@@ -1,4 +1,3 @@
-
 // Vertex shader program
 const vsSource = `
  attribute vec4 aVerte xPosition;
@@ -228,5 +227,6 @@ function main() {
     const buffers = initBuffers(gl);
     drawScene (gl, programInfo, buffers);  
 }
+
 
 main();

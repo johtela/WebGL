@@ -1,40 +1,64 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var LinearAlgebra;
 (function (LinearAlgebra) {
-    var Vec = (function (_super) {
-        __extends(Vec, _super);
-        function Vec(dim) {
-            var _this = _super.call(this, dim) || this;
-            _this.dimension = dim;
-            return _this;
+    var Dim;
+    (function (Dim) {
+        Dim[Dim["x"] = 0] = "x";
+        Dim[Dim["y"] = 1] = "y";
+        Dim[Dim["z"] = 2] = "z";
+        Dim[Dim["w"] = 3] = "w";
+    })(Dim = LinearAlgebra.Dim || (LinearAlgebra.Dim = {}));
+    var Vec = /** @class */ (function () {
+        function Vec(value) {
+            this.array = value instanceof Array ?
+                new Float32Array(value) :
+                new Float32Array(value);
         }
+        Object.defineProperty(Vec.prototype, "dimensions", {
+            get: function () {
+                return this.array.length;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vec.prototype, "x", {
+            get: function () { return this.array[Dim.x]; },
+            set: function (value) { this.array[Dim.x] = value; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vec.prototype, "y", {
+            get: function () { return this.array[Dim.y]; },
+            set: function (value) { this.array[Dim.y] = value; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vec.prototype, "z", {
+            get: function () { return this.array[Dim.z]; },
+            set: function (value) { this.array[Dim.z] = value; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vec.prototype, "w", {
+            get: function () { return this.array[Dim.w]; },
+            set: function (value) { this.array[Dim.w] = value; },
+            enumerable: true,
+            configurable: true
+        });
+        Vec.prototype.swizzle = function (coords) {
+            var res = new Array(coords.length);
+            for (var i = 0; i < res.length; i++)
+                res[i] = this.array[coords[i]];
+        };
         Vec.prototype.add = function (other) {
-            for (var i = 0; i < this.dimension; i++) {
-                this[i] = this[i] + other[i];
-            }
+            for (var i = 0; i < this.array.length; i++)
+                this.array[i] = this.array[i] + (other instanceof Vec ? other.array[i] : other);
         };
         return Vec;
-    }(Float32Array));
-    var Vec2 = (function (_super) {
-        __extends(Vec2, _super);
-        function Vec2(values) {
-            var _this = _super.call(this, 2) || this;
-            for (var i = 0; i < _this.dimension; i++) {
-                _this[i] = values[i];
-            }
-            return _this;
-        }
-        return Vec2;
-    }(Vec));
-    var v = new Vec2([1, 2, 3]);
+    }());
+    LinearAlgebra.Vec = Vec;
+    var v = new Vec([1, 2]);
+    v.add(v);
+    v.add(3);
+    v.x = 1;
 })(LinearAlgebra || (LinearAlgebra = {}));
 //# sourceMappingURL=Vec.js.map
