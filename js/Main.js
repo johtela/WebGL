@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var glm = require("gl-matrix");
 // Vertex shader program
-var vsSource = "\n attribute vec4 aVertexPosition;\n\n uniform mat4 uModelViewMatrix;\n uniform mat4 uProjectionMatrix;\n\n void main() {\n   gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;\n }\n";
+var vsSource = "\n attribute vec4 aVerte xPosition;\n\n uniform mat4 uModelViewMatrix;\n uniform mat4 uProjectionMatrix;\n\n void main() {\n   gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;\n }\n";
 var fsSource = "\nvoid main() {\n  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n}\n";
 //
 // Initialize a shader program, so WebGL knows how to draw our data
@@ -78,16 +75,16 @@ function drawScene(gl, programInfo, buffers) {
     var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
     var zNear = 0.1;
     var zFar = 100.0;
-    var projectionMatrix = glm.mat4.create();
+    var projectionMatrix = mat4.create();
     // note: glmatrix.js always has the first argument
     // as the destination to receive the result.
-    glm.mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
+    mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
     // Set the drawing position to the "identity" point, which is
     // the center of the scene.
-    var modelViewMatrix = glm.mat4.create();
+    var modelViewMatrix = mat4.create();
     // Now move the drawing position a bit to where we want to
     // start drawing the square.
-    glm.mat4.translate(modelViewMatrix, // destination matrix
+    mat4.translate(modelViewMatrix, // destination matrix
     modelViewMatrix, // matrix to translate
     [-0.0, 0.0, -6.0]); // amount to translate
     // Tell WebGL how to pull out the positions from the position
