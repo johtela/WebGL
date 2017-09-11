@@ -17,29 +17,29 @@ export class Vec
             new Float32Array (value);
     }
 
-        get dimensions (): number
-        {
-            return this.array.length;
-        }
+    get dimensions (): number
+    {
+        return this.array.length;
+    }
 
-        get x () { return this.array[Dim.x]; }
-        set x (value: number) { this.array[Dim.x] = value; }
+    get x () { return this.array[Dim.x]; }
+    set x (value: number) { this.array[Dim.x] = value; }
 
-        get y () { return this.array[Dim.y]; }
-        set y (value: number) { this.array[Dim.y] = value; }
+    get y () { return this.array[Dim.y]; }
+    set y (value: number) { this.array[Dim.y] = value; }
 
-        get z () { return this.array[Dim.z]; }
-        set z (value: number) { this.array[Dim.z] = value; }
+    get z () { return this.array[Dim.z]; }
+    set z (value: number) { this.array[Dim.z] = value; }
 
-        get w () { return this.array[Dim.w]; }
-        set w (value: number) { this.array[Dim.w] = value; }
-        
-        swizzle (coords: Dim[])
-        {
-            var res = new Array (coords.length);
-            for (var i = 0; i < res.length; i++)
-                res[i] = this.array[coords[i]];  
-        }
+    get w () { return this.array[Dim.w]; }
+    set w (value: number) { this.array[Dim.w] = value; }
+    
+    swizzle (coords: Dim[])
+    {
+        var res = new Array (coords.length);
+        for (var i = 0; i < res.length; i++)
+            res[i] = this.array[coords[i]];  
+    }
 
     add (other: Vec | number, result: Vec = this): Vec
     {
