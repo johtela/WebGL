@@ -139,10 +139,11 @@ function main() {
     var buffers = initBuffers(gl);
     drawScene(gl, programInfo, buffers);
 }
-var LinAlg_1 = require("./LinAlg");
-var v = new LinAlg_1.Vec([1, 2]);
-v.add(v);
-v.add(3);
-v.x = 1;
+var Float32Vec_1 = require("./Float32Vec");
+var v = Float32Vec_1.vec2(1, 2);
+var v4 = Float32Vec_1.vec3(1, 2, 3);
+var v2 = v.add(v);
+var v3 = v.div(3);
+v3.x = 1;
 // main(); 
 //# sourceMappingURL=Main.js.map

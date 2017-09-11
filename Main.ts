@@ -228,11 +228,13 @@ function main() {
     drawScene (gl, programInfo, buffers);  
 }
 
-import { Vec } from "./LinAlg";
+import { Vec2, Vec3 } from "./Vectors";
+import { vec2, vec3 }  from "./Float32Vec";
 
-let v = new Vec ([1, 2])
-v.add (v);
-v.add (3);
-v.x = 1;
+let v = vec2 (1, 2)
+let v4 = vec3 (1, 2, 3)
+let v2 = v.add (v);
+let v3 = v.div (3);
+v3.x = 1;
 
 // main();
