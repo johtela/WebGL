@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // Vertex shader program
 var vsSource = "\n attribute vec4 aVerte xPosition;\n\n uniform mat4 uModelViewMatrix;\n uniform mat4 uProjectionMatrix;\n\n void main() {\n   gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;\n }\n";
 var fsSource = "\nvoid main() {\n  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n}\n";
@@ -137,5 +139,10 @@ function main() {
     var buffers = initBuffers(gl);
     drawScene(gl, programInfo, buffers);
 }
-main();
+var LinAlg_1 = require("./LinAlg");
+var v = new LinAlg_1.Vec([1, 2]);
+v.add(v);
+v.add(3);
+v.x = 1;
+// main(); 
 //# sourceMappingURL=Main.js.map

@@ -228,5 +228,11 @@ function main() {
     drawScene (gl, programInfo, buffers);  
 }
 
+import { Vec } from "./LinAlg";
 
-main();
+let v = new Vec ([1, 2])
+v.add (v);
+v.add (3);
+v.x = 1;
+
+// main();
