@@ -235,6 +235,7 @@ let v = vec2 (1, 2)
 let v4 = vec3 (1, 2, 3)
 let v2 = v.add (v);
 let v3 = v.div (3);
+v.toString ()
 v3.x = 1;
 
 // main();

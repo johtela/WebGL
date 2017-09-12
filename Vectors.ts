@@ -1,3 +1,6 @@
+/**
+ * Enumeration that defines the coordinate dimensions used in the vector types.
+ */
 export enum Dim 
 {
     x = 0,
@@ -6,11 +9,33 @@ export enum Dim
     w = 3
 }
 
+/** 
+ * Base interface for all vectory types. Defines methods that have the same signature
+ * in all vector variants.
+ */
 export interface Vec
 {
-    swizzle (coords: Dim[]): number[];
-    readonly lenSqr: number;
-    readonly len: number;
+    /**
+     * Return one or more components of the vector in arbitrary order. The components
+     * returned depend on the dimensions specified in the coords argument. Note that
+     * the same component can occur multiple times in coords. So, it is valid to call
+     * the function like this:
+     * 
+     * swizzle ([Dim.x, Dim.x, Dim.y])
+     */
+    swizzle (coords: Dim[]): number[]
+    /**
+     * The lenght of the vector squared. Faster to calculate than the actual length,
+     * and useful for comparing vector magnitudes.
+     */
+    readonly lenSqr: number
+    /**
+     * Length of the vector.
+     */
+    readonly len: number
+    /**
+     * Returns the string representation of a vector. Formatted like this: [x y z]
+     */
     toString (): string
 }
 
