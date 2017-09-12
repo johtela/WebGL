@@ -144,6 +144,7 @@ var v = Float32Vec_1.vec2(1, 2);
 var v4 = Float32Vec_1.vec3(1, 2, 3);
 var v2 = v.add(v);
 var v3 = v.div(3);
+v.toString();
 v3.x = 1;
 // main(); 
 //# sourceMappingURL=Main.js.map

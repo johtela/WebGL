@@ -1,5 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Enumeration that defines the coordinate dimensions used in the vector types.
+ */
 var Dim;
 (function (Dim) {
     Dim[Dim["x"] = 0] = "x";

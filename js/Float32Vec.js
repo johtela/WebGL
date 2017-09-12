@@ -15,8 +15,8 @@ function vec4(x, y, z, w) {
 }
 exports.vec4 = vec4;
 var Float32Vec = /** @class */ (function () {
-    function Float32Vec(value) {
-        this.array = value instanceof Array ? new Float32Array(value) : value;
+    function Float32Vec(values) {
+        this.array = values instanceof Array ? new Float32Array(values) : values;
     }
     Object.defineProperty(Float32Vec.prototype, "dimensions", {
         get: function () {
@@ -62,7 +62,7 @@ var Float32Vec = /** @class */ (function () {
     };
     Float32Vec.prototype.map2 = function (other, oper) {
         return new Float32Vec(this.array.map(function (v, i, a) {
-            return oper(v, other instanceof Float32Vec ? other.array[i] : other);
+            return oper(v, other.array[i]);
         }));
     };
     Float32Vec.prototype.reduce = function (oper) {
@@ -88,16 +88,24 @@ var Float32Vec = /** @class */ (function () {
         return this.map(function (x) { return -x; });
     };
     Float32Vec.prototype.add = function (other) {
-        return this.map2(other, function (x, y) { return x + y; });
+        return other instanceof Float32Vec ?
+            this.map2(other, function (x, y) { return x + y; }) :
+            this.map(function (x) { return x + other; });
     };
     Float32Vec.prototype.sub = function (other) {
-        return this.map2(other, function (x, y) { return x - y; });
+        return other instanceof Float32Vec ?
+            this.map2(other, function (x, y) { return x - y; }) :
+            this.map(function (x) { return x - other; });
     };
     Float32Vec.prototype.mul = function (other) {
-        return this.map2(other, function (x, y) { return x * y; });
+        return other instanceof Float32Vec ?
+            this.map2(other, function (x, y) { return x * y; }) :
+            this.map(function (x) { return x * other; });
     };
     Float32Vec.prototype.div = function (other) {
-        return this.map2(other, function (x, y) { return x / y; });
+        return other instanceof Float32Vec ?
+            this.map2(other, function (x, y) { return x / y; }) :
+            this.map(function (x) { return x / other; });
     };
     Float32Vec.prototype.norm = function () {
         var l = this.len;

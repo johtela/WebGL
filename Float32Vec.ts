@@ -20,9 +20,9 @@ class Float32Vec implements Vec2, Vec3, Vec4
 {
     private array: Float32Array
 
-    constructor (value: number[] | Float32Array)
+    constructor (values: number[] | Float32Array)
     {
-        this.array = value instanceof Array ? new Float32Array (value) : value
+        this.array = values instanceof Array ? new Float32Array (values) : values
     }
 
     get dimensions (): number
@@ -59,12 +59,12 @@ class Float32Vec implements Vec2, Vec3, Vec4
             }))
     }
 
-    private map2 (other: Float32Vec | number, oper: (x: number, y: number) => number): Float32Vec
+    private map2 (other: Float32Vec, oper: (x: number, y: number) => number): Float32Vec
     {
         return new Float32Vec (this.array.map (
             function (this, v, i, a)
             {
-                return oper (v, other instanceof Float32Vec ? other.array[i] : other)
+                return oper (v, other.array[i])
             }))
     }
 
@@ -94,22 +94,30 @@ class Float32Vec implements Vec2, Vec3, Vec4
 
     add (other: Float32Vec | number): Float32Vec
     {
-        return this.map2 (other, (x, y) => x + y)
+        return other instanceof Float32Vec ? 
+            this.map2 (other, (x, y) => x + y) :
+            this.map (x => x + other)
     }
 
     sub (other: Float32Vec | number): Float32Vec
     {
-        return this.map2 (other,(x, y) => x - y)
+        return other instanceof Float32Vec ? 
+            this.map2 (other,(x, y) => x - y) :
+            this.map (x => x - other)
     }
 
     mul (other: Float32Vec | number): Float32Vec
     {
-        return this.map2 (other, (x, y) => x * y)
+        return other instanceof Float32Vec ? 
+            this.map2 (other,(x, y) => x * y) :
+            this.map (x => x * other)
     }
 
     div (other: Float32Vec | number): Float32Vec
     {
-        return this.map2 (other, (x, y) => x / y)
+        return other instanceof Float32Vec ? 
+            this.map2 (other,(x, y) => x / y) :
+            this.map (x => x / other)
     }
 
     norm (): Float32Vec
