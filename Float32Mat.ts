@@ -1,23 +1,23 @@
 
 class Float32Mat 
 {
-    readonly cols: number;
     readonly rows: number;
+    readonly cols: number;
 
     private array: Float32Array
     
-    constructor (values: number[] | Float32Array, c: number, r: number) 
+    constructor (values: number[] | Float32Array, rows: number, columns: number) 
     {
-        if (values.length !== r *c)
-            throw RangeError ("Array length has to be r * c.") 
+        if (values.length !== rows *columns)
+            throw RangeError ("Array length has to be equeal rows * columns.") 
         this.array = values instanceof Array ? new Float32Array (values) : values
-        this.cols = c;        
-        this.rows = r;
+        this.rows = rows;
+        this.cols = columns;        
     }
 
-    element (r: number, c: number)
+    element (row: number, column: number)
     {
-        return this.array[r * this.rows + c]
+        return this.array[column * this.rows + row]
     }
 
     private map (oper: (x: number) => number): Float32Mat
@@ -40,9 +40,34 @@ class Float32Mat
             }), this.cols, this.rows)
     }
 
-    private matrixMultiply (other: Float32Mat)
+    private matrixMultiply (other: Float32Mat): Float32Mat
     {
+        let n = this.rows
+        let m = this.cols
+        let q = other.rows
+        let p = other.cols
+        if (m !== q)
+            throw RangeError (`Cannot multiply ${n}x${m} matrix with ${q}x${p} matrix.`)
+        var res = new Float32Array (n * p)
+        // Iterate through rows and columns
+        for (let i = 0; i < n; i++)
+            for (let j = 0; j < p; j++)
+            {
+                // Sum up rows from this with columns from other matrix.
+                let val = 0
+                for (let k = 0; k < m; k++)
+                    val += this.array[k * n + i] * other.array[j * q + k]
+                res[j * n + i] = val 
+            }
+        return new Float32Mat (res, n, p)
+    }
 
+    static identity (rows: number, cols: number): Float32Mat
+    {
+        var res = new Float32Array (rows * cols);
+        for (let i = 0; i < Math.min (rows, cols); i++)
+            res[i * rows + i] = 1
+        return new Float32Mat (res, rows, cols)
     }
 
     add (other: Float32Mat | number): Float32Mat
@@ -62,8 +87,19 @@ class Float32Mat
     mul (other: Float32Mat | number): Float32Mat
     {
         return other instanceof Float32Mat ?
-            null :
+            this.matrixMultiply (other) :
             this.map (x => x * other)
     }
-    
+
+    transpose (): Float32Mat
+    {
+        let rows = this.cols
+        let cols = this.rows
+        let res = new Float32Array (this.array.length)
+        let ind = 0
+        for (let i = 0; i < rows; i++)
+            for (let j = 0; j < cols; j++)
+                res[j * rows + i] = this.array[ind++]
+        return new Float32Mat (res, rows, cols)
+    }
 }

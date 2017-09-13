@@ -14,7 +14,7 @@ function vec4(x, y, z, w) {
     return new Float32Vec([x, y, z, w]);
 }
 exports.vec4 = vec4;
-var Float32Vec = /** @class */ (function () {
+var Float32Vec = (function () {
     function Float32Vec(values) {
         this.array = values instanceof Array ? new Float32Array(values) : values;
     }
