@@ -15,12 +15,12 @@ function vec2(x, y) {
 }
 exports.vec2 = vec2;
 function vec3(x, y, z) {
-    return z ? new Float32Vec([x, y, z]) :
+    return y && z ? new Float32Vec([x, y, z]) :
         new Float32Vec([x, x, x]);
 }
 exports.vec3 = vec3;
 function vec4(x, y, z, w) {
-    return w ? new Float32Vec([x, y, z, w]) :
+    return y && z && w ? new Float32Vec([x, y, z, w]) :
         new Float32Vec([x, x, x, x]);
 }
 exports.vec4 = vec4;

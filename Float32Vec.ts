@@ -17,13 +17,13 @@ export function vec2 (x: number, y?: number): Vec2
 
 export function vec3 (x: number, y?: number, z?: number): Vec3
 {
-    return z ? new Float32Vec ([x, y, z]) : 
+    return y && z ? new Float32Vec ([x, y, z]) : 
            new Float32Vec ([x, x, x]) 
 }
 
 export function vec4 (x: number, y?: number, z?: number, w?: number): Vec4
 {
-    return w ? new Float32Vec ([x, y, z, w]) :
+    return y && z && w ? new Float32Vec ([x, y, z, w]) :
            new Float32Vec ([x, x, x, x]) 
 }
 

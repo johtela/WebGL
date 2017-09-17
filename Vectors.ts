@@ -15,6 +15,9 @@ export enum Dim
  */
 export interface Vec<V>
 {
+    /**
+     * Number dimensions in the vector.
+     */
     readonly dimensions: number
     /**
      * Return one or more components of the vector in arbitrary order. The components
