@@ -2,19 +2,29 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var FMath = require("./FMath");
 var Vectors_1 = require("./Vectors");
+function vec(values) {
+    var len = values.length;
+    if (len < 2 || len > 4)
+        throw RangeError("Number of components must be 2-4.");
+    return new Float32Vec(values);
+}
+exports.vec = vec;
 function vec2(x, y) {
-    return new Float32Vec([x, y]);
+    return y ? new Float32Vec([x, y]) :
+        new Float32Vec([x, x]);
 }
 exports.vec2 = vec2;
 function vec3(x, y, z) {
-    return new Float32Vec([x, y, z]);
+    return z ? new Float32Vec([x, y, z]) :
+        new Float32Vec([x, x, x]);
 }
 exports.vec3 = vec3;
 function vec4(x, y, z, w) {
-    return new Float32Vec([x, y, z, w]);
+    return w ? new Float32Vec([x, y, z, w]) :
+        new Float32Vec([x, x, x, x]);
 }
 exports.vec4 = vec4;
-var Float32Vec = (function () {
+var Float32Vec = /** @class */ (function () {
     function Float32Vec(values) {
         this.array = values instanceof Array ? new Float32Array(values) : values;
     }

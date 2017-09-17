@@ -1,4 +1,4 @@
-var Float32Mat = (function () {
+var Float32Mat = /** @class */ (function () {
     function Float32Mat(values, rows, columns) {
         if (values.length !== rows * columns)
             throw RangeError("Array length has to be equeal rows * columns.");

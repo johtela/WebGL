@@ -1,19 +1,30 @@
 import * as FMath from "./FMath"
 import { Dim, Vec, Vec2, Vec3, Vec4 } from "./Vectors"
 
-export function vec2 (x: number, y: number) : Vec2
+export function vec (values: number[]): Vec2 | Vec3 | Vec4
 {
-    return new Float32Vec ([x, y])
+    let len = values.length
+    if (len < 2 || len > 4)
+        throw RangeError ("Number of components must be 2-4.")
+    return new Float32Vec (values);
 }
 
-export function vec3 (x: number, y: number, z: number) : Vec3
+export function vec2 (x: number, y?: number): Vec2
 {
-    return new Float32Vec ([x, y, z])
+    return y ? new Float32Vec ([x, y]) : 
+           new Float32Vec ([x, x]) 
 }
 
-export function vec4 (x: number, y: number, z: number, w: number) : Vec4
+export function vec3 (x: number, y?: number, z?: number): Vec3
 {
-    return new Float32Vec ([x, y, z, w])
+    return z ? new Float32Vec ([x, y, z]) : 
+           new Float32Vec ([x, x, x]) 
+}
+
+export function vec4 (x: number, y?: number, z?: number, w?: number): Vec4
+{
+    return w ? new Float32Vec ([x, y, z, w]) :
+           new Float32Vec ([x, x, x, x]) 
 }
 
 class Float32Vec implements Vec2, Vec3, Vec4
