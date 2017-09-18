@@ -134,6 +134,8 @@ class Float32Vec implements Vec2, Vec3, Vec4
     norm (): Float32Vec
     {
         let l = this.len
+        if (l == 0)
+            throw RangeError ("Cannot normalize zero vector")
         return this.map (x => x / l)
     }
 
