@@ -3,7 +3,7 @@
 import * as jsc from "jsverify";
 import { approxEquals } from "./FMath";
 import { Vec, Vec2, Vec3, Vec4 } from "./Vectors"
-import { vec2, vec3, vec4 } from "./Float32Vec";
+import { vec2, vec3, vec4 } from "./ArrayVec";
 
 function arbNumArr (size: number): jsc.Arbitrary<number[]>
 {
@@ -76,10 +76,10 @@ function dotProduct<V extends Vec<V>> (arb: jsc.Arbitrary<V>, zero: V)
         })
     jsc.property (`Vec${dim}: v1 . v2 == (v1 . norm(v2)) * |v2| when v2 != ${zero}`,
         arb, nonzero,
-        (v1, v2) => approxEquals (v1.dot (v2), v1.dot (v2.norm ()) * v2.len, 0.0001))
+        (v1, v2) => approxEquals (v1.dot (v2), v1.dot (v2.norm ()) * v2.len))
     jsc.property (`Vec${dim}: v1 . v2 == (v2 . norm(v1)) * |v1| when v1 != ${zero}`,
         nonzero, arb, 
-        (v1, v2) => approxEquals (v1.dot (v2), v2.dot (v1.norm ()) * v1.len, 0.0001))
+        (v1, v2) => approxEquals (v1.dot (v2), v2.dot (v1.norm ()) * v1.len))
 }
 
 describe ("vector addition and subtraction", () =>
@@ -122,4 +122,21 @@ describe ("vector dot product", () =>
     dotProduct<Vec2> (arbVec2, vec2 (0))
     dotProduct<Vec3> (arbVec3, vec3 (0))
     dotProduct<Vec4> (arbVec4, vec4 (0))
+})
+
+describe ("vec3 cross product", () =>
+{
+    let zero = vec3 (0)
+    var nonzero = jsc.suchthat (arbVec3, v => !v.equals (zero))
+    jsc.property (`Vec3: norm(v1) x norm(v2) . norm(v1|v2) = 1 when v1, v2 != [0 0 0]`, 
+        nonzero, nonzero,
+        (v1, v2) =>
+        {
+            let v1n = v1.norm ()
+            let v2n = v2.norm ()
+            let cr = v1n.cross (v2n)
+            let dt1 = cr.dot (v1n)
+            let dt2 = cr.dot (v2n)
+            return approxEquals (dt1, 0) && approxEquals (dt2, 0)
+        })
 })

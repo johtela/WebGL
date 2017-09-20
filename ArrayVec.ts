@@ -6,34 +6,34 @@ export function vec (values: number[]): Vec2 | Vec3 | Vec4
     let len = values.length
     if (len < 2 || len > 4)
         throw RangeError ("Number of components must be 2-4.")
-    return new Float32Vec (values);
+    return new ArrayVec (values);
 }
 
 export function vec2 (x: number, y?: number): Vec2
 {
-    return y ? new Float32Vec ([x, y]) : 
-           new Float32Vec ([x, x]) 
+    return y ? new ArrayVec ([x, y]) : 
+           new ArrayVec ([x, x]) 
 }
 
 export function vec3 (x: number, y?: number, z?: number): Vec3
 {
-    return y && z ? new Float32Vec ([x, y, z]) : 
-           new Float32Vec ([x, x, x]) 
+    return y && z ? new ArrayVec ([x, y, z]) : 
+           new ArrayVec ([x, x, x]) 
 }
 
 export function vec4 (x: number, y?: number, z?: number, w?: number): Vec4
 {
-    return y && z && w ? new Float32Vec ([x, y, z, w]) :
-           new Float32Vec ([x, x, x, x]) 
+    return y && z && w ? new ArrayVec ([x, y, z, w]) :
+           new ArrayVec ([x, x, x, x]) 
 }
 
-class Float32Vec implements Vec2, Vec3, Vec4
+class ArrayVec implements Vec2, Vec3, Vec4
 {
-    private array: Float32Array
+    private array: number[]
 
-    constructor (values: number[] | Float32Array)
+    constructor (values: number[])
     {
-        this.array = values instanceof Array ? new Float32Array (values) : values
+        this.array = values
     }
 
     get dimensions (): number
@@ -61,18 +61,18 @@ class Float32Vec implements Vec2, Vec3, Vec4
         return res;
     }
 
-    private map (oper: (x: number) => number): Float32Vec
+    private map (oper: (x: number) => number): ArrayVec
     {
-        return new Float32Vec (this.array.map (
+        return new ArrayVec (this.array.map (
             function (this, v, i, a)
             {
                 return oper (v)
             }))
     }
 
-    private map2 (other: Float32Vec, oper: (x: number, y: number) => number): Float32Vec
+    private map2 (other: ArrayVec, oper: (x: number, y: number) => number): ArrayVec
     {
-        return new Float32Vec (this.array.map (
+        return new ArrayVec (this.array.map (
             function (this, v, i, a)
             {
                 return oper (v, other.array[i])
@@ -98,40 +98,40 @@ class Float32Vec implements Vec2, Vec3, Vec4
         return Math.sqrt (this.lenSqr)
     }
 
-    inv () : Float32Vec
+    inv () : ArrayVec
     {
         return this.map (x => -x)
     }
 
-    add (other: Float32Vec | number): Float32Vec
+    add (other: ArrayVec | number): ArrayVec
     {
-        return other instanceof Float32Vec ? 
+        return other instanceof ArrayVec ? 
             this.map2 (other, (x, y) => x + y) :
             this.map (x => x + other)
     }
 
-    sub (other: Float32Vec | number): Float32Vec
+    sub (other: ArrayVec | number): ArrayVec
     {
-        return other instanceof Float32Vec ? 
+        return other instanceof ArrayVec ? 
             this.map2 (other,(x, y) => x - y) :
             this.map (x => x - other)
     }
 
-    mul (other: Float32Vec | number): Float32Vec
+    mul (other: ArrayVec | number): ArrayVec
     {
-        return other instanceof Float32Vec ? 
+        return other instanceof ArrayVec ? 
             this.map2 (other,(x, y) => x * y) :
             this.map (x => x * other)
     }
 
-    div (other: Float32Vec | number): Float32Vec
+    div (other: ArrayVec | number): ArrayVec
     {
-        return other instanceof Float32Vec ? 
+        return other instanceof ArrayVec ? 
             this.map2 (other,(x, y) => x / y) :
             this.map (x => x / other)
     }
 
-    norm (): Float32Vec
+    norm (): ArrayVec
     {
         let l = this.len
         if (l == 0)
@@ -139,7 +139,7 @@ class Float32Vec implements Vec2, Vec3, Vec4
         return this.map (x => x / l)
     }
 
-    equals (other: Float32Vec): boolean
+    equals (other: ArrayVec): boolean
     {
         return this.array.every (
             function (v, i, a)
@@ -148,7 +148,7 @@ class Float32Vec implements Vec2, Vec3, Vec4
             })
     }
 
-    approxEquals (other: Float32Vec, epsilon: number = 0.000001): boolean
+    approxEquals (other: ArrayVec, epsilon: number = 0.000001): boolean
     {
         return this.array.every (
             function (v, i, a)
@@ -157,64 +157,64 @@ class Float32Vec implements Vec2, Vec3, Vec4
             })
     }
 
-    dot (other: Float32Vec): number
+    dot (other: ArrayVec): number
     {
         return this.array.reduce (
-            function (c: number, v: number, i: number, a: Float32Array)
+            function (c: number, v: number, i: number, a: number[])
             {
                 return c + (v * other.array[i]) 
             }, 0)
     }
 
-    cross (other: Float32Vec): Float32Vec
+    cross (other: ArrayVec): ArrayVec
     {
-        return new Float32Vec ([
+        return new ArrayVec ([
             this.y * other.z - this.z * other.y,
             this.z * other.x - this.x * other.z,
             this.x * other.y - this.y * other.x])		
     }
 
-    abs (): Float32Vec
+    abs (): ArrayVec
     {
         return this.map (Math.abs)
     }
 
-    floor (): Float32Vec
+    floor (): ArrayVec
     {
         return this.map (Math.floor)
     }
 
-    ceil (): Float32Vec
+    ceil (): ArrayVec
     {
         return this.map (Math.ceil)
     }
 
-    round (): Float32Vec
+    round (): ArrayVec
     {
         return this.map (Math.round)
     }
 
-    fract (): Float32Vec
+    fract (): ArrayVec
     {
         return this.map (FMath.fract)
     }
 
-    clamp (min: number, max: number): Float32Vec
+    clamp (min: number, max: number): ArrayVec
     {
         return this.map (x => FMath.clamp (x, min, max))
     }
 
-    mix (other: Float32Vec, interPos: number): Float32Vec
+    mix (other: ArrayVec, interPos: number): ArrayVec
     {
         return this.map2 (other, (x, y) => FMath.mix (x, y, interPos))
     }
 
-    step (edge: number): Float32Vec
+    step (edge: number): ArrayVec
     {
         return this.map (x => FMath.step (edge, x))
     }
 
-    smoothStep (edgeLower: number, edgeUpper: number): Float32Vec
+    smoothStep (edgeLower: number, edgeUpper: number): ArrayVec
     {
         return this.map (x => FMath.smoothStep (edgeLower, edgeUpper, x))
     }
@@ -222,5 +222,10 @@ class Float32Vec implements Vec2, Vec3, Vec4
     toString (): string
     {
         return "[" + this.array.join (" ") + "]"
+    }
+
+    toFloat32Array (): Float32Array
+    {
+        return new Float32Array (this.array)
     }
 }

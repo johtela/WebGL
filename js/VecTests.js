@@ -3,13 +3,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsc = require("jsverify");
 const FMath_1 = require("./FMath");
-const Float32Vec_1 = require("./Float32Vec");
+const ArrayVec_1 = require("./ArrayVec");
 function arbNumArr(size) {
     return jsc.tuple(Array(size).fill(jsc.number));
 }
-const arbVec2 = arbNumArr(2).smap(a => Float32Vec_1.vec2(a[0], a[1]), v => [v.x, v.y], v => v.toString());
-const arbVec3 = arbNumArr(3).smap(a => Float32Vec_1.vec3(a[0], a[1], a[2]), v => [v.x, v.y, v.z], v => v.toString());
-const arbVec4 = arbNumArr(4).smap(a => Float32Vec_1.vec4(a[0], a[1], a[2], a[3]), v => [v.x, v.y, v.z, v.w], v => v.toString());
+const arbVec2 = arbNumArr(2).smap(a => ArrayVec_1.vec2(a[0], a[1]), v => [v.x, v.y], v => v.toString());
+const arbVec3 = arbNumArr(3).smap(a => ArrayVec_1.vec3(a[0], a[1], a[2]), v => [v.x, v.y, v.z], v => v.toString());
+const arbVec4 = arbNumArr(4).smap(a => ArrayVec_1.vec4(a[0], a[1], a[2], a[3]), v => [v.x, v.y, v.z, v.w], v => v.toString());
 function addAndSubtract(arb, zero) {
     let dim = zero.dimensions;
     jsc.property(`Vec${dim}: v - v = ${zero}`, arb, v => v.sub(v).equals(zero));
@@ -39,13 +39,13 @@ function dotProduct(arb, zero) {
         let dp = v1.norm().dot(v2.norm());
         return -1 <= dp && dp <= 1;
     });
-    jsc.property(`Vec${dim}: v1 . v2 == (v1 . norm(v2)) * |v2| when v2 != ${zero}`, arb, nonzero, (v1, v2) => FMath_1.approxEquals(v1.dot(v2), v1.dot(v2.norm()) * v2.len, 0.0001));
-    jsc.property(`Vec${dim}: v1 . v2 == (v2 . norm(v1)) * |v1| when v1 != ${zero}`, nonzero, arb, (v1, v2) => FMath_1.approxEquals(v1.dot(v2), v2.dot(v1.norm()) * v1.len, 0.0001));
+    jsc.property(`Vec${dim}: v1 . v2 == (v1 . norm(v2)) * |v2| when v2 != ${zero}`, arb, nonzero, (v1, v2) => FMath_1.approxEquals(v1.dot(v2), v1.dot(v2.norm()) * v2.len));
+    jsc.property(`Vec${dim}: v1 . v2 == (v2 . norm(v1)) * |v1| when v1 != ${zero}`, nonzero, arb, (v1, v2) => FMath_1.approxEquals(v1.dot(v2), v2.dot(v1.norm()) * v1.len));
 }
 describe("vector addition and subtraction", () => {
-    addAndSubtract(arbVec2, Float32Vec_1.vec2(0));
-    addAndSubtract(arbVec3, Float32Vec_1.vec3(0));
-    addAndSubtract(arbVec4, Float32Vec_1.vec4(0));
+    addAndSubtract(arbVec2, ArrayVec_1.vec2(0));
+    addAndSubtract(arbVec3, ArrayVec_1.vec3(0));
+    addAndSubtract(arbVec4, ArrayVec_1.vec4(0));
 });
 describe("vector multiplication with scalar", () => {
     multiplyWithScalar(arbVec2);
@@ -53,9 +53,9 @@ describe("vector multiplication with scalar", () => {
     multiplyWithScalar(arbVec4);
 });
 describe("vector multiplication with vector", () => {
-    multiplyWithVector(arbVec2, Float32Vec_1.vec2);
-    multiplyWithVector(arbVec3, Float32Vec_1.vec3);
-    multiplyWithVector(arbVec4, Float32Vec_1.vec4);
+    multiplyWithVector(arbVec2, ArrayVec_1.vec2);
+    multiplyWithVector(arbVec3, ArrayVec_1.vec3);
+    multiplyWithVector(arbVec4, ArrayVec_1.vec4);
 });
 describe("vector division with scalar", () => {
     divideWithScalar(arbVec2);
@@ -63,13 +63,25 @@ describe("vector division with scalar", () => {
     divideWithScalar(arbVec4);
 });
 describe("vector normalization", () => {
-    normalize(arbVec2, Float32Vec_1.vec2(0));
-    normalize(arbVec3, Float32Vec_1.vec3(0));
-    normalize(arbVec4, Float32Vec_1.vec4(0));
+    normalize(arbVec2, ArrayVec_1.vec2(0));
+    normalize(arbVec3, ArrayVec_1.vec3(0));
+    normalize(arbVec4, ArrayVec_1.vec4(0));
 });
 describe("vector dot product", () => {
-    dotProduct(arbVec2, Float32Vec_1.vec2(0));
-    dotProduct(arbVec3, Float32Vec_1.vec3(0));
-    dotProduct(arbVec4, Float32Vec_1.vec4(0));
+    dotProduct(arbVec2, ArrayVec_1.vec2(0));
+    dotProduct(arbVec3, ArrayVec_1.vec3(0));
+    dotProduct(arbVec4, ArrayVec_1.vec4(0));
 });
-//# sourceMappingURL=Tests.js.map
+describe("vec3 cross product", () => {
+    let zero = ArrayVec_1.vec3(0);
+    var nonzero = jsc.suchthat(arbVec3, v => !v.equals(zero));
+    jsc.property(`Vec3: norm(v1) x norm(v2) . norm(v1|v2) = 1 when v1, v2 != [0 0 0]`, nonzero, nonzero, (v1, v2) => {
+        let v1n = v1.norm();
+        let v2n = v2.norm();
+        let cr = v1n.cross(v2n);
+        let dt1 = cr.dot(v1n);
+        let dt2 = cr.dot(v2n);
+        return FMath_1.approxEquals(dt1, 0) && FMath_1.approxEquals(dt2, 0);
+    });
+});
+//# sourceMappingURL=VecTests.js.map

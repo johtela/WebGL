@@ -6,27 +6,27 @@ function vec(values) {
     let len = values.length;
     if (len < 2 || len > 4)
         throw RangeError("Number of components must be 2-4.");
-    return new Float32Vec(values);
+    return new ArrayVec(values);
 }
 exports.vec = vec;
 function vec2(x, y) {
-    return y ? new Float32Vec([x, y]) :
-        new Float32Vec([x, x]);
+    return y ? new ArrayVec([x, y]) :
+        new ArrayVec([x, x]);
 }
 exports.vec2 = vec2;
 function vec3(x, y, z) {
-    return y && z ? new Float32Vec([x, y, z]) :
-        new Float32Vec([x, x, x]);
+    return y && z ? new ArrayVec([x, y, z]) :
+        new ArrayVec([x, x, x]);
 }
 exports.vec3 = vec3;
 function vec4(x, y, z, w) {
-    return y && z && w ? new Float32Vec([x, y, z, w]) :
-        new Float32Vec([x, x, x, x]);
+    return y && z && w ? new ArrayVec([x, y, z, w]) :
+        new ArrayVec([x, x, x, x]);
 }
 exports.vec4 = vec4;
-class Float32Vec {
+class ArrayVec {
     constructor(values) {
-        this.array = values instanceof Array ? new Float32Array(values) : values;
+        this.array = values;
     }
     get dimensions() {
         return this.array.length;
@@ -46,12 +46,12 @@ class Float32Vec {
         return res;
     }
     map(oper) {
-        return new Float32Vec(this.array.map(function (v, i, a) {
+        return new ArrayVec(this.array.map(function (v, i, a) {
             return oper(v);
         }));
     }
     map2(other, oper) {
-        return new Float32Vec(this.array.map(function (v, i, a) {
+        return new ArrayVec(this.array.map(function (v, i, a) {
             return oper(v, other.array[i]);
         }));
     }
@@ -70,22 +70,22 @@ class Float32Vec {
         return this.map(x => -x);
     }
     add(other) {
-        return other instanceof Float32Vec ?
+        return other instanceof ArrayVec ?
             this.map2(other, (x, y) => x + y) :
             this.map(x => x + other);
     }
     sub(other) {
-        return other instanceof Float32Vec ?
+        return other instanceof ArrayVec ?
             this.map2(other, (x, y) => x - y) :
             this.map(x => x - other);
     }
     mul(other) {
-        return other instanceof Float32Vec ?
+        return other instanceof ArrayVec ?
             this.map2(other, (x, y) => x * y) :
             this.map(x => x * other);
     }
     div(other) {
-        return other instanceof Float32Vec ?
+        return other instanceof ArrayVec ?
             this.map2(other, (x, y) => x / y) :
             this.map(x => x / other);
     }
@@ -111,7 +111,7 @@ class Float32Vec {
         }, 0);
     }
     cross(other) {
-        return new Float32Vec([
+        return new ArrayVec([
             this.y * other.z - this.z * other.y,
             this.z * other.x - this.x * other.z,
             this.x * other.y - this.y * other.x
@@ -147,5 +147,8 @@ class Float32Vec {
     toString() {
         return "[" + this.array.join(" ") + "]";
     }
+    toFloat32Array() {
+        return new Float32Array(this.array);
+    }
 }
-//# sourceMappingURL=Float32Vec.js.map
+//# sourceMappingURL=ArrayVec.js.map
