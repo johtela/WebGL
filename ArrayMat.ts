@@ -1,3 +1,5 @@
+import { Vec } from "./Vectors";
+import { NewMat, Mat2, Mat3, Mat4 } from "./Matrices";
 
 class ArrayMat implements Mat2, Mat3, Mat4
 {
@@ -89,6 +91,14 @@ class ArrayMat implements Mat2, Mat3, Mat4
         return other instanceof ArrayMat ?
             this.matrixMultiply (other) :
             this.map (x => x * other)
+    }
+
+    mulVec<V extends Vec<V>> (other: V): V
+    {
+        if (other.dimensions != this.cols)
+            throw RangeError (`Cannot multiply ${this.rows}x${this.cols} matrix with ` +
+                `${other.dimensions}D vector`)
+        
     }
 
     transpose (): ArrayMat

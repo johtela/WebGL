@@ -63,7 +63,7 @@ export interface Vec<V>
     smoothStep (edgeLower: number, edgeUpper: number): V
 }
 
-interface NewVec<V extends Vec<V>>
+export interface NewVec<V extends Vec<V>>
 {
     zero (): V
     unif (x: number): V

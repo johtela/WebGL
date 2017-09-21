@@ -1,5 +1,5 @@
 import * as FMath from "./FMath"
-import { Dim, Vec, Vec2, Vec3, Vec4 } from "./Vectors"
+import { Dim, Vec, Vec2, Vec3, Vec4, NewVec } from "./Vectors"
 
 export function vec (values: number[]): Vec2 | Vec3 | Vec4
 {
@@ -227,5 +227,18 @@ class ArrayVec implements Vec2, Vec3, Vec4
     toFloat32Array (): Float32Array
     {
         return new Float32Array (this.array)
+    }
+}
+
+class NewArrayVec implements NewVec<Vec2>, NewVec<Vec3>, NewVec<Vec4>
+{
+    zero (): Vec2
+    {
+        return new ArrayVec([0, 0])
+    }
+
+    zero (): Vec3
+    {
+        return new ArrayVec([0, 0, 0])
     }
 }

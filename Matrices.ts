@@ -1,6 +1,6 @@
 import { Vec } from "./Vectors";
 
-interface Mat<M extends Mat<M>>
+export interface Mat<M extends Mat<M>>
 {
     readonly rows: number
     readonly cols: number
@@ -15,11 +15,9 @@ interface Mat<M extends Mat<M>>
     approxEquals (other: M, epsilon?: number): boolean
     toString (): string
     toFloat32Array (): Float32Array
-    
-    
 }
 
-interface NewMat<M extends Mat<M>>
+export interface NewMat<M extends Mat<M>>
 {
     identity (): M
     translation (...offsets: number[])
@@ -27,6 +25,6 @@ interface NewMat<M extends Mat<M>>
     
 }
 
-interface Mat2 extends Mat<Mat2> {}
-interface Mat3 extends Mat<Mat3> {}
-interface Mat4 extends Mat<Mat4> {}
+export interface Mat2 extends Mat<Mat2> {}
+export interface Mat3 extends Mat<Mat3> {}
+export interface Mat4 extends Mat<Mat4> {}
