@@ -232,13 +232,8 @@ class ArrayVec implements Vec2, Vec3, Vec4
 
 class NewArrayVec implements NewVec<Vec2>, NewVec<Vec3>, NewVec<Vec4>
 {
-    zero (): Vec2
+    zero (): Vec2|Vec3|Vec4
     {
         return new ArrayVec([0, 0])
-    }
-
-    zero (): Vec3
-    {
-        return new ArrayVec([0, 0, 0])
     }
 }
