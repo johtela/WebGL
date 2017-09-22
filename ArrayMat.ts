@@ -15,8 +15,7 @@ class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
 
     private identityArray (): number[]
     {
-        let r = this.rows        
-        let c = this.cols        
+        let { rows: r, cols: c } = this        
         let arr = Array<number> (r * c)
         for (let i = 0; i < Math.min (r, c); i++) 
             arr[i * r + i] = 1
@@ -30,8 +29,7 @@ class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
 
     translation (offsets: number[]|Vec2|Vec3|Vec4): Mat2 & Mat3 & Mat4
     {
-        let r = this.rows
-        let c = this.cols
+        let { rows: r, cols: c } = this        
         let offs = offsets instanceof Array ? offsets : offsets.toArray ()
         if (offs.length >= r)
             throw RangeError (`Too many offsets for ${r}x${c} matrix.`)
@@ -44,8 +42,7 @@ class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
 
     scaling (factors: number[]|Vec2|Vec3|Vec4): Mat2 & Mat3 & Mat4
     {
-        let r = this.rows
-        let c = this.cols
+        let { rows: r, cols: c } = this        
         let facs = factors instanceof Array ? factors :factors.toArray ()
         if (facs.length >= r)
             throw RangeError (`Too many factors for ${r}x${c} matrix.`)
@@ -57,8 +54,7 @@ class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
 
     rotationX (angle: number): Mat2 & Mat3 & Mat4
     {
-        let r = this.rows
-        let c = this.cols
+        let { rows: r, cols: c } = this        
         if (r < 3 || c < 3)
             throw RangeError (`Rotation around X-axis not defined for ${r}x${c} matrix.`)
         let res = this.identityArray ()
@@ -73,8 +69,7 @@ class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
 
     rotationY (angle: number): Mat2 & Mat3 & Mat4
     {
-        let r = this.rows
-        let c = this.cols
+        let { rows: r, cols: c } = this        
         if (r < 3 || c < 3)
             throw RangeError (`Rotation around Y-axis not defined for ${r}x${c} matrix.`)
         let res = this.identityArray ()
@@ -89,8 +84,7 @@ class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
 
     rotationZ (angle: number): Mat2 & Mat3 & Mat4
     {
-        let r = this.rows
-        let c = this.cols
+        let { rows: r, cols: c } = this        
         let res = this.identityArray ()
         let sina = Math.sin (angle)
         let cosa = Math.cos (angle)
@@ -100,7 +94,54 @@ class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
         res[r + 1] = cosa;
         return new ArrayMat (res, r, c)
     }
+
+    perspective (left: number, right: number, bottom: number, top: number,
+        zNear: number, zFar: number): Mat4
+    {
+        if (zNear <= 0 || zNear >= zFar)
+            throw RangeError ("zNear needs to be positive and smaller thatn zFar")
+        let width = right - left
+        let height = top - bottom
+        let depth = zFar - zNear
+        return new ArrayMat (
+            [(2.0 * zNear) / width, 0, 0, 0,
+            0, (2.0 * zNear) / height, 0, 0,
+            (right + left) / width, (top + bottom) / height, -(zFar + zNear) / depth, -1,
+            0, 0, -(2.0 * zFar * zNear) / depth, 0], 
+            4, 4)
+    }
+
+    orthographic (left: number, right: number, bottom: number, top: number,
+        zNear: number, zFar: number): Mat4
+    {
+        let invWidth = 1.0 / (right - left)
+        let invHeight = 1.0 / (top - bottom)
+        let invDepth = 1.0 / (zFar - zNear)
+        return new ArrayMat (
+            [2 * invWidth, 0, 0, 0,
+            0, 2 * invHeight, 0, 0,
+            0, 0, -2 * invDepth, 0,
+            -(right + left) * invWidth, -(top + bottom) * invHeight, -(zFar + zNear) * invDepth, 1],
+            4, 4)
+    }
+
+    lookAt (direction: Vec3, up: Vec3): Mat4
+    {
+        let zaxis = direction.inv ().norm ()
+        let xaxis = up.cross (zaxis).norm ()
+        let yaxis = zaxis.cross (xaxis)
+
+        return new ArrayMat (
+            [xaxis.x, yaxis.x, zaxis.x, 0,
+            xaxis.y, yaxis.y, zaxis.y, 0,
+            xaxis.z, yaxis.z, zaxis.z, 0,
+            0, 0, 0, 1], 4, 4)
+    }
 }
+
+export const newMat2: NewMat<Mat2, Vec2> = new NewArrayMat (2, 2)
+export const newMat3: NewMat<Mat3, Vec3> = new NewArrayMat (3, 3)
+export const newMat4: NewMat4 = new NewArrayMat (4, 4)
 
 class ArrayMat implements Mat2, Mat3, Mat4
 {
@@ -151,7 +192,7 @@ class ArrayMat implements Mat2, Mat3, Mat4
         let p = other.cols
         if (m !== q)
             throw RangeError (`Cannot multiply ${n}x${m} matrix with ${q}x${p} matrix.`)
-        var res = Array<number> (n * p)
+        let res = Array<number> (n * p)
         // Iterate through rows and columns
         for (let i = 0; i < n; i++)
             for (let j = 0; j < p; j++)

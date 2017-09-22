@@ -7,8 +7,7 @@ class NewArrayMat {
         this.cols = cols;
     }
     identityArray() {
-        let r = this.rows;
-        let c = this.cols;
+        let { rows: r, cols: c } = this;
         let arr = Array(r * c);
         for (let i = 0; i < Math.min(r, c); i++)
             arr[i * r + i] = 1;
@@ -18,8 +17,7 @@ class NewArrayMat {
         return new ArrayMat(this.identityArray(), this.rows, this.cols);
     }
     translation(offsets) {
-        let r = this.rows;
-        let c = this.cols;
+        let { rows: r, cols: c } = this;
         let offs = offsets instanceof Array ? offsets : offsets.toArray();
         if (offs.length >= r)
             throw RangeError(`Too many offsets for ${r}x${c} matrix.`);
@@ -30,8 +28,7 @@ class NewArrayMat {
         return new ArrayMat(res, r, c);
     }
     scaling(factors) {
-        let r = this.rows;
-        let c = this.cols;
+        let { rows: r, cols: c } = this;
         let facs = factors instanceof Array ? factors : factors.toArray();
         if (facs.length >= r)
             throw RangeError(`Too many factors for ${r}x${c} matrix.`);
@@ -41,8 +38,7 @@ class NewArrayMat {
         return new ArrayMat(res, r, c);
     }
     rotationX(angle) {
-        let r = this.rows;
-        let c = this.cols;
+        let { rows: r, cols: c } = this;
         if (r < 3 || c < 3)
             throw RangeError(`Rotation around X-axis not defined for ${r}x${c} matrix.`);
         let res = this.identityArray();
@@ -55,8 +51,7 @@ class NewArrayMat {
         return new ArrayMat(res, r, c);
     }
     rotationY(angle) {
-        let r = this.rows;
-        let c = this.cols;
+        let { rows: r, cols: c } = this;
         if (r < 3 || c < 3)
             throw RangeError(`Rotation around Y-axis not defined for ${r}x${c} matrix.`);
         let res = this.identityArray();
@@ -69,8 +64,7 @@ class NewArrayMat {
         return new ArrayMat(res, r, c);
     }
     rotationZ(angle) {
-        let r = this.rows;
-        let c = this.cols;
+        let { rows: r, cols: c } = this;
         let res = this.identityArray();
         let sina = Math.sin(angle);
         let cosa = Math.cos(angle);
@@ -80,7 +74,39 @@ class NewArrayMat {
         res[r + 1] = cosa;
         return new ArrayMat(res, r, c);
     }
+    perspective(left, right, bottom, top, zNear, zFar) {
+        if (zNear <= 0 || zNear >= zFar)
+            throw RangeError("zNear needs to be positive and smaller thatn zFar");
+        let width = right - left;
+        let height = top - bottom;
+        let depth = zFar - zNear;
+        return new ArrayMat([(2.0 * zNear) / width, 0, 0, 0,
+            0, (2.0 * zNear) / height, 0, 0,
+            (right + left) / width, (top + bottom) / height, -(zFar + zNear) / depth, -1,
+            0, 0, -(2.0 * zFar * zNear) / depth, 0], 4, 4);
+    }
+    orthographic(left, right, bottom, top, zNear, zFar) {
+        let invWidth = 1.0 / (right - left);
+        let invHeight = 1.0 / (top - bottom);
+        let invDepth = 1.0 / (zFar - zNear);
+        return new ArrayMat([2 * invWidth, 0, 0, 0,
+            0, 2 * invHeight, 0, 0,
+            0, 0, -2 * invDepth, 0,
+            -(right + left) * invWidth, -(top + bottom) * invHeight, -(zFar + zNear) * invDepth, 1], 4, 4);
+    }
+    lookAt(direction, up) {
+        let zaxis = direction.inv().norm();
+        let xaxis = up.cross(zaxis).norm();
+        let yaxis = zaxis.cross(xaxis);
+        return new ArrayMat([xaxis.x, yaxis.x, zaxis.x, 0,
+            xaxis.y, yaxis.y, zaxis.y, 0,
+            xaxis.z, yaxis.z, zaxis.z, 0,
+            0, 0, 0, 1], 4, 4);
+    }
 }
+exports.newMat2 = new NewArrayMat(2, 2);
+exports.newMat3 = new NewArrayMat(3, 3);
+exports.newMat4 = new NewArrayMat(4, 4);
 class ArrayMat {
     constructor(values, rows, columns) {
         if (values.length !== rows * columns)
@@ -111,7 +137,7 @@ class ArrayMat {
         let p = other.cols;
         if (m !== q)
             throw RangeError(`Cannot multiply ${n}x${m} matrix with ${q}x${p} matrix.`);
-        var res = Array(n * p);
+        let res = Array(n * p);
         // Iterate through rows and columns
         for (let i = 0; i < n; i++)
             for (let j = 0; j < p; j++) {
