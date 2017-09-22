@@ -1,31 +1,43 @@
 import * as FMath from "./FMath"
 import { Dim, Vec, Vec2, Vec3, Vec4, NewVec } from "./Vectors"
 
-export function vec (values: number[]): Vec2 | Vec3 | Vec4
+class NewArrayVec implements NewVec<Vec2>, NewVec<Vec3>, NewVec<Vec4>
 {
-    let len = values.length
-    if (len < 2 || len > 4)
-        throw RangeError ("Number of components must be 2-4.")
-    return new ArrayVec (values);
+    private dimensions: number
+
+    constructor (dims: number)
+    {
+        this.dimensions = dims
+    }
+
+    zero (): Vec2 & Vec3 & Vec4
+    {
+        return new ArrayVec (Array<number> (this.dimensions).fill (0))
+    }
+
+    unif (x: number): Vec2 & Vec3 & Vec4
+    {
+        return new ArrayVec (Array<number> (this.dimensions).fill (x))
+    }
+
+    init (...values: number[]): Vec2 & Vec3 & Vec4
+    {
+        if (values.length != this.dimensions)
+            throw RangeError (`Expected ${this.dimensions} components.`)
+        return new ArrayVec (values)
+    }
+
+    fromArray (array: number[]): Vec2 & Vec3 & Vec4
+    {
+        if (array.length != this.dimensions)
+            throw RangeError (`Expected ${this.dimensions} components.`)
+        return new ArrayVec (array)
+    }
 }
 
-export function vec2 (x: number, y?: number): Vec2
-{
-    return y ? new ArrayVec ([x, y]) : 
-           new ArrayVec ([x, x]) 
-}
-
-export function vec3 (x: number, y?: number, z?: number): Vec3
-{
-    return y && z ? new ArrayVec ([x, y, z]) : 
-           new ArrayVec ([x, x, x]) 
-}
-
-export function vec4 (x: number, y?: number, z?: number, w?: number): Vec4
-{
-    return y && z && w ? new ArrayVec ([x, y, z, w]) :
-           new ArrayVec ([x, x, x, x]) 
-}
+export const newVec2: NewVec<Vec2> = new NewArrayVec (2)
+export const newVec3: NewVec<Vec3> = new NewArrayVec (3)
+export const newVec4: NewVec<Vec4> = new NewArrayVec (4)
 
 class ArrayVec implements Vec2, Vec3, Vec4
 {
@@ -39,6 +51,11 @@ class ArrayVec implements Vec2, Vec3, Vec4
     get dimensions (): number
     {
         return this.array.length
+    }
+
+    component (i: number): number
+    {
+        return this.array[i]
     }
 
     get x (): number { return this.array[Dim.x] }
@@ -224,16 +241,18 @@ class ArrayVec implements Vec2, Vec3, Vec4
         return "[" + this.array.join (" ") + "]"
     }
 
+    toArray (): number[]
+    {
+        return this.array
+    }
+
     toFloat32Array (): Float32Array
     {
         return new Float32Array (this.array)
     }
-}
 
-class NewArrayVec implements NewVec<Vec2>, NewVec<Vec3>, NewVec<Vec4>
-{
-    zero (): Vec2|Vec3|Vec4
+    newVec (): NewArrayVec
     {
-        return new ArrayVec([0, 0])
+        return new NewArrayVec (this.dimensions)
     }
 }

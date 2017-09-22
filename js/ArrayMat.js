@@ -1,3 +1,86 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const FMath = require("./FMath");
+class NewArrayMat {
+    constructor(rows, cols) {
+        this.rows = rows;
+        this.cols = cols;
+    }
+    identityArray() {
+        let r = this.rows;
+        let c = this.cols;
+        let arr = Array(r * c);
+        for (let i = 0; i < Math.min(r, c); i++)
+            arr[i * r + i] = 1;
+        return arr;
+    }
+    identity() {
+        return new ArrayMat(this.identityArray(), this.rows, this.cols);
+    }
+    translation(offsets) {
+        let r = this.rows;
+        let c = this.cols;
+        let offs = offsets instanceof Array ? offsets : offsets.toArray();
+        if (offs.length >= r)
+            throw RangeError(`Too many offsets for ${r}x${c} matrix.`);
+        let res = this.identityArray();
+        let lastCol = c - 1;
+        for (let i = 0; i < offs.length; i++)
+            res[lastCol * r + i] = offs[i];
+        return new ArrayMat(res, r, c);
+    }
+    scaling(factors) {
+        let r = this.rows;
+        let c = this.cols;
+        let facs = factors instanceof Array ? factors : factors.toArray();
+        if (facs.length >= r)
+            throw RangeError(`Too many factors for ${r}x${c} matrix.`);
+        let res = this.identityArray();
+        for (let i = 0; i < facs.length; i++)
+            res[i * r + i] = facs[i];
+        return new ArrayMat(res, r, c);
+    }
+    rotationX(angle) {
+        let r = this.rows;
+        let c = this.cols;
+        if (r < 3 || c < 3)
+            throw RangeError(`Rotation around X-axis not defined for ${r}x${c} matrix.`);
+        let res = this.identityArray();
+        let sina = Math.sin(angle);
+        let cosa = Math.cos(angle);
+        res[r + 1] = cosa;
+        res[r + 2] = sina;
+        res[2 * r + 1] = -sina;
+        res[2 * r + 2] = cosa;
+        return new ArrayMat(res, r, c);
+    }
+    rotationY(angle) {
+        let r = this.rows;
+        let c = this.cols;
+        if (r < 3 || c < 3)
+            throw RangeError(`Rotation around Y-axis not defined for ${r}x${c} matrix.`);
+        let res = this.identityArray();
+        let sina = Math.sin(angle);
+        let cosa = Math.cos(angle);
+        res[0] = cosa;
+        res[2] = -sina;
+        res[2 * r] = sina;
+        res[2 * r + 2] = cosa;
+        return new ArrayMat(res, r, c);
+    }
+    rotationZ(angle) {
+        let r = this.rows;
+        let c = this.cols;
+        let res = this.identityArray();
+        let sina = Math.sin(angle);
+        let cosa = Math.cos(angle);
+        res[0] = cosa;
+        res[1] = sina;
+        res[r] = -sina;
+        res[r + 1] = cosa;
+        return new ArrayMat(res, r, c);
+    }
+}
 class ArrayMat {
     constructor(values, rows, columns) {
         if (values.length !== rows * columns)
@@ -40,12 +123,6 @@ class ArrayMat {
             }
         return new ArrayMat(res, n, p);
     }
-    static identity(rows, cols) {
-        var res = Array(rows * cols);
-        for (let i = 0; i < Math.min(rows, cols); i++)
-            res[i * rows + i] = 1;
-        return new ArrayMat(res, rows, cols);
-    }
     add(other) {
         return other instanceof ArrayMat ?
             this.map2(other, (x, y) => x + y) :
@@ -61,6 +138,10 @@ class ArrayMat {
             this.matrixMultiply(other) :
             this.map(x => x * other);
     }
+    mulVec(other) {
+        let vecm = new ArrayMat(other.toArray(), this.cols, 1);
+        return other.newVec().fromArray(this.matrixMultiply(vecm).array);
+    }
     transpose() {
         let rows = this.cols;
         let cols = this.rows;
@@ -70,6 +151,29 @@ class ArrayMat {
             for (let j = 0; j < cols; j++)
                 res[j * rows + i] = this.array[ind++];
         return new ArrayMat(res, rows, cols);
+    }
+    equals(other) {
+        return this.array.every(function (v, i, a) {
+            return v === other.array[i];
+        });
+    }
+    approxEquals(other, epsilon) {
+        return this.array.every(function (v, i, a) {
+            return FMath.approxEquals(v, other.array[i], epsilon);
+        });
+    }
+    toString() {
+        let res = "";
+        for (let r = 0; r < this.rows; r++) {
+            res += "[ ";
+            for (let c = 0; c < this.cols; c++)
+                res += this.element(r, c) + " ";
+            res += "]\n";
+        }
+        return res;
+    }
+    toFloat32Array() {
+        return new Float32Array(this.array);
     }
 }
 //# sourceMappingURL=ArrayMat.js.map

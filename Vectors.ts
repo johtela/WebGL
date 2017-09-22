@@ -13,7 +13,7 @@ export enum Dim
  * Base interface for all vectory types. Defines methods that have the same signature
  * in all vector variants.
  */
-export interface Vec<V>
+export interface Vec<V extends Vec<V>>
 {
     /**
      * Number dimensions in the vector.
@@ -40,8 +40,11 @@ export interface Vec<V>
     /**
      * Returns the string representation of a vector. Formatted like this: [x y z]
      */
+    component (i: number): number
     toString (): string
+    toArray (): number[]
     toFloat32Array (): Float32Array
+    newVec (): NewVec<V>
     
     inv (): V
     add (other: V | number): V
@@ -68,6 +71,7 @@ export interface NewVec<V extends Vec<V>>
     zero (): V
     unif (x: number): V
     init (...values: number[]): V
+    fromArray (array: number[]): V
 }
 
 export interface Vec2 extends Vec<Vec2>

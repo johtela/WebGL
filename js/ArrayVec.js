@@ -2,34 +2,39 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const FMath = require("./FMath");
 const Vectors_1 = require("./Vectors");
-function vec(values) {
-    let len = values.length;
-    if (len < 2 || len > 4)
-        throw RangeError("Number of components must be 2-4.");
-    return new ArrayVec(values);
+class NewArrayVec {
+    constructor(dims) {
+        this.dimensions = dims;
+    }
+    zero() {
+        return new ArrayVec(Array(this.dimensions).fill(0));
+    }
+    unif(x) {
+        return new ArrayVec(Array(this.dimensions).fill(x));
+    }
+    init(...values) {
+        if (values.length != this.dimensions)
+            throw RangeError(`Expected ${this.dimensions} components.`);
+        return new ArrayVec(values);
+    }
+    fromArray(array) {
+        if (array.length != this.dimensions)
+            throw RangeError(`Expected ${this.dimensions} components.`);
+        return new ArrayVec(array);
+    }
 }
-exports.vec = vec;
-function vec2(x, y) {
-    return y ? new ArrayVec([x, y]) :
-        new ArrayVec([x, x]);
-}
-exports.vec2 = vec2;
-function vec3(x, y, z) {
-    return y && z ? new ArrayVec([x, y, z]) :
-        new ArrayVec([x, x, x]);
-}
-exports.vec3 = vec3;
-function vec4(x, y, z, w) {
-    return y && z && w ? new ArrayVec([x, y, z, w]) :
-        new ArrayVec([x, x, x, x]);
-}
-exports.vec4 = vec4;
+exports.newVec2 = new NewArrayVec(2);
+exports.newVec3 = new NewArrayVec(3);
+exports.newVec4 = new NewArrayVec(4);
 class ArrayVec {
     constructor(values) {
         this.array = values;
     }
     get dimensions() {
         return this.array.length;
+    }
+    component(i) {
+        return this.array[i];
     }
     get x() { return this.array[Vectors_1.Dim.x]; }
     set x(value) { this.array[Vectors_1.Dim.x] = value; }
@@ -147,8 +152,14 @@ class ArrayVec {
     toString() {
         return "[" + this.array.join(" ") + "]";
     }
+    toArray() {
+        return this.array;
+    }
     toFloat32Array() {
         return new Float32Array(this.array);
+    }
+    newVec() {
+        return new NewArrayVec(this.dimensions);
     }
 }
 //# sourceMappingURL=ArrayVec.js.map
