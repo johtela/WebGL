@@ -7,9 +7,10 @@ const ArrayVec_1 = require("./ArrayVec");
 function arbNumArr(size) {
     return jsc.tuple(Array(size).fill(jsc.number));
 }
-const arbVec2 = arbNumArr(2).smap(a => ArrayVec_1.newVec2.fromArray(a), v => [v.x, v.y], v => v.toString());
-const arbVec3 = arbNumArr(3).smap(a => ArrayVec_1.newVec3.fromArray(a), v => [v.x, v.y, v.z], v => v.toString());
-const arbVec4 = arbNumArr(4).smap(a => ArrayVec_1.newVec4.fromArray(a), v => [v.x, v.y, v.z, v.w], v => v.toString());
+exports.arbNumArr = arbNumArr;
+exports.arbVec2 = arbNumArr(2).smap(a => ArrayVec_1.newVec2.fromArray(a), v => [v.x, v.y], v => v.toString());
+exports.arbVec3 = arbNumArr(3).smap(a => ArrayVec_1.newVec3.fromArray(a), v => [v.x, v.y, v.z], v => v.toString());
+exports.arbVec4 = arbNumArr(4).smap(a => ArrayVec_1.newVec4.fromArray(a), v => [v.x, v.y, v.z, v.w], v => v.toString());
 function addAndSubtract(arb, zero) {
     let dim = zero.dimensions;
     jsc.property(`Vec${dim}: v - v = ${zero}`, arb, v => v.sub(v).equals(zero));
@@ -43,38 +44,38 @@ function dotProduct(arb, zero) {
     jsc.property(`Vec${dim}: v1 . v2 == (v2 . norm(v1)) * |v1| when v1 != ${zero}`, nonzero, arb, (v1, v2) => FMath_1.approxEquals(v1.dot(v2), v2.dot(v1.norm()) * v1.len));
 }
 describe("vector addition and subtraction", () => {
-    addAndSubtract(arbVec2, ArrayVec_1.newVec2.zero());
-    addAndSubtract(arbVec3, ArrayVec_1.newVec3.zero());
-    addAndSubtract(arbVec4, ArrayVec_1.newVec4.zero());
+    addAndSubtract(exports.arbVec2, ArrayVec_1.newVec2.zero());
+    addAndSubtract(exports.arbVec3, ArrayVec_1.newVec3.zero());
+    addAndSubtract(exports.arbVec4, ArrayVec_1.newVec4.zero());
 });
 describe("vector multiplication with scalar", () => {
-    multiplyWithScalar(arbVec2);
-    multiplyWithScalar(arbVec3);
-    multiplyWithScalar(arbVec4);
+    multiplyWithScalar(exports.arbVec2);
+    multiplyWithScalar(exports.arbVec3);
+    multiplyWithScalar(exports.arbVec4);
 });
 describe("vector multiplication with vector", () => {
-    multiplyWithVector(arbVec2, ArrayVec_1.newVec2);
-    multiplyWithVector(arbVec3, ArrayVec_1.newVec3);
-    multiplyWithVector(arbVec4, ArrayVec_1.newVec4);
+    multiplyWithVector(exports.arbVec2, ArrayVec_1.newVec2);
+    multiplyWithVector(exports.arbVec3, ArrayVec_1.newVec3);
+    multiplyWithVector(exports.arbVec4, ArrayVec_1.newVec4);
 });
 describe("vector division with scalar", () => {
-    divideWithScalar(arbVec2);
-    divideWithScalar(arbVec3);
-    divideWithScalar(arbVec4);
+    divideWithScalar(exports.arbVec2);
+    divideWithScalar(exports.arbVec3);
+    divideWithScalar(exports.arbVec4);
 });
 describe("vector normalization", () => {
-    normalize(arbVec2, ArrayVec_1.newVec2.zero());
-    normalize(arbVec3, ArrayVec_1.newVec3.zero());
-    normalize(arbVec4, ArrayVec_1.newVec4.zero());
+    normalize(exports.arbVec2, ArrayVec_1.newVec2.zero());
+    normalize(exports.arbVec3, ArrayVec_1.newVec3.zero());
+    normalize(exports.arbVec4, ArrayVec_1.newVec4.zero());
 });
 describe("vector dot product", () => {
-    dotProduct(arbVec2, ArrayVec_1.newVec2.zero());
-    dotProduct(arbVec3, ArrayVec_1.newVec3.zero());
-    dotProduct(arbVec4, ArrayVec_1.newVec4.zero());
+    dotProduct(exports.arbVec2, ArrayVec_1.newVec2.zero());
+    dotProduct(exports.arbVec3, ArrayVec_1.newVec3.zero());
+    dotProduct(exports.arbVec4, ArrayVec_1.newVec4.zero());
 });
 describe("vec3 cross product", () => {
     let zero = ArrayVec_1.newVec3.zero();
-    var nonzero = jsc.suchthat(arbVec3, v => !v.equals(zero));
+    var nonzero = jsc.suchthat(exports.arbVec3, v => !v.equals(zero));
     jsc.property(`Vec3: norm(v1) x norm(v2) . norm(v1|v2) = 1 when v1, v2 != [0 0 0]`, nonzero, nonzero, (v1, v2) => {
         let v1n = v1.norm();
         let v2n = v2.norm();

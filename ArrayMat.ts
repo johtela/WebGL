@@ -4,8 +4,8 @@ import * as FMath from "./FMath"
 
 class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
 {
-    private rows: number
-    private cols: number
+    readonly rows: number
+    readonly cols: number
 
     constructor(rows: number, cols: number) 
     {
@@ -20,6 +20,12 @@ class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
         for (let i = 0; i < Math.min (r, c); i++) 
             arr[i * r + i] = 1
         return arr
+    }
+
+    zero (): Mat2 & Mat3 & Mat4
+    {
+        let { rows: r, cols: c } = this        
+        return new ArrayMat (Array<number>(r * c).fill (0), r, c)
     }
 
     identity (): Mat2 & Mat3 & Mat4
@@ -137,6 +143,11 @@ class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
             xaxis.z, yaxis.z, zaxis.z, 0,
             0, 0, 0, 1], 4, 4)
     }
+
+    fromArray (array: number[], rows: number, cols: number)
+    {
+        return new ArrayMat (array, rows, cols)
+    }
 }
 
 export const newMat2: NewMat<Mat2, Vec2> = new NewArrayMat (2, 2)
@@ -227,7 +238,7 @@ class ArrayMat implements Mat2, Mat3, Mat4
             this.map (x => x * other)
     }
 
-    mulVec<V extends Vec<V>> (other: V): V
+    transform<V extends Vec<V>> (other: V): V
     {
         let vecm = new ArrayMat (other.toArray (), this.cols, 1)
         return other.newVec ().fromArray (this.matrixMultiply (vecm).array)
@@ -274,6 +285,11 @@ class ArrayMat implements Mat2, Mat3, Mat4
             res += "]\n"
         }
         return res        
+    }
+
+    toArray (): number[]
+    {
+        return this.array
     }
 
     toFloat32Array (): Float32Array

@@ -5,18 +5,18 @@ import { approxEquals } from "./FMath";
 import { NewVec, Vec, Vec2, Vec3, Vec4 } from "./Vectors"
 import { newVec2, newVec3, newVec4 } from "./ArrayVec";
 
-function arbNumArr (size: number): jsc.Arbitrary<number[]>
+export function arbNumArr (size: number): jsc.Arbitrary<number[]>
 {
     return jsc.tuple (Array<jsc.Arbitrary<number>>(size).fill (jsc.number));
 }
 
-const arbVec2: jsc.Arbitrary<Vec2> = arbNumArr (2).smap (
+export const arbVec2: jsc.Arbitrary<Vec2> = arbNumArr (2).smap (
     a => newVec2.fromArray (a),
     v => [v.x, v.y], v => v.toString ())
-const arbVec3: jsc.Arbitrary<Vec3> = arbNumArr (3).smap (
+export const arbVec3: jsc.Arbitrary<Vec3> = arbNumArr (3).smap (
     a => newVec3.fromArray (a),
     v => [v.x, v.y, v.z], v => v.toString ())
-const arbVec4: jsc.Arbitrary<Vec4> = arbNumArr (4).smap (
+export const arbVec4: jsc.Arbitrary<Vec4> = arbNumArr (4).smap (
     a => newVec4.fromArray (a),
     v => [v.x, v.y, v.z, v.w], v => v.toString ())
 
@@ -84,44 +84,44 @@ function dotProduct<V extends Vec<V>> (arb: jsc.Arbitrary<V>, zero: V)
 
 describe ("vector addition and subtraction", () =>
 {
-    addAndSubtract<Vec2> (arbVec2, newVec2.zero ())
-    addAndSubtract<Vec3> (arbVec3, newVec3.zero ())
-    addAndSubtract<Vec4> (arbVec4, newVec4.zero ())
+    addAndSubtract (arbVec2, newVec2.zero ())
+    addAndSubtract (arbVec3, newVec3.zero ())
+    addAndSubtract (arbVec4, newVec4.zero ())
 })
 
 describe ("vector multiplication with scalar", () =>
 {
-    multiplyWithScalar<Vec2> (arbVec2)
-    multiplyWithScalar<Vec3> (arbVec3)
-    multiplyWithScalar<Vec4> (arbVec4)
+    multiplyWithScalar (arbVec2)
+    multiplyWithScalar (arbVec3)
+    multiplyWithScalar (arbVec4)
 })
 
 describe ("vector multiplication with vector", () =>
 {
-    multiplyWithVector<Vec2> (arbVec2, newVec2)
-    multiplyWithVector<Vec3> (arbVec3, newVec3)
-    multiplyWithVector<Vec4> (arbVec4, newVec4)
+    multiplyWithVector (arbVec2, newVec2)
+    multiplyWithVector (arbVec3, newVec3)
+    multiplyWithVector (arbVec4, newVec4)
 })
 
 describe ("vector division with scalar", () =>
 {
-    divideWithScalar<Vec2> (arbVec2)
-    divideWithScalar<Vec3> (arbVec3)
-    divideWithScalar<Vec4> (arbVec4)
+    divideWithScalar (arbVec2)
+    divideWithScalar (arbVec3)
+    divideWithScalar (arbVec4)
 })
 
 describe ("vector normalization", () =>
 {
-    normalize<Vec2> (arbVec2, newVec2.zero ())
-    normalize<Vec3> (arbVec3, newVec3.zero ())
-    normalize<Vec4> (arbVec4, newVec4.zero ())
+    normalize (arbVec2, newVec2.zero ())
+    normalize (arbVec3, newVec3.zero ())
+    normalize (arbVec4, newVec4.zero ())
 })
 
 describe ("vector dot product", () =>
 {
-    dotProduct<Vec2> (arbVec2, newVec2.zero ())
-    dotProduct<Vec3> (arbVec3, newVec3.zero ())
-    dotProduct<Vec4> (arbVec4, newVec4.zero ())
+    dotProduct (arbVec2, newVec2.zero ())
+    dotProduct (arbVec3, newVec3.zero ())
+    dotProduct (arbVec4, newVec4.zero ())
 })
 
 describe ("vec3 cross product", () =>

@@ -9,23 +9,29 @@ export interface Mat<M extends Mat<M, V>, V extends Vec<V>>
     add (other: M | number): M
     sub (other: M | number): M
     mul (other: M | number): M
-    mulVec (other: V): V
+    transform (other: V): V
     transpose (): M
 
     equals (other: M): boolean
     approxEquals (other: M, epsilon?: number): boolean
     toString (): string
+    toArray (): number[]
     toFloat32Array (): Float32Array
 }
 
 export interface NewMat<M extends Mat<M, V>, V extends Vec<V>>
 {
+    readonly rows: number
+    readonly cols: number
+
+    zero (): M
     identity (): M
     translation (offsets: V|number[]): M
     scaling (factors: V|number[]): M
     rotationX (angle: number): M
     rotationY (angle: number): M
     rotationZ (angle: number): M
+    fromArray (array: number[], rows: number, cols: number)
 }
 
 export interface Mat2 extends Mat<Mat2, Vec2> {}

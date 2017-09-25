@@ -13,6 +13,10 @@ class NewArrayMat {
             arr[i * r + i] = 1;
         return arr;
     }
+    zero() {
+        let { rows: r, cols: c } = this;
+        return new ArrayMat(Array(r * c).fill(0), r, c);
+    }
     identity() {
         return new ArrayMat(this.identityArray(), this.rows, this.cols);
     }
@@ -103,6 +107,9 @@ class NewArrayMat {
             xaxis.z, yaxis.z, zaxis.z, 0,
             0, 0, 0, 1], 4, 4);
     }
+    fromArray(array, rows, cols) {
+        return new ArrayMat(array, rows, cols);
+    }
 }
 exports.newMat2 = new NewArrayMat(2, 2);
 exports.newMat3 = new NewArrayMat(3, 3);
@@ -164,7 +171,7 @@ class ArrayMat {
             this.matrixMultiply(other) :
             this.map(x => x * other);
     }
-    mulVec(other) {
+    transform(other) {
         let vecm = new ArrayMat(other.toArray(), this.cols, 1);
         return other.newVec().fromArray(this.matrixMultiply(vecm).array);
     }
@@ -197,6 +204,9 @@ class ArrayMat {
             res += "]\n";
         }
         return res;
+    }
+    toArray() {
+        return this.array;
     }
     toFloat32Array() {
         return new Float32Array(this.array);
