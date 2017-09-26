@@ -53,9 +53,14 @@ class ArrayVec implements Vec2, Vec3, Vec4
         return this.array.length
     }
 
-    component (i: number): number
+    component (index: number): number
     {
-        return this.array[i]
+        return this.array[index]
+    }
+
+    with (index: number, value: number): ArrayVec
+    {
+        return new ArrayVec (this.array.map ((v, i, a) => i == index ? value : v))
     }
 
     get x (): number { return this.array[Dim.x] }

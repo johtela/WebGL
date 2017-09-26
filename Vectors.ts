@@ -40,7 +40,8 @@ export interface Vec<V extends Vec<V>>
     /**
      * Returns the string representation of a vector. Formatted like this: [x y z]
      */
-    component (i: number): number
+    component (index: number): number
+    with (index: number, value: number): V
     toString (): string
     toArray (): number[]
     toFloat32Array (): Float32Array

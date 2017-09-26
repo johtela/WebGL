@@ -31,6 +31,21 @@ function transpose(arb) {
     jsc.property(`Mat${d}: m1^T + m2^T = (m1 + m2)^T`, arb, arb, (m1, m2) => m1.transpose().add(m2.transpose())
         .equals(m1.add(m2).transpose()));
 }
+function matrixMultiply(arb, newMat) {
+    let d = newMat.rows;
+    let ident = newMat.identity();
+    jsc.property(`Mat${d}: m * I = m`, arb, m => m.mul(ident).equals(m));
+    jsc.property(`Mat${d}: (m1 * m2) * m3 = m1 * (m2 * m3)`, arb, arb, arb, (m1, m2, m3) => m1.mul(m2).mul(m3).approxEquals(m1.mul(m2.mul(m3))));
+}
+function translation(arb, newMat) {
+    let d = arb.generator(0).dimensions;
+    jsc.property(`Mat${d}: M(v1) = v2 + v2 where M = translate (v2)`, arb, arb, (v1, v2) => {
+        let vec = v1.with(d - 1, 1);
+        let off = v2.with(d - 1, 0);
+        let m = newMat.translation(off.toArray());
+        return m.transform(vec).equals(vec.add(off));
+    });
+}
 describe("matrix transformation is linear", () => {
     transformationIsLinear(arbMat2, VecTests_1.arbVec2);
     transformationIsLinear(arbMat3, VecTests_1.arbVec3);
@@ -50,5 +65,15 @@ describe("matrix transpose", () => {
     transpose(arbMat2);
     transpose(arbMat3);
     transpose(arbMat4);
+});
+describe("matrix multiplication", () => {
+    matrixMultiply(arbMat2, ArrayMat_1.newMat2);
+    matrixMultiply(arbMat3, ArrayMat_1.newMat3);
+    matrixMultiply(arbMat4, ArrayMat_1.newMat4);
+});
+describe("translation matrix", () => {
+    translation(VecTests_1.arbVec2, ArrayMat_1.newMat2);
+    translation(VecTests_1.arbVec3, ArrayMat_1.newMat3);
+    translation(VecTests_1.arbVec4, ArrayMat_1.newMat4);
 });
 //# sourceMappingURL=MatTests.js.map

@@ -33,8 +33,11 @@ class ArrayVec {
     get dimensions() {
         return this.array.length;
     }
-    component(i) {
-        return this.array[i];
+    component(index) {
+        return this.array[index];
+    }
+    with(index, value) {
+        return new ArrayVec(this.array.map((v, i, a) => i == index ? value : v));
     }
     get x() { return this.array[Vectors_1.Dim.x]; }
     set x(value) { this.array[Vectors_1.Dim.x] = value; }

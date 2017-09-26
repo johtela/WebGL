@@ -8,7 +8,7 @@ class NewArrayMat {
     }
     identityArray() {
         let { rows: r, cols: c } = this;
-        let arr = Array(r * c);
+        let arr = Array(r * c).fill(0);
         for (let i = 0; i < Math.min(r, c); i++)
             arr[i * r + i] = 1;
         return arr;
@@ -23,11 +23,11 @@ class NewArrayMat {
     translation(offsets) {
         let { rows: r, cols: c } = this;
         let offs = offsets instanceof Array ? offsets : offsets.toArray();
-        if (offs.length >= r)
+        if (offs.length > r)
             throw RangeError(`Too many offsets for ${r}x${c} matrix.`);
         let res = this.identityArray();
         let lastCol = c - 1;
-        for (let i = 0; i < offs.length; i++)
+        for (let i = 0; i < Math.min(offs.length, r - 1); i++)
             res[lastCol * r + i] = offs[i];
         return new ArrayMat(res, r, c);
     }

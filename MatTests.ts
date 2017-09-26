@@ -64,6 +64,32 @@ function transpose<M extends Mat<M, V>, V extends Vec<V>> (
             .equals (m1.add (m2).transpose ()))
 }
 
+function matrixMultiply<M extends Mat<M, V>, V extends Vec<V>> (
+    arb: jsc.Arbitrary<M>, newMat: NewMat<M, V>)
+{
+    let d = newMat.rows
+    let ident = newMat.identity ()
+    jsc.property (`Mat${d}: m * I = m`, arb, 
+        m => m.mul (ident).equals (m))
+    jsc.property (`Mat${d}: (m1 * m2) * m3 = m1 * (m2 * m3)`, 
+        arb, arb, arb,
+        (m1, m2, m3) => m1.mul (m2).mul (m3).approxEquals (m1.mul (m2.mul (m3))))
+}
+
+function translation<M extends Mat<M, V>, V extends Vec<V>> (
+    arb: jsc.Arbitrary<V>, newMat: NewMat<M, V>)
+{
+    let d = arb.generator (0).dimensions
+    jsc.property (`Mat${d}: M(v1) = v2 + v2 where M = translate (v2)`, 
+        arb, arb, (v1, v2) => 
+        {
+            let vec = v1.with (d - 1, 1)
+            let off = v2.with (d - 1, 0)
+            let m = newMat.translation (off.toArray ())
+            return m.transform (vec).equals (vec.add (off))
+        })
+}
+
 describe ("matrix transformation is linear", () =>
 {
     transformationIsLinear (arbMat2, arbVec2)
@@ -90,4 +116,18 @@ describe ("matrix transpose", () =>
     transpose (arbMat2)
     transpose (arbMat3)
     transpose (arbMat4)
+})
+
+describe ("matrix multiplication", () =>
+{
+    matrixMultiply (arbMat2, newMat2)
+    matrixMultiply (arbMat3, newMat3)
+    matrixMultiply (arbMat4, newMat4)
+})
+
+describe ("translation matrix", () =>
+{
+    translation (arbVec2, newMat2)
+    translation (arbVec3, newMat3)
+    translation (arbVec4, newMat4)
 })
