@@ -84,9 +84,9 @@ function dotProduct<V extends Vec<V>> (arb: jsc.Arbitrary<V>, zero: V)
 
 describe ("vector addition and subtraction", () =>
 {
-    addAndSubtract (arbVec2, newVec2.zero ())
-    addAndSubtract (arbVec3, newVec3.zero ())
-    addAndSubtract (arbVec4, newVec4.zero ())
+    addAndSubtract (arbVec2, newVec2.zero)
+    addAndSubtract (arbVec3, newVec3.zero)
+    addAndSubtract (arbVec4, newVec4.zero)
 })
 
 describe ("vector multiplication with scalar", () =>
@@ -112,22 +112,21 @@ describe ("vector division with scalar", () =>
 
 describe ("vector normalization", () =>
 {
-    normalize (arbVec2, newVec2.zero ())
-    normalize (arbVec3, newVec3.zero ())
-    normalize (arbVec4, newVec4.zero ())
+    normalize (arbVec2, newVec2.zero)
+    normalize (arbVec3, newVec3.zero)
+    normalize (arbVec4, newVec4.zero)
 })
 
 describe ("vector dot product", () =>
 {
-    dotProduct (arbVec2, newVec2.zero ())
-    dotProduct (arbVec3, newVec3.zero ())
-    dotProduct (arbVec4, newVec4.zero ())
+    dotProduct (arbVec2, newVec2.zero)
+    dotProduct (arbVec3, newVec3.zero)
+    dotProduct (arbVec4, newVec4.zero)
 })
 
 describe ("vec3 cross product", () =>
 {
-    let zero = newVec3.zero ()
-    var nonzero = jsc.suchthat (arbVec3, v => !v.equals (zero))
+    var nonzero = jsc.suchthat (arbVec3, v => !v.equals (newVec3.zero))
     jsc.property (`Vec3: norm(v1) x norm(v2) . norm(v1|v2) = 1 when v1, v2 != [0 0 0]`, 
         nonzero, nonzero,
         (v1, v2) =>

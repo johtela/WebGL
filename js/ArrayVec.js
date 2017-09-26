@@ -6,7 +6,7 @@ class NewArrayVec {
     constructor(dims) {
         this.dimensions = dims;
     }
-    zero() {
+    get zero() {
         return new ArrayVec(Array(this.dimensions).fill(0));
     }
     unif(x) {

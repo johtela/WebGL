@@ -44,9 +44,9 @@ function dotProduct(arb, zero) {
     jsc.property(`Vec${dim}: v1 . v2 == (v2 . norm(v1)) * |v1| when v1 != ${zero}`, nonzero, arb, (v1, v2) => FMath_1.approxEquals(v1.dot(v2), v2.dot(v1.norm()) * v1.len));
 }
 describe("vector addition and subtraction", () => {
-    addAndSubtract(exports.arbVec2, ArrayVec_1.newVec2.zero());
-    addAndSubtract(exports.arbVec3, ArrayVec_1.newVec3.zero());
-    addAndSubtract(exports.arbVec4, ArrayVec_1.newVec4.zero());
+    addAndSubtract(exports.arbVec2, ArrayVec_1.newVec2.zero);
+    addAndSubtract(exports.arbVec3, ArrayVec_1.newVec3.zero);
+    addAndSubtract(exports.arbVec4, ArrayVec_1.newVec4.zero);
 });
 describe("vector multiplication with scalar", () => {
     multiplyWithScalar(exports.arbVec2);
@@ -64,18 +64,17 @@ describe("vector division with scalar", () => {
     divideWithScalar(exports.arbVec4);
 });
 describe("vector normalization", () => {
-    normalize(exports.arbVec2, ArrayVec_1.newVec2.zero());
-    normalize(exports.arbVec3, ArrayVec_1.newVec3.zero());
-    normalize(exports.arbVec4, ArrayVec_1.newVec4.zero());
+    normalize(exports.arbVec2, ArrayVec_1.newVec2.zero);
+    normalize(exports.arbVec3, ArrayVec_1.newVec3.zero);
+    normalize(exports.arbVec4, ArrayVec_1.newVec4.zero);
 });
 describe("vector dot product", () => {
-    dotProduct(exports.arbVec2, ArrayVec_1.newVec2.zero());
-    dotProduct(exports.arbVec3, ArrayVec_1.newVec3.zero());
-    dotProduct(exports.arbVec4, ArrayVec_1.newVec4.zero());
+    dotProduct(exports.arbVec2, ArrayVec_1.newVec2.zero);
+    dotProduct(exports.arbVec3, ArrayVec_1.newVec3.zero);
+    dotProduct(exports.arbVec4, ArrayVec_1.newVec4.zero);
 });
 describe("vec3 cross product", () => {
-    let zero = ArrayVec_1.newVec3.zero();
-    var nonzero = jsc.suchthat(exports.arbVec3, v => !v.equals(zero));
+    var nonzero = jsc.suchthat(exports.arbVec3, v => !v.equals(ArrayVec_1.newVec3.zero));
     jsc.property(`Vec3: norm(v1) x norm(v2) . norm(v1|v2) = 1 when v1, v2 != [0 0 0]`, nonzero, nonzero, (v1, v2) => {
         let v1n = v1.norm();
         let v2n = v2.norm();

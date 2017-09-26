@@ -68,7 +68,7 @@ function matrixMultiply<M extends Mat<M, V>, V extends Vec<V>> (
     arb: jsc.Arbitrary<M>, newMat: NewMat<M, V>)
 {
     let d = newMat.rows
-    let ident = newMat.identity ()
+    let ident = newMat.identity
     jsc.property (`Mat${d}: m * I = m`, arb, 
         m => m.mul (ident).equals (m))
     jsc.property (`Mat${d}: (m1 * m2) * m3 = m1 * (m2 * m3)`, 
@@ -79,14 +79,62 @@ function matrixMultiply<M extends Mat<M, V>, V extends Vec<V>> (
 function translation<M extends Mat<M, V>, V extends Vec<V>> (
     arb: jsc.Arbitrary<V>, newMat: NewMat<M, V>)
 {
-    let d = arb.generator (0).dimensions
-    jsc.property (`Mat${d}: M(v1) = v2 + v2 where M = translate (v2)`, 
-        arb, arb, (v1, v2) => 
+    let d = newMat.rows
+    jsc.property (`Mat${d}: M(v1) = v1 + v2 where M = translate (v2)`, 
+        arb, arb, 
+        (v1, v2) => 
         {
             let vec = v1.with (d - 1, 1)
             let off = v2.with (d - 1, 0)
             let m = newMat.translation (off.toArray ())
             return m.transform (vec).equals (vec.add (off))
+        })
+}
+
+function scaling<M extends Mat<M, V>, V extends Vec<V>> (
+    arb: jsc.Arbitrary<V>, newMat: NewMat<M, V>)
+{
+    let d = newMat.rows
+    jsc.property (`Mat${d}: M(v1) = v1 * v2 where M = scale (v2)`, 
+        arb, arb, 
+        (v1, v2) => newMat.scaling (v2).transform (v1).equals (v1.mul (v2)))
+}
+
+function rotationZ<M extends Mat<M, V>, V extends Vec<V>> (
+    arb: jsc.Arbitrary<V>, newMat: NewMat<M, V>, zero: V)
+{
+    let d = newMat.rows
+    let arbnz = jsc.suchthat (arb, v => !v.equals (zero)) 
+    jsc.property (`Mat${d}: | M(v) | = | v | where M = rotateZ (a)`, 
+        arb, jsc.number, 
+        (v, a) => approxEquals (newMat.rotationZ (a).transform (v).len, v.len))
+    jsc.property (`Mat${d}: M(v1) . M(v2)  = v1 . v2 where M = rotateZ (a) and v1, v2 != ${zero}`, 
+        arbnz, arbnz, jsc.number, 
+        (v1, v2, a) => {
+            let m = newMat.rotationZ (a)
+            let vr1 = m.transform (v1)
+            let vr2 = m.transform (v2)
+            return approxEquals (v1.dot (v2), vr1.dot (vr2))
+        })
+}
+
+function rotationXY<M extends Mat<M, V>, V extends Vec<V>> (
+    arb: jsc.Arbitrary<V>, newMat: NewMat<M, V>, zero: V)
+{
+    let d = newMat.rows
+    let arbnz = jsc.suchthat (arb, v => !v.equals (zero)) 
+    jsc.property (`Mat${d}: | M(v) | = | v | where M = rotateX (a) * rotateY (b)`, 
+        arb, jsc.number, jsc.number,  
+        (v, a, b) => approxEquals (
+            newMat.rotationX (a).mul (newMat.rotationY (b)).transform (v).len, v.len))
+    jsc.property (`Mat${d}: M(v1) . M(v2)  = v1 . v2 where ` + 
+        `M = rotateX (a) * rotateY (b) and v1, v2 != ${zero}`, 
+        arbnz, arbnz, jsc.number, jsc.number,
+        (v1, v2, a, b) => {
+            let m = newMat.rotationX (a).mul (newMat.rotationY (b))
+            let vr1 = m.transform (v1)
+            let vr2 = m.transform (v2)
+            return approxEquals (v1.dot (v2), vr1.dot (vr2))
         })
 }
 
@@ -99,9 +147,9 @@ describe ("matrix transformation is linear", () =>
 
 describe ("matrix addition and subtraction", () =>
 {
-    addAndSubtract (arbMat2, newMat2.zero ())
-    addAndSubtract (arbMat3, newMat3.zero ())
-    addAndSubtract (arbMat4, newMat4.zero ())
+    addAndSubtract (arbMat2, newMat2.zero)
+    addAndSubtract (arbMat3, newMat3.zero)
+    addAndSubtract (arbMat4, newMat4.zero)
 })
 
 describe ("matrix multiplication with scalar", () =>
@@ -131,3 +179,24 @@ describe ("translation matrix", () =>
     translation (arbVec3, newMat3)
     translation (arbVec4, newMat4)
 })
+
+describe ("scaling matrix", () =>
+{
+    scaling (arbVec2, newMat2)
+    scaling (arbVec3, newMat3)
+    scaling (arbVec4, newMat4)
+})
+
+describe ("rotation around Z axis", () =>
+{
+    rotationZ (arbVec2, newMat2, newVec2.zero)
+    rotationZ (arbVec3, newMat3, newVec3.zero)
+    rotationZ (arbVec4, newMat4, newVec4.zero)
+})
+
+describe ("rotation around X and Y axis", () =>
+{
+    rotationXY (arbVec3, newMat3, newVec3.zero)
+    rotationXY (arbVec4, newMat4, newVec4.zero)
+})
+

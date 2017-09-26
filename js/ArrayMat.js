@@ -13,11 +13,11 @@ class NewArrayMat {
             arr[i * r + i] = 1;
         return arr;
     }
-    zero() {
+    get zero() {
         let { rows: r, cols: c } = this;
         return new ArrayMat(Array(r * c).fill(0), r, c);
     }
-    identity() {
+    get identity() {
         return new ArrayMat(this.identityArray(), this.rows, this.cols);
     }
     translation(offsets) {
@@ -34,10 +34,10 @@ class NewArrayMat {
     scaling(factors) {
         let { rows: r, cols: c } = this;
         let facs = factors instanceof Array ? factors : factors.toArray();
-        if (facs.length >= r)
+        if (facs.length > r)
             throw RangeError(`Too many factors for ${r}x${c} matrix.`);
         let res = this.identityArray();
-        for (let i = 0; i < facs.length; i++)
+        for (let i = 0; i < Math.min(facs.length, r, c); i++)
             res[i * r + i] = facs[i];
         return new ArrayMat(res, r, c);
     }

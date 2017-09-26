@@ -10,7 +10,7 @@ class NewArrayVec implements NewVec<Vec2>, NewVec<Vec3>, NewVec<Vec4>
         this.dimensions = dims
     }
 
-    zero (): Vec2 & Vec3 & Vec4
+    get zero (): Vec2 & Vec3 & Vec4
     {
         return new ArrayVec (Array<number> (this.dimensions).fill (0))
     }

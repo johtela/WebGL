@@ -69,7 +69,7 @@ export interface Vec<V extends Vec<V>>
 
 export interface NewVec<V extends Vec<V>>
 {
-    zero (): V
+    readonly zero: V
     unif (x: number): V
     init (...values: number[]): V
     fromArray (array: number[]): V

@@ -23,9 +23,8 @@ export interface NewMat<M extends Mat<M, V>, V extends Vec<V>>
 {
     readonly rows: number
     readonly cols: number
-
-    zero (): M
-    identity (): M
+    readonly zero: M
+    readonly identity: M
     translation (offsets: V|number[]): M
     scaling (factors: V|number[]): M
     rotationX (angle: number): M
