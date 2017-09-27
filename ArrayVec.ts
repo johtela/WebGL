@@ -1,5 +1,6 @@
 import * as FMath from "./FMath"
 import { Dim, Vec, Vec2, Vec3, Vec4, NewVec } from "./Vectors"
+import * as ArrayHelper from "./ArrayHelper";
 
 class NewArrayVec implements NewVec<Vec2>, NewVec<Vec3>, NewVec<Vec4>
 {
@@ -12,12 +13,12 @@ class NewArrayVec implements NewVec<Vec2>, NewVec<Vec3>, NewVec<Vec4>
 
     get zero (): Vec2 & Vec3 & Vec4
     {
-        return new ArrayVec (Array<number> (this.dimensions).fill (0))
+        return new ArrayVec (ArrayHelper.fill (Array<number> (this.dimensions), 0))
     }
 
     unif (x: number): Vec2 & Vec3 & Vec4
     {
-        return new ArrayVec (Array<number> (this.dimensions).fill (x))
+        return new ArrayVec (ArrayHelper.fill (Array<number> (this.dimensions), x))
     }
 
     init (...values: number[]): Vec2 & Vec3 & Vec4

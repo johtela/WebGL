@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function approxEquals(x, y, epsilon = 0.000001) {
+function approxEquals(x, y, epsilon) {
+    if (epsilon === void 0) { epsilon = 0.000001; }
     if (x === y)
         return true;
-    let absX = Math.abs(x);
-    let absY = Math.abs(y);
-    let diff = Math.abs(x - y);
+    var absX = Math.abs(x);
+    var absY = Math.abs(y);
+    var diff = Math.abs(x - y);
     if (x * y == 0)
         return diff < (epsilon * epsilon);
     else
@@ -31,7 +32,7 @@ function step(edge, value) {
 }
 exports.step = step;
 function smoothStep(edgeLower, edgeUpper, value) {
-    let t = clamp((value - edgeLower) / (edgeUpper - edgeLower), 0, 1);
+    var t = clamp((value - edgeLower) / (edgeUpper - edgeLower), 0, 1);
     return t * t * (3 - (2 * t));
 }
 exports.smoothStep = smoothStep;

@@ -11,6 +11,7 @@ export interface Mat<M extends Mat<M, V>, V extends Vec<V>>
     mul (other: M | number): M
     transform (other: V): V
     transpose (): M
+    determinant (): number
     invert (): M
 
     equals (other: M): boolean

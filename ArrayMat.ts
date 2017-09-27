@@ -1,6 +1,7 @@
 import { Vec, Vec2, Vec3, Vec4 } from "./Vectors";
 import { NewMat, NewMat4, Mat2, Mat3, Mat4 } from "./Matrices";
 import * as FMath from "./FMath"
+import * as ArrayHelper from "./ArrayHelper";
 
 class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
 {
@@ -16,7 +17,7 @@ class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
     private identityArray (): number[]
     {
         let { rows: r, cols: c } = this        
-        let arr = Array<number> (r * c).fill (0)
+        let arr = ArrayHelper.fill (Array<number> (r * c), 0)
         for (let i = 0; i < Math.min (r, c); i++) 
             arr[i * r + i] = 1
         return arr
@@ -25,7 +26,7 @@ class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
     get zero (): Mat2 & Mat3 & Mat4
     {
         let { rows: r, cols: c } = this        
-        return new ArrayMat (Array<number>(r * c).fill (0), r, c)
+        return new ArrayMat (ArrayHelper.fill (Array<number>(r * c), 0), r, c)
     }
 
     get identity (): Mat2 & Mat3 & Mat4
@@ -256,9 +257,14 @@ class ArrayMat implements Mat2, Mat3, Mat4
         return new ArrayMat (res, rows, cols)
     }
 
+    determinant (): number
+    {
+        return this.determinantFA ();
+    }
+
     invert (): ArrayMat
     {
-
+        return ArrayMat.fromJaggedArray (this.inverseFA ())
     }
 
     private toJaggedArray (): number[][]
@@ -269,9 +275,21 @@ class ArrayMat implements Mat2, Mat3, Mat4
         {
             res[r] = Array<number>(cols)
             for (let c = 0; c < cols; c++)
-                res[r][c] = array[c * rows + c]
+                res[r][c] = array[c * rows + r]
         }
         return res
+    }
+
+    private static fromJaggedArray (matrix: number[][]): ArrayMat
+    {
+        let rows = matrix.length
+        let cols = matrix[0].length
+        let arr = Array<number>(cols * rows)
+        let i = 0
+        for (let c = 0; c < cols; c++)
+            for (let r = 0; r < rows; r++)
+                arr[i++] = matrix[r][c]
+        return new ArrayMat (arr, rows, cols)
     }
 
     private decomposeFA (matrix: number[][]): [ number[], number ] 
@@ -324,32 +342,18 @@ class ArrayMat implements Mat2, Mat3, Mat4
     private determinantFA (): number
     {
         let matrix = this.toJaggedArray ()
-        let [ _, result ] = this.decomposeFA (matrix)
+        let result = this.decomposeFA (matrix)[1]
         for (let i = 0; i < matrix.length; i++)
             result *= matrix[i][i]
         return result
-    }
-
-    private static clone (array: number[][]): number[][]
-    {
-        let rows = array.length
-        let res = Array<number[]>(rows)
-        for (let r = 0; r < rows; r++)
-        {
-            var cols = array[r].length
-            res[r] = Array<number>(cols)
-            for (let c = 0; c < cols; c++)
-                res[r][c] = array[r][c]
-        }
-        return res
     }
 
     private inverseFA (): number[][]
     {
         let matrix = this.toJaggedArray ()
         let rows = matrix.length
-        let result = ArrayMat.clone (matrix)
-        let [ perm, _ ] = this.decomposeFA (matrix)
+        let result = ArrayHelper.clone (matrix)
+        let perm = this.decomposeFA (matrix)[0]
         let b = Array<number>(rows)
         for (let c = 0; c < rows; c++)
         {
@@ -367,24 +371,22 @@ class ArrayMat implements Mat2, Mat3, Mat4
         // before calling this helper, permute b using the perm array from 
         // MatrixDecompose that generated luMatrix
         let rows = luMatrix.length
-        let res = Array<number> (rows)
-        Array.Copy (vector, res, rows);
+        let res = vector.slice ()
 
-        for (int r = 1; r < rows; ++r)
+        for (let r = 1; r < rows; r++)
         {
-            var sum = res[r];
-            for (int c = 0; c < r; ++c)
-                sum -= luMatrix[r][c] * res[c];
-            res[r] = sum;
+            let sum = res[r]
+            for (let c = 0; c < r; c++)
+                sum -= luMatrix[r][c] * res[c]
+            res[r] = sum
         }
-
-        res[rows - 1] /= luMatrix[rows - 1][rows - 1];
-        for (int r = rows - 2; r >= 0; --r)
+        res[rows - 1] /= luMatrix[rows - 1][rows - 1]
+        for (let r = rows - 2; r >= 0; r--)
         {
-            var sum = res[r];
-            for (int c = r + 1; c < rows; ++c)
-                sum -= luMatrix[r][c] * res[c];
-            res[r] = sum / luMatrix[r][r];
+            let sum = res[r]
+            for (let c = r + 1; c < rows; c++)
+                sum -= luMatrix[r][c] * res[c]
+            res[r] = sum / luMatrix[r][r]
         }
         return res;
     }

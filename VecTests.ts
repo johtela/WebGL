@@ -1,13 +1,14 @@
 ///<reference path="./node_modules/jsverify/lib/jsverify.d.ts"/>
 
-import * as jsc from "jsverify";
-import { approxEquals } from "./FMath";
+import * as jsc from "jsverify"
+import { approxEquals } from "./FMath"
 import { NewVec, Vec, Vec2, Vec3, Vec4 } from "./Vectors"
-import { newVec2, newVec3, newVec4 } from "./ArrayVec";
+import { newVec2, newVec3, newVec4 } from "./ArrayVec"
+import * as ArrayHelper from "./ArrayHelper";
 
 export function arbNumArr (size: number): jsc.Arbitrary<number[]>
 {
-    return jsc.tuple (Array<jsc.Arbitrary<number>>(size).fill (jsc.number));
+    return jsc.tuple (ArrayHelper.fill (Array<jsc.Arbitrary<number>>(size), jsc.number));
 }
 
 export const arbVec2: jsc.Arbitrary<Vec2> = arbNumArr (2).smap (
@@ -42,7 +43,7 @@ function multiplyWithVector<V extends Vec<V>> (arb: jsc.Arbitrary<V>,
     newVec: NewVec<V>)
 {
     let dim = arb.generator (0).dimensions
-    jsc.property (`Vec${dim}: v * s = v * v.${'s'.repeat (dim)}`, 
+    jsc.property (`Vec${dim}: v * s = v * v.${ArrayHelper.repeat('s', dim)}`, 
         arb, jsc.number,  
         (v, s) => v.mul (s).approxEquals (v.mul (newVec.unif (s))))
 }

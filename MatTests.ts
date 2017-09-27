@@ -138,6 +138,17 @@ function rotationXY<M extends Mat<M, V>, V extends Vec<V>> (
         })
 }
 
+function inverse<M extends Mat<M, V>, V extends Vec<V>> (
+    arb: jsc.Arbitrary<M>, newMat: NewMat<M, V>)
+{
+    let ident = newMat.identity
+    let zero = newMat.zero
+    let d = ident.rows
+    jsc.property (`Mat${d}: m * m^-1 = I`, 
+        jsc.suchthat (arb, m => m.determinant () != 0),  
+        m => m.mul (m.invert ()).approxEquals (ident))
+}
+
 describe ("matrix transformation is linear", () =>
 {
     transformationIsLinear (arbMat2, arbVec2)
@@ -200,3 +211,9 @@ describe ("rotation around X and Y axis", () =>
     rotationXY (arbVec4, newMat4, newVec4.zero)
 })
 
+describe ("matrix inverse", () =>
+{
+    inverse (arbMat2, newMat2)
+    inverse (arbMat3, newMat3)
+    inverse (arbMat4, newMat4)
+})
