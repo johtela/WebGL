@@ -256,6 +256,139 @@ class ArrayMat implements Mat2, Mat3, Mat4
         return new ArrayMat (res, rows, cols)
     }
 
+    invert (): ArrayMat
+    {
+
+    }
+
+    private toJaggedArray (): number[][]
+    {
+        let { rows, cols, array } = this
+        let res = Array<number[]> (rows)
+        for (let r = 0; r < rows; r++)
+        {
+            res[r] = Array<number>(cols)
+            for (let c = 0; c < cols; c++)
+                res[r][c] = array[c * rows + c]
+        }
+        return res
+    }
+
+    private decomposeFA (matrix: number[][]): [ number[], number ] 
+    {
+        let { rows, cols } = this
+        if (rows != cols)
+            throw RangeError ("Cannot decompose non-square matrix")
+        // set up row permutation result
+        let perm = Array<number>(rows)
+        for (let i = 0; i < rows; i++) 
+            perm[i] = i
+        // toggle tracks row swaps. +1 -> even, -1 -> odd. used by MatrixDeterminant
+        let toggle = 1; 
+        for (let c = 0; c < cols - 1; c++) // each column
+        {
+            let colMax = Math.abs (matrix[c][c]) // find largest value in col j
+            let pRow = c
+            for (let r = c + 1; r < rows; r++)
+                if (matrix[r][c] > colMax)
+                {
+                    colMax = matrix[r][c]
+                    pRow = r
+                }
+            if (pRow != c) 
+            {
+                // if largest value not on pivot, swap rows
+                let rowPtr = matrix[pRow]
+                matrix[pRow] = matrix[c]
+                matrix[c] = rowPtr
+                // and swap perm info
+                let tmp = perm[pRow]
+                perm[pRow] = perm[c]
+                perm[c] = tmp
+                // adjust the row-swap toggle
+                toggle = -toggle                 
+            }
+            // handle the case where the input matrix is singular
+            if (matrix[c][c] == 0)
+                matrix[c][c] = 0.000001
+            for (let r = c + 1; r < rows; r++)
+            {
+                matrix[r][c] /= matrix[c][c]
+                for (let k = c + 1; k < cols; k++)
+                    matrix[r][k] -= matrix[r][c] * matrix[c][k]
+            }
+        }
+        return [ perm, toggle ]
+    }
+
+    private determinantFA (): number
+    {
+        let matrix = this.toJaggedArray ()
+        let [ _, result ] = this.decomposeFA (matrix)
+        for (let i = 0; i < matrix.length; i++)
+            result *= matrix[i][i]
+        return result
+    }
+
+    private static clone (array: number[][]): number[][]
+    {
+        let rows = array.length
+        let res = Array<number[]>(rows)
+        for (let r = 0; r < rows; r++)
+        {
+            var cols = array[r].length
+            res[r] = Array<number>(cols)
+            for (let c = 0; c < cols; c++)
+                res[r][c] = array[r][c]
+        }
+        return res
+    }
+
+    private inverseFA (): number[][]
+    {
+        let matrix = this.toJaggedArray ()
+        let rows = matrix.length
+        let result = ArrayMat.clone (matrix)
+        let [ perm, _ ] = this.decomposeFA (matrix)
+        let b = Array<number>(rows)
+        for (let c = 0; c < rows; c++)
+        {
+            for (let r = 0; r < rows; r++)
+                b[r] = c == perm[r] ? 1 : 0
+            let x = ArrayMat.helperSolvef (matrix, b) 
+            for (let r = 0; r < rows; r++)
+                result[r][c] = x[r]
+        }
+        return result
+    }
+
+    private static helperSolvef (luMatrix: number[][], vector: number[]): number[] 
+    {
+        // before calling this helper, permute b using the perm array from 
+        // MatrixDecompose that generated luMatrix
+        let rows = luMatrix.length
+        let res = Array<number> (rows)
+        Array.Copy (vector, res, rows);
+
+        for (int r = 1; r < rows; ++r)
+        {
+            var sum = res[r];
+            for (int c = 0; c < r; ++c)
+                sum -= luMatrix[r][c] * res[c];
+            res[r] = sum;
+        }
+
+        res[rows - 1] /= luMatrix[rows - 1][rows - 1];
+        for (int r = rows - 2; r >= 0; --r)
+        {
+            var sum = res[r];
+            for (int c = r + 1; c < rows; ++c)
+                sum -= luMatrix[r][c] * res[c];
+            res[r] = sum / luMatrix[r][r];
+        }
+        return res;
+    }
+
     equals (other: ArrayMat): boolean
     {
         return this.array.every (
