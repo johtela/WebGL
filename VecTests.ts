@@ -1,4 +1,4 @@
-///<reference path="./node_modules/jsverify/lib/jsverify.d.ts"/>
+///<reference types="jsverify"/>
 
 import * as jsc from "jsverify"
 import { approxEquals } from "./FMath"

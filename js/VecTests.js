@@ -1,5 +1,5 @@
 "use strict";
-///<reference path="./node_modules/jsverify/lib/jsverify.d.ts"/>
+///<reference types="jsverify"/>
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsc = require("jsverify");
 var FMath_1 = require("./FMath");

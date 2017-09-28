@@ -1,5 +1,5 @@
 "use strict";
-///<reference path="./node_modules/jsverify/lib/jsverify.d.ts"/>
+///<reference types="jsverify"/>
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsc = require("jsverify");
 var FMath_1 = require("./FMath");
@@ -79,7 +79,7 @@ function inverse(arb, newMat) {
     var ident = newMat.identity;
     var zero = newMat.zero;
     var d = ident.rows;
-    jsc.property("Mat" + d + ": m * m^-1 = I", jsc.suchthat(arb, function (m) { return m.determinant() != 0; }), function (m) { return m.mul(m.invert()).approxEquals(ident); });
+    jsc.property("Mat" + d + ": m * m^-1 = I when det(m) != 0", jsc.suchthat(arb, function (m) { return m.determinant() != 0; }), function (m) { return m.mul(m.invert()).approxEquals(ident); });
 }
 describe("matrix transformation is linear", function () {
     transformationIsLinear(arbMat2, VecTests_1.arbVec2);

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var FMath = require("./FMath");
 var ArrayHelper = require("./ArrayHelper");
-var NewArrayMat = /** @class */ (function () {
+var NewArrayMat = (function () {
     function NewArrayMat(rows, cols) {
         this.rows = rows;
         this.cols = cols;
@@ -124,7 +124,7 @@ var NewArrayMat = /** @class */ (function () {
 exports.newMat2 = new NewArrayMat(2, 2);
 exports.newMat3 = new NewArrayMat(3, 3);
 exports.newMat4 = new NewArrayMat(4, 4);
-var ArrayMat = /** @class */ (function () {
+var ArrayMat = (function () {
     function ArrayMat(values, rows, columns) {
         if (values.length !== rows * columns)
             throw RangeError("Array length has to be equeal rows * columns.");

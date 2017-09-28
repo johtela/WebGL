@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var FMath = require("./FMath");
 var Vectors_1 = require("./Vectors");
 var ArrayHelper = require("./ArrayHelper");
-var NewArrayVec = /** @class */ (function () {
+var NewArrayVec = (function () {
     function NewArrayVec(dims) {
         this.dimensions = dims;
     }
@@ -36,7 +36,7 @@ var NewArrayVec = /** @class */ (function () {
 exports.newVec2 = new NewArrayVec(2);
 exports.newVec3 = new NewArrayVec(3);
 exports.newVec4 = new NewArrayVec(4);
-var ArrayVec = /** @class */ (function () {
+var ArrayVec = (function () {
     function ArrayVec(values) {
         this.array = values;
     }

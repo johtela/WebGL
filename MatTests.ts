@@ -1,4 +1,4 @@
-///<reference path="./node_modules/jsverify/lib/jsverify.d.ts"/>
+///<reference types="jsverify"/>
 
 import * as jsc from "jsverify";
 import { approxEquals } from "./FMath";
@@ -144,7 +144,7 @@ function inverse<M extends Mat<M, V>, V extends Vec<V>> (
     let ident = newMat.identity
     let zero = newMat.zero
     let d = ident.rows
-    jsc.property (`Mat${d}: m * m^-1 = I`, 
+    jsc.property (`Mat${d}: m * m^-1 = I when det(m) != 0`, 
         jsc.suchthat (arb, m => m.determinant () != 0),  
         m => m.mul (m.invert ()).approxEquals (ident))
 }
