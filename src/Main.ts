@@ -9,7 +9,8 @@ const fsSource: string = require ('./shaders/simple.frag')
 //
 // Initialize a shader program, so WebGL knows how to draw our data
 //
-function initShaderProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string): WebGLProgram | null 
+function initShaderProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string): 
+    WebGLProgram | null 
 {
     const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
     const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
