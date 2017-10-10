@@ -1,3 +1,5 @@
+import { Vec, Vec2, Vec3, Vec4 } from "./Vectors";
+
 export type VertAttrGetter<T> = (object) => T
 
 export class VertAttr<T>
@@ -32,7 +34,7 @@ export class VertAttr<T>
 
     sizeInBytes (gl: WebGLRenderingContext): number
     {
-        return Math.ceil (this.typeSize (gl) / 4) * 4
+        return Math.ceil (this.typeSize (gl) * this.count / 4) * 4
     }
 }
 
@@ -66,3 +68,22 @@ export function float (gl: WebGLRenderingContext, getter: VertAttrGetter<number>
     return new VertAttr (gl.FLOAT, 1, lift (getter))
 }
 
+function liftVec<V extends Vec<V>> (getter: VertAttrGetter<V>): (object) => number[]
+{
+    return obj => getter (obj).toArray ()
+}
+
+export function vec2 (gl: WebGLRenderingContext, getter: VertAttrGetter<Vec2>): VertAttr<Vec2>
+{
+    return new VertAttr (gl.FLOAT, 2, liftVec (getter))
+}
+
+export function vec3 (gl: WebGLRenderingContext, getter: VertAttrGetter<Vec3>): VertAttr<Vec3>
+{
+    return new VertAttr (gl.FLOAT, 3, liftVec (getter))
+}
+
+export function vec4 (gl: WebGLRenderingContext, getter: VertAttrGetter<Vec4>): VertAttr<Vec4>
+{
+    return new VertAttr (gl.FLOAT, 4, liftVec (getter))
+}
