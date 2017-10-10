@@ -12,9 +12,31 @@ export class VertAttr<T>
         this.count = count
         this.getter = getter
     }
+
+    typeSize (gl: WebGLRenderingContext): number
+    {
+        switch (this.type) 
+        {
+            case gl.BYTE: 
+            case gl.UNSIGNED_BYTE: 
+                return 1 * this.count
+            case gl.SHORT:
+            case gl.UNSIGNED_SHORT: 
+                return 2 * this.count
+            case gl.FLOAT:
+                return 4 * this.count
+            default:
+                throw Error ("Unsupported attribute type.")
+        }
+    }
+
+    sizeInBytes (gl: WebGLRenderingContext): number
+    {
+        return Math.ceil (this.typeSize (gl) / 4) * 4
+    }
 }
 
-function lift (fun: (object) => number): (object) => number[]
+function lift<T> (fun: (object) => T): (object) => T[]
 {
     return obj => [ fun (obj) ]
 }
