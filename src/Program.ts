@@ -1,5 +1,6 @@
 import { VertexAttr, VertexDef } from "./VertexAttr"
 import { ShaderType, Shader } from "./Shader"
+import { VertexBuffer, IndexBuffer } from "./Buffers";
 
 export class Program<V>
 {
@@ -34,4 +35,30 @@ export class Program<V>
         return prg
     }
 
+    private initVertexAttrArrays ()
+    {
+        let gl = this.gl
+        this.vertexDef.vertexAttrs.forEach (attr =>
+        {
+            gl.vertexAttribPointer(
+                attr.location,
+                attr.numComponents,
+                attr.glType (gl),
+                false,
+                this.vertexDef.stride,
+                attr.offset);
+            gl.enableVertexAttribArray(attr.location);
+        })
+    }
+
+    drawElements (mode: number, vbuffer: VertexBuffer<V>, ibuffer: IndexBuffer)
+    {
+        let gl = this.gl
+        gl.bindBuffer(gl.ARRAY_BUFFER, vbuffer.glBuffer)
+        gl.bindBuffer (gl.ELEMENT_ARRAY_BUFFER, ibuffer.glBuffer)
+        this.initVertexAttrArrays ()
+        gl.drawElements (mode, ibuffer.count, gl.UNSIGNED_SHORT, 0)
+        gl.bindBuffer(gl.ARRAY_BUFFER, null)
+        gl.bindBuffer (gl.ELEMENT_ARRAY_BUFFER, null)
+    }
 }

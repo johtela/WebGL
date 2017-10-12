@@ -12,7 +12,7 @@ export class Shader
         this.type = type
         let shader = gl.createShader(this.glShaderType);
         if (shader === null)
-            throw Error (`Failed to create ${type} shader`)
+            throw Error (`Failed to create ${type} shader.`)
         
         gl.shaderSource(shader, source);
         gl.compileShader(shader);

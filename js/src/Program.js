@@ -21,6 +21,23 @@ var Program = (function () {
                 gl.getProgramInfoLog(prg));
         return prg;
     };
+    Program.prototype.initVertexAttrArrays = function () {
+        var _this = this;
+        var gl = this.gl;
+        this.vertexDef.vertexAttrs.forEach(function (attr) {
+            gl.vertexAttribPointer(attr.location, attr.numComponents, attr.glType(gl), false, _this.vertexDef.stride, attr.offset);
+            gl.enableVertexAttribArray(attr.location);
+        });
+    };
+    Program.prototype.drawElements = function (mode, vbuffer, ibuffer) {
+        var gl = this.gl;
+        gl.bindBuffer(gl.ARRAY_BUFFER, vbuffer.glBuffer);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuffer.glBuffer);
+        this.initVertexAttrArrays();
+        gl.drawElements(mode, ibuffer.count, gl.UNSIGNED_SHORT, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+    };
     return Program;
 }());
 exports.Program = Program;

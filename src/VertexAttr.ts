@@ -6,16 +6,16 @@ export class VertexAttr<V>
 {
     readonly name: string
     readonly type: VertexAttrType
-    readonly componentCount: number
+    readonly numComponents: number
     readonly getter: (V) => number[]
 
     location: number
     offset: number
 
-    constructor (name: string, type: VertexAttrType, count: number, getter: (V) => number[]) 
+    constructor (name: string, type: VertexAttrType, components: number, getter: (V) => number[]) 
     {
         this.type = type
-        this.componentCount = count
+        this.numComponents = components
         this.getter = getter
     }
 
@@ -38,7 +38,7 @@ export class VertexAttr<V>
 
     get sizeInBytes (): number
     {
-        return Math.ceil (this.typeSize * this.componentCount / 4) * 4
+        return Math.ceil (this.typeSize * this.numComponents / 4) * 4
     }
 
     glType (gl: WebGLRenderingContext): number
@@ -58,12 +58,12 @@ export class VertexAttr<V>
 export class VertexDef<V>
 {
     readonly vertexAttrs: VertexAttr<V>[]
-    readonly size: number
+    readonly stride: number
     
     constructor (attrs: VertexAttr<V>[])
     {
         this.vertexAttrs = attrs
-        this.size = this.initVertexAttrOffsets ()
+        this.stride = this.initVertexAttrOffsets ()
     }
 
     initVertexAttrOffsets (): number

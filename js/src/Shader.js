@@ -6,7 +6,7 @@ var Shader = (function () {
         this.type = type;
         var shader = gl.createShader(this.glShaderType);
         if (shader === null)
-            throw Error("Failed to create " + type + " shader");
+            throw Error("Failed to create " + type + " shader.");
         gl.shaderSource(shader, source);
         gl.compileShader(shader);
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
