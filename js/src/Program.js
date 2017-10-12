@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var VertexAttr_1 = require("./VertexAttr");
 var Program = (function () {
     function Program(gl, shaders, vertexAttrs) {
         this.gl = gl;
         this.shaders = shaders;
-        this.vertexAttrs = vertexAttrs;
         this.glProgram = this.link();
+        this.vertexDef = new VertexAttr_1.VertexDef(vertexAttrs);
+        this.vertexDef.initVertexAttrLocations(gl, this.glProgram);
     }
     Program.prototype.link = function () {
         var gl = this.gl;

@@ -6,19 +6,20 @@ export class VertexAttr<V>
 {
     readonly name: string
     readonly type: VertexAttrType
-    readonly count: number
+    readonly componentCount: number
     readonly getter: (V) => number[]
 
     location: number
+    offset: number
 
     constructor (name: string, type: VertexAttrType, count: number, getter: (V) => number[]) 
     {
         this.type = type
-        this.count = count
+        this.componentCount = count
         this.getter = getter
     }
 
-    typeSize (): number
+    get typeSize (): number
     {
         switch (this.type) 
         {
@@ -35,9 +36,56 @@ export class VertexAttr<V>
         }
     }
 
-    sizeInBytes (): number
+    get sizeInBytes (): number
     {
-        return Math.ceil (this.typeSize () * this.count / 4) * 4
+        return Math.ceil (this.typeSize * this.componentCount / 4) * 4
+    }
+
+    glType (gl: WebGLRenderingContext): number
+    {
+        switch (this.type) 
+        {
+            case 'byte': return gl.BYTE
+            case 'ubyte': return gl.UNSIGNED_BYTE
+            case 'short': return gl.SHORT
+            case 'ushort': return gl.UNSIGNED_SHORT
+            case 'float': return gl.FLOAT
+            default: throw Error ("Unsupported attribute type.")
+        }
+    }
+}
+
+export class VertexDef<V>
+{
+    readonly vertexAttrs: VertexAttr<V>[]
+    readonly size: number
+    
+    constructor (attrs: VertexAttr<V>[])
+    {
+        this.vertexAttrs = attrs
+        this.size = this.initVertexAttrOffsets ()
+    }
+
+    initVertexAttrOffsets (): number
+    {
+        let offset = 0
+        this.vertexAttrs.forEach (v =>
+        {
+            v.offset = offset
+            offset += v.sizeInBytes 
+        })
+        return offset
+    }
+
+    initVertexAttrLocations (gl: WebGLRenderingContext, prg: WebGLProgram): void
+    {
+        this.vertexAttrs.forEach(v =>
+        {
+            var loc = gl.getAttribLocation (prg, v.name)
+            if (loc < 0)
+                throw Error (`Vertex attribute '${v.name}' not found in program.`)
+            v.location = loc
+        })
     }
 }
 

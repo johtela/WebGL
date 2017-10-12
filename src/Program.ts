@@ -1,12 +1,12 @@
-import { VertexAttr } from "./VertexAttr"
+import { VertexAttr, VertexDef } from "./VertexAttr"
 import { ShaderType, Shader } from "./Shader"
 
 export class Program<V>
 {
-    private gl: WebGLRenderingContext
-    private glProgram: WebGLProgram
-    private shaders: Shader[]
-    private vertexAttrs: VertexAttr<V>[]
+    readonly gl: WebGLRenderingContext
+    readonly glProgram: WebGLProgram
+    readonly shaders: Shader[]
+    readonly vertexDef: VertexDef<V>
 
     constructor (gl: WebGLRenderingContext, 
         shaders: Shader[], 
@@ -14,8 +14,9 @@ export class Program<V>
     {
         this.gl = gl
         this.shaders = shaders
-        this.vertexAttrs = vertexAttrs
         this.glProgram = this.link ()
+        this.vertexDef = new VertexDef (vertexAttrs)
+        this.vertexDef.initVertexAttrLocations (gl, this.glProgram)
     }
 
     private link (): WebGLProgram
@@ -32,4 +33,5 @@ export class Program<V>
                 gl.getProgramInfoLog(prg))
         return prg
     }
+
 }
