@@ -47,11 +47,12 @@ export class VertexBuffer<V> extends Buffer
         vertexDef.vertexAttrs.forEach (attr => 
         { 
             var setter = this.vertexAttrSetter (view, attr.type)
-            for (let j = 0; j < attr.numComponents; j++)
+            let typeSize = attr.typeSize
+            for (let j = 0; j < len; j++)
             {
-                for (let k = 0; k < len; k++)
-                    setter ((k * vertexSize) + attr.offset + (j * attr.typeSize), 
-                        attr.getter (vertices[k])[j]) 
+                let values = attr.getter (vertices[j])
+                for (let k = 0; k < attr.numComponents; k++)
+                    setter ((j * vertexSize) + attr.offset + (k * typeSize), values[k]) 
             }
         })
         return buffer
@@ -62,11 +63,11 @@ export class VertexBuffer<V> extends Buffer
     {
         switch (type) 
         {
-            case 'byte': return view.setInt8
-            case 'ubyte': return view.setUint8
-            case 'short': return view.setInt16
-            case 'ushort': return view.setUint16
-            case 'float': return view.setFloat32
+            case 'byte': return (off, val) => view.setInt8 (off, val)
+            case 'ubyte': return (off, val) => view.setUint8 (off, val)
+            case 'short': return (off, val) => view.setInt16 (off, val)
+            case 'ushort': return (off, val) => view.setUint16 (off, val)
+            case 'float': return (off, val) => view.setFloat32 (off, val)
         }
     }
 }

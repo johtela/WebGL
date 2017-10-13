@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var VertexAttr = (function () {
     function VertexAttr(name, type, components, getter) {
+        this.name = name;
         this.type = type;
         this.numComponents = components;
         this.getter = getter;

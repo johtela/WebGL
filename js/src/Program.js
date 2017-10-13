@@ -30,7 +30,7 @@ var Program = (function (_super) {
         var prg = gl.createProgram();
         if (prg === null)
             throw Error("Failed to create program");
-        this.shaders.forEach(function (s) { return gl.attachShader(s.glShader, s.glShaderType); });
+        this.shaders.forEach(function (s) { return gl.attachShader(prg, s.glShader); });
         gl.linkProgram(prg);
         if (!gl.getProgramParameter(prg, gl.LINK_STATUS))
             throw Error('Unable to initialize the shader program: ' +
@@ -38,10 +38,10 @@ var Program = (function (_super) {
         return prg;
     };
     Program.prototype.enableVertexAttrArrays = function () {
-        var _this = this;
         var gl = this.gl;
         this.vertexDef.vertexAttrs.forEach(function (attr) {
-            gl.vertexAttribPointer(attr.location, attr.numComponents, attr.glType(gl), false, _this.vertexDef.stride, attr.offset);
+            gl.vertexAttribPointer(attr.location, attr.numComponents, attr.glType(gl), false, 0, //this.vertexDef.stride,
+            attr.offset);
             gl.enableVertexAttribArray(attr.location);
         });
     };
@@ -54,9 +54,10 @@ var Program = (function (_super) {
     Program.prototype.drawElements = function (mode, vbuffer, ibuffer, uniforms) {
         var _this = this;
         GLResource_1.using([this, vbuffer, ibuffer], function (gl) {
-            _this.uniformDef.setValues(_this.gl, uniforms);
+            _this.uniformDef.setValues(gl, uniforms);
             _this.enableVertexAttrArrays();
-            gl.drawElements(mode, ibuffer.length, gl.UNSIGNED_SHORT, 0);
+            // gl.drawElements (mode, ibuffer.length, gl.UNSIGNED_SHORT, 0)
+            gl.drawArrays(mode, 0, vbuffer.length);
         });
     };
     return Program;

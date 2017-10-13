@@ -17,6 +17,7 @@ export class Uniform<U>
         let lowComp = type === 'matrix' ? 2 : 1
         if (components < lowComp || components > 4)
             throw RangeError (`Number of components must be [${lowComp}..4] for ${type}.`)
+        this.name = name
         this.type = type
         this.numComponents = components
         this.getter = getter
@@ -36,7 +37,7 @@ export class Uniform<U>
                     gl.uniform1fv (this.location, val)
                 break
             case 2:
-                if (this.type == 'int')
+                if (this.type === 'int')
                     gl.uniform2iv (this.location, val)
                 else if (this.type === 'float')
                     gl.uniform2fv (this.location, val)
@@ -44,7 +45,7 @@ export class Uniform<U>
                     gl.uniformMatrix2fv (this.location, false, val)
                 break
             case 3:
-                if (this.type == 'int')
+                if (this.type === 'int')
                     gl.uniform3iv (this.location, val)
                 else if (this.type === 'float')
                     gl.uniform3fv (this.location, val)
@@ -52,7 +53,7 @@ export class Uniform<U>
                     gl.uniformMatrix3fv (this.location, false, val)
                 break
             case 4:
-                if (this.type == 'int')
+                if (this.type === 'int')
                     gl.uniform4iv (this.location, val)
                 else if (this.type === 'float')
                     gl.uniform4fv (this.location, val)
@@ -115,15 +116,15 @@ export function vec4<U, A extends keyof U> (name: A): Uniform<U>
 
 export function mat2<U, A extends keyof U> (name: A): Uniform<U>
 {
-    return new Uniform (name, 'float', 2, u => (<Mat2>u[name]).toArray ())
+    return new Uniform (name, 'matrix', 2, u => (<Mat2>u[name]).toArray ())
 }
 
 export function mat3<U, A extends keyof U> (name: A): Uniform<U>
 {
-    return new Uniform (name, 'float', 3, u => (<Mat3>u[name]).toArray ())
+    return new Uniform (name, 'matrix', 3, u => (<Mat3>u[name]).toArray ())
 }
 
 export function mat4<U, A extends keyof U> (name: A): Uniform<U>
 {
-    return new Uniform (name, 'float', 4, u => (<Mat4>u[name]).toArray ())
+    return new Uniform (name, 'matrix', 4, u => (<Mat4>u[name]).toArray ())
 }

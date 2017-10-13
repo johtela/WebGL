@@ -50,20 +50,22 @@ var VertexBuffer = (function (_super) {
         var view = new DataView(buffer);
         vertexDef.vertexAttrs.forEach(function (attr) {
             var setter = _this.vertexAttrSetter(view, attr.type);
-            for (var j = 0; j < attr.numComponents; j++) {
-                for (var k = 0; k < len; k++)
-                    setter((k * vertexSize) + attr.offset + (j * attr.typeSize), attr.getter(vertices[k])[j]);
+            var typeSize = attr.typeSize;
+            for (var j = 0; j < len; j++) {
+                var values = attr.getter(vertices[j]);
+                for (var k = 0; k < attr.numComponents; k++)
+                    setter((j * vertexSize) + attr.offset + (k * typeSize), values[k]);
             }
         });
         return buffer;
     };
     VertexBuffer.prototype.vertexAttrSetter = function (view, type) {
         switch (type) {
-            case 'byte': return view.setInt8;
-            case 'ubyte': return view.setUint8;
-            case 'short': return view.setInt16;
-            case 'ushort': return view.setUint16;
-            case 'float': return view.setFloat32;
+            case 'byte': return function (off, val) { return view.setInt8(off, val); };
+            case 'ubyte': return function (off, val) { return view.setUint8(off, val); };
+            case 'short': return function (off, val) { return view.setInt16(off, val); };
+            case 'ushort': return function (off, val) { return view.setUint16(off, val); };
+            case 'float': return function (off, val) { return view.setFloat32(off, val); };
         }
     };
     return VertexBuffer;

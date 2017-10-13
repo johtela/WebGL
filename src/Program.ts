@@ -31,7 +31,7 @@ export class Program<V, U> extends GLResource
         let prg = gl.createProgram()
         if (prg === null)
             throw Error ("Failed to create program")
-        this.shaders.forEach(s => gl.attachShader(s.glShader, s.glShaderType))
+        this.shaders.forEach(s => gl.attachShader(prg, s.glShader))
         gl.linkProgram(prg);
       
         if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) 
@@ -70,9 +70,10 @@ export class Program<V, U> extends GLResource
     {
         using ([this, vbuffer, ibuffer], gl =>
         {
-            this.uniformDef.setValues (this.gl, uniforms)
+            this.uniformDef.setValues (gl, uniforms)
             this.enableVertexAttrArrays ()
-            gl.drawElements (mode, ibuffer.length, gl.UNSIGNED_SHORT, 0)
+            // gl.drawElements (mode, ibuffer.length, gl.UNSIGNED_SHORT, 0)
+            gl.drawArrays (mode, 0, vbuffer.length)
         })
     }
 }

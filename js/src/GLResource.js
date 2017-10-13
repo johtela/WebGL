@@ -8,18 +8,20 @@ var GLResource = (function () {
 }());
 exports.GLResource = GLResource;
 function using(resource, action) {
-    if (resource instanceof Array)
-        resource.forEach(function (res) { return res.use(); });
-    else
-        resource.use();
+    var res = resource instanceof Array ?
+        resource.pop() :
+        resource;
+    if (!res)
+        return;
+    res.use();
     try {
-        action(this.gl);
+        if (resource instanceof Array && resource.length > 0)
+            using(resource, action);
+        else
+            action(res.gl);
     }
     finally {
-        if (resource instanceof Array)
-            resource.forEach(function (res) { return res.release(); });
-        else
-            resource.release();
+        res.release();
     }
 }
 exports.using = using;

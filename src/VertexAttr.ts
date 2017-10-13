@@ -14,6 +14,7 @@ export class VertexAttr<V>
 
     constructor (name: string, type: VertexAttrType, components: number, getter: (V) => number[]) 
     {
+        this.name = name
         this.type = type
         this.numComponents = components
         this.getter = getter

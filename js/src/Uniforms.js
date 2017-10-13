@@ -5,6 +5,7 @@ var Uniform = (function () {
         var lowComp = type === 'matrix' ? 2 : 1;
         if (components < lowComp || components > 4)
             throw RangeError("Number of components must be [" + lowComp + "..4] for " + type + ".");
+        this.name = name;
         this.type = type;
         this.numComponents = components;
         this.getter = getter;
@@ -21,7 +22,7 @@ var Uniform = (function () {
                     gl.uniform1fv(this.location, val);
                 break;
             case 2:
-                if (this.type == 'int')
+                if (this.type === 'int')
                     gl.uniform2iv(this.location, val);
                 else if (this.type === 'float')
                     gl.uniform2fv(this.location, val);
@@ -29,7 +30,7 @@ var Uniform = (function () {
                     gl.uniformMatrix2fv(this.location, false, val);
                 break;
             case 3:
-                if (this.type == 'int')
+                if (this.type === 'int')
                     gl.uniform3iv(this.location, val);
                 else if (this.type === 'float')
                     gl.uniform3fv(this.location, val);
@@ -37,7 +38,7 @@ var Uniform = (function () {
                     gl.uniformMatrix3fv(this.location, false, val);
                 break;
             case 4:
-                if (this.type == 'int')
+                if (this.type === 'int')
                     gl.uniform4iv(this.location, val);
                 else if (this.type === 'float')
                     gl.uniform4fv(this.location, val);
@@ -87,15 +88,15 @@ function vec4(name) {
 }
 exports.vec4 = vec4;
 function mat2(name) {
-    return new Uniform(name, 'float', 2, function (u) { return u[name].toArray(); });
+    return new Uniform(name, 'matrix', 2, function (u) { return u[name].toArray(); });
 }
 exports.mat2 = mat2;
 function mat3(name) {
-    return new Uniform(name, 'float', 3, function (u) { return u[name].toArray(); });
+    return new Uniform(name, 'matrix', 3, function (u) { return u[name].toArray(); });
 }
 exports.mat3 = mat3;
 function mat4(name) {
-    return new Uniform(name, 'float', 4, function (u) { return u[name].toArray(); });
+    return new Uniform(name, 'matrix', 4, function (u) { return u[name].toArray(); });
 }
 exports.mat4 = mat4;
 //# sourceMappingURL=Uniforms.js.map

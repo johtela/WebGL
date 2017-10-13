@@ -14,19 +14,21 @@ export abstract class GLResource
 export function using (resource: GLResource | GLResource[], 
     action: (gl: WebGLRenderingContext) => void)
 {
-    if (resource instanceof Array)
-        resource.forEach (res => res.use ())
-    else
-        resource.use ()
+    let res = resource instanceof Array ? 
+        resource.pop () : 
+        resource
+    if (!res)
+        return
+    res.use ()
     try
     {
-        action (this.gl)
+        if (resource instanceof Array && resource.length > 0)
+            using (resource, action)
+        else
+            action (res.gl)
     }
     finally
     {
-        if (resource instanceof Array)
-            resource.forEach (res => res.release ())
-        else
-            resource.release ()
+        res.release ()
     }
 }
