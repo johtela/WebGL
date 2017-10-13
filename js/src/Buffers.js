@@ -63,9 +63,9 @@ var VertexBuffer = (function (_super) {
         switch (type) {
             case 'byte': return function (off, val) { return view.setInt8(off, val); };
             case 'ubyte': return function (off, val) { return view.setUint8(off, val); };
-            case 'short': return function (off, val) { return view.setInt16(off, val); };
-            case 'ushort': return function (off, val) { return view.setUint16(off, val); };
-            case 'float': return function (off, val) { return view.setFloat32(off, val); };
+            case 'short': return function (off, val) { return view.setInt16(off, val, true); };
+            case 'ushort': return function (off, val) { return view.setUint16(off, val, true); };
+            case 'float': return function (off, val) { return view.setFloat32(off, val, true); };
         }
     };
     return VertexBuffer;

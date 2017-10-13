@@ -38,10 +38,10 @@ var Program = (function (_super) {
         return prg;
     };
     Program.prototype.enableVertexAttrArrays = function () {
+        var _this = this;
         var gl = this.gl;
         this.vertexDef.vertexAttrs.forEach(function (attr) {
-            gl.vertexAttribPointer(attr.location, attr.numComponents, attr.glType(gl), false, 0, //this.vertexDef.stride,
-            attr.offset);
+            gl.vertexAttribPointer(attr.location, attr.numComponents, attr.glType(gl), false, _this.vertexDef.stride, attr.offset);
             gl.enableVertexAttribArray(attr.location);
         });
     };
@@ -56,8 +56,7 @@ var Program = (function (_super) {
         GLResource_1.using([this, vbuffer, ibuffer], function (gl) {
             _this.uniformDef.setValues(gl, uniforms);
             _this.enableVertexAttrArrays();
-            // gl.drawElements (mode, ibuffer.length, gl.UNSIGNED_SHORT, 0)
-            gl.drawArrays(mode, 0, vbuffer.length);
+            gl.drawElements(mode, ibuffer.length, gl.UNSIGNED_SHORT, 0);
         });
     };
     return Program;

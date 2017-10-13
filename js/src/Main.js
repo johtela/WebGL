@@ -58,7 +58,13 @@ function initBuffers(gl) {
     // Now pass the list of positions into WebGL to build the
     // shape. We do this by creating a Float32Array from the
     // JavaScript array, then use it to fill the current buffer.
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+    var buf = new ArrayBuffer(8 * 4);
+    var view = new DataView(buf);
+    for (var i = 0; i < positions.length; i++)
+        view.setFloat32(i * 4, positions[i], true);
+    gl.bufferData(gl.ARRAY_BUFFER, 
+    // new Float32Array(positions),
+    buf, gl.STATIC_DRAW);
     return { position: positionBuffer };
 }
 function drawScene(gl, programInfo, buffers) {

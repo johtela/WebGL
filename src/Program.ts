@@ -72,8 +72,7 @@ export class Program<V, U> extends GLResource
         {
             this.uniformDef.setValues (gl, uniforms)
             this.enableVertexAttrArrays ()
-            // gl.drawElements (mode, ibuffer.length, gl.UNSIGNED_SHORT, 0)
-            gl.drawArrays (mode, 0, vbuffer.length)
+            gl.drawElements (mode, ibuffer.length, gl.UNSIGNED_SHORT, 0)
         })
     }
 }

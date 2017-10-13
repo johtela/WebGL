@@ -66,7 +66,7 @@ function main ()
 
     let program = new Program<SimpleVertex, MyUniforms> (gl,
         [ vertShader, fragShader ],
-        [ VAttr.vec4 ('aVertexPosition') ],
+        [ VAttr.vec2 ('aVertexPosition') ],
         [ Unif.mat4 ('uModelViewMatrix'), Unif.mat4 ('uProjectionMatrix') ])
 
     let vbuffer = new VertexBuffer (gl, program.vertexDef, vertices)

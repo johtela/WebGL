@@ -90,8 +90,14 @@ function initBuffers(gl: WebGLRenderingContext): Buffers | null
       // shape. We do this by creating a Float32Array from the
       // JavaScript array, then use it to fill the current buffer.
     
+      let buf = new ArrayBuffer (8 * 4)
+      let view = new DataView (buf)
+      for (let i = 0; i < positions.length; i++)
+        view.setFloat32 (i* 4, positions[i], true)
+
       gl.bufferData(gl.ARRAY_BUFFER,
-                    new Float32Array(positions),
+                    // new Float32Array(positions),
+                    buf,
                     gl.STATIC_DRAW);
     
       return { position: positionBuffer };

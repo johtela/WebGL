@@ -51,7 +51,7 @@ function main() {
     }
     var vertShader = new Shader_1.Shader(gl, 'vertex', vsSource);
     var fragShader = new Shader_1.Shader(gl, 'fragment', fsSource);
-    var program = new Program_1.Program(gl, [vertShader, fragShader], [VAttr.vec4('aVertexPosition')], [Unif.mat4('uModelViewMatrix'), Unif.mat4('uProjectionMatrix')]);
+    var program = new Program_1.Program(gl, [vertShader, fragShader], [VAttr.vec2('aVertexPosition')], [Unif.mat4('uModelViewMatrix'), Unif.mat4('uProjectionMatrix')]);
     var vbuffer = new Buffers_1.VertexBuffer(gl, program.vertexDef, vertices);
     var ibuffer = new Buffers_1.IndexBuffer(gl, indices);
     drawScene(gl, program, vbuffer, ibuffer, uniforms);

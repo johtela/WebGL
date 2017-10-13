@@ -65,16 +65,16 @@ export class VertexBuffer<V> extends Buffer
         {
             case 'byte': return (off, val) => view.setInt8 (off, val)
             case 'ubyte': return (off, val) => view.setUint8 (off, val)
-            case 'short': return (off, val) => view.setInt16 (off, val)
-            case 'ushort': return (off, val) => view.setUint16 (off, val)
-            case 'float': return (off, val) => view.setFloat32 (off, val)
+            case 'short': return (off, val) => view.setInt16 (off, val, true)
+            case 'ushort': return (off, val) => view.setUint16 (off, val, true)
+            case 'float': return (off, val) => view.setFloat32 (off, val, true)
         }
     }
 }
 
 export class IndexBuffer extends Buffer
 {
-    readonly glBuffer: WebGLBuffer
+    readonly glBuffer: WebGLBuffer  
     readonly length: number
 
     constructor (gl: WebGLRenderingContext, indices: number[])
