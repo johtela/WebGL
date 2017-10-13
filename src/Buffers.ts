@@ -1,19 +1,41 @@
+import { GLResource, using } from "./GLResource";
 import { VertexAttr, VertexAttrType, VertexDef } from "./VertexAttr"
 
-export class VertexBuffer<V>
+export abstract class Buffer extends GLResource
 {
+    readonly target: number
     readonly glBuffer: WebGLBuffer
-    readonly count: number
+    readonly length: number
 
+    constructor (gl: WebGLRenderingContext, target: number, glBuffer: WebGLBuffer, length: number)
+    {
+        super (gl)
+        this.target = target
+        this.glBuffer = glBuffer
+        this.length = length
+    }
+
+    use ()
+    {
+        this.gl.bindBuffer (this.target, this.glBuffer)
+    }
+
+    release ()
+    {
+        this.gl.bindBuffer (this.target, null)
+    }
+}
+
+export class VertexBuffer<V> extends Buffer 
+{
     constructor (gl: WebGLRenderingContext, vertexDef: VertexDef<V>, vertices: V[])
     {
         let buf = gl.createBuffer ()
         if (buf === null)
             throw Error ('Failed to create vertex buffer.')
-        this.glBuffer = buf
-        this.count = vertices.length
-        gl.bindBuffer (gl.ARRAY_BUFFER, buf)
-        gl.bufferData (gl.ARRAY_BUFFER, this.initBuffer (vertexDef, vertices), gl.STATIC_DRAW)
+        super (gl, gl.ARRAY_BUFFER, buf, vertices.length)
+        using (this, () => 
+            gl.bufferData (gl.ARRAY_BUFFER, this.initBuffer (vertexDef, vertices), gl.STATIC_DRAW))
     }
 
     private initBuffer (vertexDef: VertexDef<V>, vertices: V[]): ArrayBuffer
@@ -49,19 +71,18 @@ export class VertexBuffer<V>
     }
 }
 
-export class IndexBuffer
+export class IndexBuffer extends Buffer
 {
     readonly glBuffer: WebGLBuffer
-    readonly count: number
+    readonly length: number
 
     constructor (gl: WebGLRenderingContext, indices: number[])
     {
         let buf = gl.createBuffer ()
         if (buf === null)
             throw Error ('Failed to create index buffer.')
-        this.glBuffer = buf
-        this.count = indices.length
-        gl.bindBuffer (gl.ELEMENT_ARRAY_BUFFER, buf)
-        gl.bufferData (gl.ELEMENT_ARRAY_BUFFER, new Uint16Array (indices), gl.STATIC_DRAW)
+        super (gl, gl.ELEMENT_ARRAY_BUFFER, buf, indices.length)
+        using (this, () => 
+            gl.bufferData (gl.ELEMENT_ARRAY_BUFFER, new Uint16Array (indices), gl.STATIC_DRAW))
     }
 }

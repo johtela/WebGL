@@ -1,23 +1,28 @@
-import { VertexAttr, VertexDef } from "./VertexAttr"
 import { ShaderType, Shader } from "./Shader"
+import { VertexAttr, VertexDef } from "./VertexAttr"
+import { Uniform, UniformDef } from "./Uniforms"
+import { GLResource, using } from "./GLResource"
 import { VertexBuffer, IndexBuffer } from "./Buffers";
 
-export class Program<V>
+export class Program<V, U> extends GLResource
 {
-    readonly gl: WebGLRenderingContext
     readonly glProgram: WebGLProgram
     readonly shaders: Shader[]
     readonly vertexDef: VertexDef<V>
+    readonly uniformDef: UniformDef<U>
 
     constructor (gl: WebGLRenderingContext, 
         shaders: Shader[], 
-        vertexAttrs: VertexAttr<V>[]) 
+        vertexAttrs: VertexAttr<V>[],
+        uniforms: Uniform<U>[]) 
     {
-        this.gl = gl
+        super (gl)
         this.shaders = shaders
         this.glProgram = this.link ()
         this.vertexDef = new VertexDef (vertexAttrs)
         this.vertexDef.initVertexAttrLocations (gl, this.glProgram)
+        this.uniformDef = new UniformDef (uniforms)
+        this.uniformDef.initUniformLocations (gl, this.glProgram)
     }
 
     private link (): WebGLProgram
@@ -35,7 +40,7 @@ export class Program<V>
         return prg
     }
 
-    private initVertexAttrArrays ()
+    private enableVertexAttrArrays ()
     {
         let gl = this.gl
         this.vertexDef.vertexAttrs.forEach (attr =>
@@ -51,14 +56,23 @@ export class Program<V>
         })
     }
 
-    drawElements (mode: number, vbuffer: VertexBuffer<V>, ibuffer: IndexBuffer)
+    use ()
     {
-        let gl = this.gl
-        gl.bindBuffer(gl.ARRAY_BUFFER, vbuffer.glBuffer)
-        gl.bindBuffer (gl.ELEMENT_ARRAY_BUFFER, ibuffer.glBuffer)
-        this.initVertexAttrArrays ()
-        gl.drawElements (mode, ibuffer.count, gl.UNSIGNED_SHORT, 0)
-        gl.bindBuffer(gl.ARRAY_BUFFER, null)
-        gl.bindBuffer (gl.ELEMENT_ARRAY_BUFFER, null)
+        this.gl.useProgram (this.glProgram)
+    }
+
+    release ()
+    {
+        this.gl.useProgram (null)
+    }
+
+    drawElements (mode: number, vbuffer: VertexBuffer<V>, ibuffer: IndexBuffer, uniforms: U)
+    {
+        using ([this, vbuffer, ibuffer], gl =>
+        {
+            this.uniformDef.setValues (this.gl, uniforms)
+            this.enableVertexAttrArrays ()
+            gl.drawElements (mode, ibuffer.length, gl.UNSIGNED_SHORT, 0)
+        })
     }
 }
