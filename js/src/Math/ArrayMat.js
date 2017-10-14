@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var FMath = require("./FMath");
-var ArrayHelper = require("./ArrayHelper");
+var ArrayHelper = require("../Common/ArrayHelper");
 var NewArrayMat = (function () {
     function NewArrayMat(rows, cols) {
         this.rows = rows;
@@ -125,12 +125,12 @@ exports.newMat2 = new NewArrayMat(2, 2);
 exports.newMat3 = new NewArrayMat(3, 3);
 exports.newMat4 = new NewArrayMat(4, 4);
 var ArrayMat = (function () {
-    function ArrayMat(values, rows, columns) {
-        if (values.length !== rows * columns)
-            throw RangeError("Array length has to be equeal rows * columns.");
-        this.array = values;
+    function ArrayMat(array, rows, cols) {
+        this.array = array;
         this.rows = rows;
-        this.cols = columns;
+        this.cols = cols;
+        if (array.length !== rows * cols)
+            throw RangeError("Array length has to be equeal rows * columns.");
     }
     ArrayMat.prototype.element = function (row, column) {
         return this.array[column * this.rows + row];

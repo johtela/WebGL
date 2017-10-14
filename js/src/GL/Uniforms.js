@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Uniform = (function () {
-    function Uniform(name, type, components, getter) {
-        var lowComp = type === 'matrix' ? 2 : 1;
-        if (components < lowComp || components > 4)
-            throw RangeError("Number of components must be [" + lowComp + "..4] for " + type + ".");
+    function Uniform(name, type, numComponents, getter) {
         this.name = name;
         this.type = type;
-        this.numComponents = components;
+        this.numComponents = numComponents;
         this.getter = getter;
+        var lowComp = type === 'matrix' ? 2 : 1;
+        if (numComponents < lowComp || numComponents > 4)
+            throw RangeError("Number of components must be [" + lowComp + "..4] for " + type + ".");
     }
     Uniform.prototype.setValue = function (gl, uniforms) {
         var val = this.getter(uniforms);

@@ -1,15 +1,10 @@
 import * as FMath from "./FMath"
 import { Dim, Vec, Vec2, Vec3, Vec4, NewVec } from "./Vectors"
-import * as ArrayHelper from "./ArrayHelper";
+import * as ArrayHelper from "../Common/ArrayHelper";
 
 class NewArrayVec implements NewVec<Vec2>, NewVec<Vec3>, NewVec<Vec4>
 {
-    private dimensions: number
-
-    constructor (dims: number)
-    {
-        this.dimensions = dims
-    }
+    constructor (private dimensions: number) { }
 
     get zero (): Vec2 & Vec3 & Vec4
     {
@@ -42,12 +37,7 @@ export const newVec4: NewVec<Vec4> = new NewArrayVec (4)
 
 class ArrayVec implements Vec2, Vec3, Vec4
 {
-    private array: number[]
-
-    constructor (values: number[])
-    {
-        this.array = values
-    }
+    constructor (private array: number[]) { }
 
     get dimensions (): number
     {

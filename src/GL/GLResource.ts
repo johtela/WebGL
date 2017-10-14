@@ -1,12 +1,6 @@
 export abstract class GLResource
 {
-    readonly gl: WebGLRenderingContext
-
-    constructor (gl: WebGLRenderingContext)
-    {
-        this.gl = gl
-    }
-
+    constructor (readonly gl: WebGLRenderingContext) { }
     abstract use ()
     abstract release ()
 }

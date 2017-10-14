@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ArrayVec_1 = require("./ArrayVec");
-var ArrayMat_1 = require("./ArrayMat");
-var Shader_1 = require("./Shader");
-var VAttr = require("./VertexAttr");
-var Unif = require("./Uniforms");
-var Buffers_1 = require("./Buffers");
-var Program_1 = require("./Program");
+var ArrayVec_1 = require("./Math/ArrayVec");
+var ArrayMat_1 = require("./Math/ArrayMat");
+var Shader_1 = require("./GL/Shader");
+var VAttr = require("./GL/VertexAttr");
+var Unif = require("./GL/Uniforms");
+var Buffers_1 = require("./GL/Buffers");
+var Program_1 = require("./GL/Program");
 // Vertex shader program
 var vsSource = require('./shaders/simple.vert');
 var fsSource = require('./shaders/simple.frag');

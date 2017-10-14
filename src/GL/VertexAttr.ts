@@ -1,24 +1,14 @@
-import { Vec, Vec2, Vec3, Vec4 } from "./Vectors";
+import { Vec, Vec2, Vec3, Vec4 } from "../Math/Vectors";
 
 export type VertexAttrType = 'byte' | 'short' | 'ubyte' | 'ushort' | 'float'
 
 export class VertexAttr<V>
 {
-    readonly name: string
-    readonly type: VertexAttrType
-    readonly numComponents: number
-    readonly getter: (V) => number[]
-
     location: number
     offset: number
 
-    constructor (name: string, type: VertexAttrType, components: number, getter: (V) => number[]) 
-    {
-        this.name = name
-        this.type = type
-        this.numComponents = components
-        this.getter = getter
-    }
+    constructor (readonly name: string, readonly type: VertexAttrType,
+        readonly numComponents: number, readonly getter: (V) => number[]) { }
 
     get typeSize (): number
     {
@@ -58,12 +48,10 @@ export class VertexAttr<V>
 
 export class VertexDef<V>
 {
-    readonly vertexAttrs: VertexAttr<V>[]
     readonly stride: number
     
-    constructor (attrs: VertexAttr<V>[])
+    constructor (readonly vertexAttrs: VertexAttr<V>[])
     {
-        this.vertexAttrs = attrs
         this.stride = this.initVertexAttrOffsets ()
     }
 
@@ -117,12 +105,12 @@ export function float<V, A extends keyof V> (name: A): VertexAttr<V>
 
 export function vec2<V, A extends keyof V> (name: A): VertexAttr<V>
 {
-    return new VertexAttr (name, 'float', 2, v => (<Vec2>v[name]).toArray () )
+    return new VertexAttr (name, 'float', 2, v => (<Vec2>v[name]).toArray ())
 }
 
 export function vec3<V, A extends keyof V> (name: A): VertexAttr<V>
 {
-    return new VertexAttr (name, 'float', 3, v => (<Vec3>v[name]).toArray () )
+    return new VertexAttr (name, 'float', 3, v => (<Vec3>v[name]).toArray ())
 }
 
 export function vec4<V, A extends keyof V> (name: A): VertexAttr<V>

@@ -1,6 +1,6 @@
-import { NewVec, Vec3, Vec4 } from "./Vectors"
-import { NewMat4, Mat4 } from "./Matrices"
-import { newMat4 } from "./ArrayMat"
+import { NewVec, Vec3, Vec4 } from "./Math/Vectors"
+import { NewMat4, Mat4 } from "./Math/Matrices"
+import { newMat4 } from "./Math/ArrayMat"
 
 // Vertex shader program
 const vsSource: string = require ('./shaders/simple.vert')

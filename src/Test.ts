@@ -1,12 +1,12 @@
-import { NewVec, Vec2, Vec3, Vec4 } from "./Vectors";
-import { NewMat, Mat2, Mat3, Mat4 } from "./Matrices";
-import { newVec2, newVec4 } from "./ArrayVec"
-import { newMat4 } from "./ArrayMat"
-import { ShaderType, Shader } from "./Shader"
-import * as VAttr from "./VertexAttr"
-import * as Unif from "./Uniforms"
-import { VertexBuffer, IndexBuffer } from "./Buffers";
-import { Program } from "./Program"
+import { NewVec, Vec2, Vec3, Vec4 } from "./Math/Vectors";
+import { NewMat, Mat2, Mat3, Mat4 } from "./Math/Matrices";
+import { newVec2, newVec4 } from "./Math/ArrayVec"
+import { newMat4 } from "./Math/ArrayMat"
+import { ShaderType, Shader } from "./GL/Shader"
+import * as VAttr from "./GL/VertexAttr"
+import * as Unif from "./GL/Uniforms"
+import { VertexBuffer, IndexBuffer } from "./GL/Buffers";
+import { Program } from "./GL/Program"
 
 // Vertex shader program
 const vsSource: string = require ('./shaders/simple.vert')
@@ -37,7 +37,6 @@ function drawScene(gl: WebGLRenderingContext, program: Program<SimpleVertex, MyU
 
     program.drawElements (gl.TRIANGLE_STRIP, vbuffer, ibuffer, uniforms)
 }
-
 
 function main ()
 {

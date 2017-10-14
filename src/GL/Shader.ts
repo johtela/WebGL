@@ -2,11 +2,9 @@ export type ShaderType = 'vertex' | 'fragment'
 
 export class Shader
 {
-    private gl: WebGLRenderingContext
     readonly glShader: WebGLShader
-    readonly type: ShaderType
 
-    constructor (gl: WebGLRenderingContext, type: ShaderType, source: string)
+    constructor (private gl: WebGLRenderingContext, readonly type: ShaderType, source: string)
     {
         this.gl = gl
         this.type = type

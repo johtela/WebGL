@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var VertexAttr = (function () {
-    function VertexAttr(name, type, components, getter) {
+    function VertexAttr(name, type, numComponents, getter) {
         this.name = name;
         this.type = type;
-        this.numComponents = components;
+        this.numComponents = numComponents;
         this.getter = getter;
     }
     Object.defineProperty(VertexAttr.prototype, "typeSize", {
@@ -46,8 +46,8 @@ var VertexAttr = (function () {
 }());
 exports.VertexAttr = VertexAttr;
 var VertexDef = (function () {
-    function VertexDef(attrs) {
-        this.vertexAttrs = attrs;
+    function VertexDef(vertexAttrs) {
+        this.vertexAttrs = vertexAttrs;
         this.stride = this.initVertexAttrOffsets();
     }
     VertexDef.prototype.initVertexAttrOffsets = function () {

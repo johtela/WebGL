@@ -1,26 +1,18 @@
-import { Vec, Vec2, Vec3, Vec4 } from "./Vectors";
-import { Mat, Mat2, Mat3, Mat4 } from "./Matrices";
+import { Vec, Vec2, Vec3, Vec4 } from "../Math/Vectors";
+import { Mat, Mat2, Mat3, Mat4 } from "../Math/Matrices";
 
 export type UniformType = 'int' | 'float' | 'matrix'
 
 export class Uniform<U>
 {
-    readonly name: string
-    readonly type: UniformType
-    readonly numComponents: number
-    readonly getter: (U) => number[]
-
     location: WebGLUniformLocation
 
-    constructor (name: string, type: UniformType, components: number, getter: (U) => number[]) 
+    constructor (readonly name: string, readonly type: UniformType, 
+        readonly numComponents: number, readonly getter: (U) => number[]) 
     {
         let lowComp = type === 'matrix' ? 2 : 1
-        if (components < lowComp || components > 4)
+        if (numComponents < lowComp || numComponents > 4)
             throw RangeError (`Number of components must be [${lowComp}..4] for ${type}.`)
-        this.name = name
-        this.type = type
-        this.numComponents = components
-        this.getter = getter
     }
 
     setValue (gl: WebGLRenderingContext, uniforms: U)
@@ -65,12 +57,7 @@ export class Uniform<U>
 
 export class UniformDef<U>
 {
-    readonly uniforms: Uniform<U>[]
-    
-    constructor (uniforms: Uniform<U>[])
-    {
-        this.uniforms = uniforms
-    }
+    constructor (readonly uniforms: Uniform<U>[]) { }
 
     initUniformLocations (gl: WebGLRenderingContext, prg: WebGLProgram)
     {

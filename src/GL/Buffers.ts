@@ -3,16 +3,10 @@ import { VertexAttr, VertexAttrType, VertexDef } from "./VertexAttr"
 
 export abstract class Buffer extends GLResource
 {
-    readonly target: number
-    readonly glBuffer: WebGLBuffer
-    readonly length: number
-
-    constructor (gl: WebGLRenderingContext, target: number, glBuffer: WebGLBuffer, length: number)
+    constructor (gl: WebGLRenderingContext, readonly target: number,
+        readonly glBuffer: WebGLBuffer, readonly length: number)
     {
         super (gl)
-        this.target = target
-        this.glBuffer = glBuffer
-        this.length = length
     }
 
     use ()
@@ -74,9 +68,6 @@ export class VertexBuffer<V> extends Buffer
 
 export class IndexBuffer extends Buffer
 {
-    readonly glBuffer: WebGLBuffer  
-    readonly length: number
-
     constructor (gl: WebGLRenderingContext, indices: number[])
     {
         let buf = gl.createBuffer ()

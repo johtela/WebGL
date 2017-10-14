@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var FMath = require("./FMath");
 var Vectors_1 = require("./Vectors");
-var ArrayHelper = require("./ArrayHelper");
+var ArrayHelper = require("../Common/ArrayHelper");
 var NewArrayVec = (function () {
-    function NewArrayVec(dims) {
-        this.dimensions = dims;
+    function NewArrayVec(dimensions) {
+        this.dimensions = dimensions;
     }
     Object.defineProperty(NewArrayVec.prototype, "zero", {
         get: function () {
@@ -37,8 +37,8 @@ exports.newVec2 = new NewArrayVec(2);
 exports.newVec3 = new NewArrayVec(3);
 exports.newVec4 = new NewArrayVec(4);
 var ArrayVec = (function () {
-    function ArrayVec(values) {
-        this.array = values;
+    function ArrayVec(array) {
+        this.array = array;
     }
     Object.defineProperty(ArrayVec.prototype, "dimensions", {
         get: function () {

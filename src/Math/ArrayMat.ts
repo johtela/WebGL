@@ -1,18 +1,11 @@
 import { Vec, Vec2, Vec3, Vec4 } from "./Vectors";
 import { NewMat, NewMat4, Mat2, Mat3, Mat4 } from "./Matrices";
 import * as FMath from "./FMath"
-import * as ArrayHelper from "./ArrayHelper";
+import * as ArrayHelper from "../Common/ArrayHelper";
 
 class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
 {
-    readonly rows: number
-    readonly cols: number
-
-    constructor(rows: number, cols: number) 
-    {
-        this.rows = rows
-        this.cols = cols
-    }
+    constructor(readonly rows: number, readonly cols: number) { }
 
     private identityArray (): number[]
     {
@@ -157,18 +150,10 @@ export const newMat4: NewMat4 = new NewArrayMat (4, 4)
 
 class ArrayMat implements Mat2, Mat3, Mat4
 {
-    readonly rows: number
-    readonly cols: number
-
-    private array: number[]
-    
-    constructor (values: number[], rows: number, columns: number) 
+    constructor (readonly array: number[], readonly rows: number, readonly cols: number) 
     {
-        if (values.length !== rows *columns)
+        if (array.length !== rows *cols)
             throw RangeError ("Array length has to be equeal rows * columns.") 
-        this.array = values
-        this.rows = rows
-        this.cols = columns        
     }
 
     element (row: number, column: number): number

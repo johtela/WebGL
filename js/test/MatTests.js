@@ -2,9 +2,9 @@
 ///<reference types="jsverify"/>
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsc = require("jsverify");
-var FMath_1 = require("../src/FMath");
-var ArrayVec_1 = require("../src/ArrayVec");
-var ArrayMat_1 = require("../src/ArrayMat");
+var FMath_1 = require("../src/Math/FMath");
+var ArrayVec_1 = require("../src/Math/ArrayVec");
+var ArrayMat_1 = require("../src/Math/ArrayMat");
 var VecTests_1 = require("./VecTests");
 var arbMat2 = VecTests_1.arbNumArr(4).smap(function (a) { return ArrayMat_1.newMat2.fromArray(a, 2, 2); }, function (m) { return m.toArray(); }, function (m) { return m.toString(); });
 var arbMat3 = VecTests_1.arbNumArr(9).smap(function (a) { return ArrayMat_1.newMat3.fromArray(a, 3, 3); }, function (m) { return m.toArray(); }, function (m) { return m.toString(); });

@@ -4,6 +4,8 @@ var Shader = (function () {
     function Shader(gl, type, source) {
         this.gl = gl;
         this.type = type;
+        this.gl = gl;
+        this.type = type;
         var shader = gl.createShader(this.glShaderType);
         if (shader === null)
             throw Error("Failed to create " + type + " shader.");

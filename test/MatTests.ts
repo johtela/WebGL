@@ -1,11 +1,11 @@
 ///<reference types="jsverify"/>
 
 import * as jsc from "jsverify";
-import { approxEquals } from "../src/FMath";
-import { NewVec, Vec, Vec2, Vec3, Vec4 } from "../src/Vectors"
-import { newVec2, newVec3, newVec4 } from "../src/ArrayVec";
-import { NewMat, NewMat4, Mat, Mat2, Mat3, Mat4 } from "../src/Matrices";
-import { newMat2, newMat3, newMat4 } from "../src/ArrayMat";
+import { approxEquals } from "../src/Math/FMath";
+import { NewVec, Vec, Vec2, Vec3, Vec4 } from "../src/Math/Vectors"
+import { newVec2, newVec3, newVec4 } from "../src/Math/ArrayVec";
+import { NewMat, NewMat4, Mat, Mat2, Mat3, Mat4 } from "../src/Math/Matrices";
+import { newMat2, newMat3, newMat4 } from "../src/Math/ArrayMat";
 import { arbNumArr, arbVec2, arbVec3, arbVec4 } from "./VecTests";
 
 const arbMat2: jsc.Arbitrary<Mat2> = arbNumArr (4).smap (

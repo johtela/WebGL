@@ -1,10 +1,10 @@
 ///<reference types="jsverify"/>
 
 import * as jsc from "jsverify"
-import { approxEquals } from "../src/FMath"
-import { NewVec, Vec, Vec2, Vec3, Vec4 } from "../src/Vectors"
-import { newVec2, newVec3, newVec4 } from "../src/ArrayVec"
-import * as ArrayHelper from "../src/ArrayHelper";
+import { approxEquals } from "../src/Math/FMath"
+import { NewVec, Vec, Vec2, Vec3, Vec4 } from "../src/Math/Vectors"
+import { newVec2, newVec3, newVec4 } from "../src/Math/ArrayVec"
+import * as ArrayHelper from "../src/Common/ArrayHelper";
 
 export function arbNumArr (size: number): jsc.Arbitrary<number[]>
 {

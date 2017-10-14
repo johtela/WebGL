@@ -2,9 +2,9 @@
 ///<reference types="jsverify"/>
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsc = require("jsverify");
-var FMath_1 = require("../src/FMath");
-var ArrayVec_1 = require("../src/ArrayVec");
-var ArrayHelper = require("../src/ArrayHelper");
+var FMath_1 = require("../src/Math/FMath");
+var ArrayVec_1 = require("../src/Math/ArrayVec");
+var ArrayHelper = require("../src/Common/ArrayHelper");
 function arbNumArr(size) {
     return jsc.tuple(ArrayHelper.fill(Array(size), jsc.number));
 }

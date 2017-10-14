@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ArrayMat_1 = require("./ArrayMat");
+var ArrayMat_1 = require("./Math/ArrayMat");
 // Vertex shader program
 var vsSource = require('./shaders/simple.vert');
 var fsSource = require('./shaders/simple.frag');
