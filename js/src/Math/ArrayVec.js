@@ -179,6 +179,12 @@ var ArrayVec = (function () {
     ArrayVec.prototype.fract = function () {
         return this.map(FMath.fract);
     };
+    ArrayVec.prototype.min = function (other) {
+        return this.map2(other, Math.min);
+    };
+    ArrayVec.prototype.max = function (other) {
+        return this.map2(other, Math.max);
+    };
     ArrayVec.prototype.clamp = function (min, max) {
         return this.map(function (x) { return FMath.clamp(x, min, max); });
     };

@@ -37,11 +37,12 @@ export interface Vec<V extends Vec<V>>
      * Length of the vector.
      */
     readonly len: number
+
+    component (index: number): number
+    with (index: number, value: number): V
     /**
      * Returns the string representation of a vector. Formatted like this: [x y z]
      */
-    component (index: number): number
-    with (index: number, value: number): V
     toString (): string
     toArray (): number[]
     toFloat32Array (): Float32Array
@@ -61,6 +62,8 @@ export interface Vec<V extends Vec<V>>
     ceil (): V
     round (): V
     fract (): V
+    min (other: V) : V
+    max (other: V) : V
     clamp (min: number, max: number): V
     mix (other: V, interPos: number): V
     step (edge: number): V

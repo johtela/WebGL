@@ -212,6 +212,16 @@ class ArrayVec implements Vec2, Vec3, Vec4
         return this.map (FMath.fract)
     }
 
+    min (other: ArrayVec): ArrayVec
+    {
+        return this.map2 (other, Math.min)
+    }
+
+    max (other: ArrayVec): ArrayVec
+    {
+        return this.map2 (other, Math.max)
+    }
+
     clamp (min: number, max: number): ArrayVec
     {
         return this.map (x => FMath.clamp (x, min, max))

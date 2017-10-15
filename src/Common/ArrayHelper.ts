@@ -1,3 +1,5 @@
+import { approxEquals } from "../Math/FMath";
+
 export function clone<T> (array: T[][]): T[][]
 {
     let rows = array.length
@@ -20,4 +22,30 @@ export function repeat<T> (value: T, count: number): T[]
     for (var i = 0; i < count; i++)
         res[i] = value
     return res;
+}
+
+export function maxItems<T> (array: T[], selector: (T) => number): T[]
+{
+    let res: T[] = []
+    let max = Number.MAX_VALUE
+    for (let item of array)
+    {
+        var value = selector (item);
+        if (value > max)
+        {
+            max = value;
+            res = [ item ]
+        }
+        else if (approxEquals (value, max))
+            res.push (item)
+    }
+    return res;
+}
+
+export function sum (array: number[]): number
+{
+    let res = 0
+    for (var item of array)
+        res += item
+    return res
 }
