@@ -1,12 +1,12 @@
 ///<reference types="jsverify"/>
 
-import * as jsc from "jsverify";
-import { approxEquals } from "../src/Math/FMath";
+import * as jsc from "jsverify"
+import { approxEquals } from "../src/Math/FMath"
 import { NewVec, Vec, Vec2, Vec3, Vec4 } from "../src/Math/Vectors"
-import { newVec2, newVec3, newVec4 } from "../src/Math/ArrayVec";
-import { NewMat, NewMat4, Mat, Mat2, Mat3, Mat4 } from "../src/Math/Matrices";
-import { newMat2, newMat3, newMat4 } from "../src/Math/ArrayMat";
-import { arbNumArr, arbVec2, arbVec3, arbVec4, arbMat2, arbMat3, arbMat4 } from "./ArbitraryTypes";
+import { newVec2, newVec3, newVec4 } from "../src/Math/ArrayVec"
+import { NewMat, NewMat4, Mat, Mat2, Mat3, Mat4 } from "../src/Math/Matrices"
+import { newMat2, newMat3, newMat4 } from "../src/Math/ArrayMat"
+import * as Arb from "./ArbitraryTypes"
 
 function transformationIsLinear<M extends Mat<M, V>, V extends Vec<V>> (
     arbm: jsc.Arbitrary<M>, arbv: jsc.Arbitrary<V>)
@@ -141,69 +141,69 @@ function inverse<M extends Mat<M, V>, V extends Vec<V>> (
 
 describe ("matrix transformation is linear", () =>
 {
-    transformationIsLinear (arbMat2, arbVec2)
-    transformationIsLinear (arbMat3, arbVec3)
-    transformationIsLinear (arbMat4, arbVec4)
+    transformationIsLinear (Arb.mat2, Arb.vec2)
+    transformationIsLinear (Arb.mat3, Arb.vec3)
+    transformationIsLinear (Arb.mat4, Arb.vec4)
 })
 
 describe ("matrix addition and subtraction", () =>
 {
-    addAndSubtract (arbMat2, newMat2.zero)
-    addAndSubtract (arbMat3, newMat3.zero)
-    addAndSubtract (arbMat4, newMat4.zero)
+    addAndSubtract (Arb.mat2, newMat2.zero)
+    addAndSubtract (Arb.mat3, newMat3.zero)
+    addAndSubtract (Arb.mat4, newMat4.zero)
 })
 
 describe ("matrix multiplication with scalar", () =>
 {
-    multiplyWithScalar (arbMat2)
-    multiplyWithScalar (arbMat3)
-    multiplyWithScalar (arbMat4)
+    multiplyWithScalar (Arb.mat2)
+    multiplyWithScalar (Arb.mat3)
+    multiplyWithScalar (Arb.mat4)
 })
 
 describe ("matrix transpose", () =>
 {
-    transpose (arbMat2)
-    transpose (arbMat3)
-    transpose (arbMat4)
+    transpose (Arb.mat2)
+    transpose (Arb.mat3)
+    transpose (Arb.mat4)
 })
 
 describe ("matrix multiplication", () =>
 {
-    matrixMultiply (arbMat2, newMat2)
-    matrixMultiply (arbMat3, newMat3)
-    matrixMultiply (arbMat4, newMat4)
+    matrixMultiply (Arb.mat2, newMat2)
+    matrixMultiply (Arb.mat3, newMat3)
+    matrixMultiply (Arb.mat4, newMat4)
 })
 
 describe ("translation matrix", () =>
 {
-    translation (arbVec2, newMat2)
-    translation (arbVec3, newMat3)
-    translation (arbVec4, newMat4)
+    translation (Arb.vec2, newMat2)
+    translation (Arb.vec3, newMat3)
+    translation (Arb.vec4, newMat4)
 })
 
 describe ("scaling matrix", () =>
 {
-    scaling (arbVec2, newMat2)
-    scaling (arbVec3, newMat3)
-    scaling (arbVec4, newMat4)
+    scaling (Arb.vec2, newMat2)
+    scaling (Arb.vec3, newMat3)
+    scaling (Arb.vec4, newMat4)
 })
 
 describe ("rotation around Z axis", () =>
 {
-    rotationZ (arbVec2, newMat2, newVec2.zero)
-    rotationZ (arbVec3, newMat3, newVec3.zero)
-    rotationZ (arbVec4, newMat4, newVec4.zero)
+    rotationZ (Arb.vec2, newMat2, newVec2.zero)
+    rotationZ (Arb.vec3, newMat3, newVec3.zero)
+    rotationZ (Arb.vec4, newMat4, newVec4.zero)
 })
 
 describe ("rotation around X and Y axis", () =>
 {
-    rotationXY (arbVec3, newMat3, newVec3.zero)
-    rotationXY (arbVec4, newMat4, newVec4.zero)
+    rotationXY (Arb.vec3, newMat3, newVec3.zero)
+    rotationXY (Arb.vec4, newMat4, newVec4.zero)
 })
 
 describe ("matrix inverse", () =>
 {
-    inverse (arbMat2, newMat2)
-    inverse (arbMat3, newMat3)
-    inverse (arbMat4, newMat4)
+    inverse (Arb.mat2, newMat2)
+    inverse (Arb.mat3, newMat3)
+    inverse (Arb.mat4, newMat4)
 })

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ArrayVec_1 = require("../Math/ArrayVec");
 const FMath_1 = require("../Math/FMath");
-const ArrayHelper_1 = require("../Common/ArrayHelper");
+const ArrayExt_1 = require("../Common/ArrayExt");
 const VertexFilter = require("./VertexFilter");
 class Dir3D {
 }
@@ -46,7 +46,7 @@ function extents(positionals) {
 }
 exports.extents = extents;
 function furthest(positionals, direction) {
-    return ArrayHelper_1.maxItems(positionals, p => ArrayHelper_1.sum(p.position.toArray()));
+    return ArrayExt_1.maxItems(positionals, p => p.position.dot(direction));
 }
 exports.furthest = furthest;
 function facing(planars, direction) {

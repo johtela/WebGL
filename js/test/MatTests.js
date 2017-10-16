@@ -5,7 +5,7 @@ const jsc = require("jsverify");
 const FMath_1 = require("../src/Math/FMath");
 const ArrayVec_1 = require("../src/Math/ArrayVec");
 const ArrayMat_1 = require("../src/Math/ArrayMat");
-const ArbitraryTypes_1 = require("./ArbitraryTypes");
+const Arb = require("./ArbitraryTypes");
 function transformationIsLinear(arbm, arbv) {
     let d = arbv.generator(0).dimensions;
     jsc.property(`Mat${d}: M(v1) + M(v2) = M(v1 + v2)`, arbm, arbv, arbv, (m, v1, v2) => m.transform(v1).add(m.transform(v2))
@@ -79,52 +79,52 @@ function inverse(arb, newMat) {
     jsc.property(`Mat${d}: m * m^-1 = I when det(m) != 0`, jsc.suchthat(arb, m => m.determinant() != 0), m => m.mul(m.invert()).approxEquals(ident));
 }
 describe("matrix transformation is linear", () => {
-    transformationIsLinear(ArbitraryTypes_1.arbMat2, ArbitraryTypes_1.arbVec2);
-    transformationIsLinear(ArbitraryTypes_1.arbMat3, ArbitraryTypes_1.arbVec3);
-    transformationIsLinear(ArbitraryTypes_1.arbMat4, ArbitraryTypes_1.arbVec4);
+    transformationIsLinear(Arb.mat2, Arb.vec2);
+    transformationIsLinear(Arb.mat3, Arb.vec3);
+    transformationIsLinear(Arb.mat4, Arb.vec4);
 });
 describe("matrix addition and subtraction", () => {
-    addAndSubtract(ArbitraryTypes_1.arbMat2, ArrayMat_1.newMat2.zero);
-    addAndSubtract(ArbitraryTypes_1.arbMat3, ArrayMat_1.newMat3.zero);
-    addAndSubtract(ArbitraryTypes_1.arbMat4, ArrayMat_1.newMat4.zero);
+    addAndSubtract(Arb.mat2, ArrayMat_1.newMat2.zero);
+    addAndSubtract(Arb.mat3, ArrayMat_1.newMat3.zero);
+    addAndSubtract(Arb.mat4, ArrayMat_1.newMat4.zero);
 });
 describe("matrix multiplication with scalar", () => {
-    multiplyWithScalar(ArbitraryTypes_1.arbMat2);
-    multiplyWithScalar(ArbitraryTypes_1.arbMat3);
-    multiplyWithScalar(ArbitraryTypes_1.arbMat4);
+    multiplyWithScalar(Arb.mat2);
+    multiplyWithScalar(Arb.mat3);
+    multiplyWithScalar(Arb.mat4);
 });
 describe("matrix transpose", () => {
-    transpose(ArbitraryTypes_1.arbMat2);
-    transpose(ArbitraryTypes_1.arbMat3);
-    transpose(ArbitraryTypes_1.arbMat4);
+    transpose(Arb.mat2);
+    transpose(Arb.mat3);
+    transpose(Arb.mat4);
 });
 describe("matrix multiplication", () => {
-    matrixMultiply(ArbitraryTypes_1.arbMat2, ArrayMat_1.newMat2);
-    matrixMultiply(ArbitraryTypes_1.arbMat3, ArrayMat_1.newMat3);
-    matrixMultiply(ArbitraryTypes_1.arbMat4, ArrayMat_1.newMat4);
+    matrixMultiply(Arb.mat2, ArrayMat_1.newMat2);
+    matrixMultiply(Arb.mat3, ArrayMat_1.newMat3);
+    matrixMultiply(Arb.mat4, ArrayMat_1.newMat4);
 });
 describe("translation matrix", () => {
-    translation(ArbitraryTypes_1.arbVec2, ArrayMat_1.newMat2);
-    translation(ArbitraryTypes_1.arbVec3, ArrayMat_1.newMat3);
-    translation(ArbitraryTypes_1.arbVec4, ArrayMat_1.newMat4);
+    translation(Arb.vec2, ArrayMat_1.newMat2);
+    translation(Arb.vec3, ArrayMat_1.newMat3);
+    translation(Arb.vec4, ArrayMat_1.newMat4);
 });
 describe("scaling matrix", () => {
-    scaling(ArbitraryTypes_1.arbVec2, ArrayMat_1.newMat2);
-    scaling(ArbitraryTypes_1.arbVec3, ArrayMat_1.newMat3);
-    scaling(ArbitraryTypes_1.arbVec4, ArrayMat_1.newMat4);
+    scaling(Arb.vec2, ArrayMat_1.newMat2);
+    scaling(Arb.vec3, ArrayMat_1.newMat3);
+    scaling(Arb.vec4, ArrayMat_1.newMat4);
 });
 describe("rotation around Z axis", () => {
-    rotationZ(ArbitraryTypes_1.arbVec2, ArrayMat_1.newMat2, ArrayVec_1.newVec2.zero);
-    rotationZ(ArbitraryTypes_1.arbVec3, ArrayMat_1.newMat3, ArrayVec_1.newVec3.zero);
-    rotationZ(ArbitraryTypes_1.arbVec4, ArrayMat_1.newMat4, ArrayVec_1.newVec4.zero);
+    rotationZ(Arb.vec2, ArrayMat_1.newMat2, ArrayVec_1.newVec2.zero);
+    rotationZ(Arb.vec3, ArrayMat_1.newMat3, ArrayVec_1.newVec3.zero);
+    rotationZ(Arb.vec4, ArrayMat_1.newMat4, ArrayVec_1.newVec4.zero);
 });
 describe("rotation around X and Y axis", () => {
-    rotationXY(ArbitraryTypes_1.arbVec3, ArrayMat_1.newMat3, ArrayVec_1.newVec3.zero);
-    rotationXY(ArbitraryTypes_1.arbVec4, ArrayMat_1.newMat4, ArrayVec_1.newVec4.zero);
+    rotationXY(Arb.vec3, ArrayMat_1.newMat3, ArrayVec_1.newVec3.zero);
+    rotationXY(Arb.vec4, ArrayMat_1.newMat4, ArrayVec_1.newVec4.zero);
 });
 describe("matrix inverse", () => {
-    inverse(ArbitraryTypes_1.arbMat2, ArrayMat_1.newMat2);
-    inverse(ArbitraryTypes_1.arbMat3, ArrayMat_1.newMat3);
-    inverse(ArbitraryTypes_1.arbMat4, ArrayMat_1.newMat4);
+    inverse(Arb.mat2, ArrayMat_1.newMat2);
+    inverse(Arb.mat3, ArrayMat_1.newMat3);
+    inverse(Arb.mat4, ArrayMat_1.newMat4);
 });
 //# sourceMappingURL=MatTests.js.map

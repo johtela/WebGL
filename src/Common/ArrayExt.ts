@@ -24,7 +24,7 @@ export function repeat<T> (value: T, count: number): T[]
     return res;
 }
 
-export function maxItems<T> (array: T[], selector: (T) => number): T[]
+export function maxItems<T> (array: T[], selector: (ítem: T) => number): T[]
 {
     let res: T[] = []
     let max = Number.MAX_VALUE

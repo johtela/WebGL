@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const FMath = require("./FMath");
-const ArrayHelper = require("../Common/ArrayHelper");
+const ArrayHelper = require("../Common/ArrayExt");
 class NewArrayMat {
     constructor(rows, cols) {
         this.rows = rows;

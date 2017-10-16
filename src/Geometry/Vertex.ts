@@ -1,8 +1,8 @@
 import { Vec, Vec2, Vec3, Vec4, NewVec } from "../Math/Vectors"
-import { newVec3 } from "../Math/ArrayVec";
+import { newVec3 } from "../Math/ArrayVec"
 import { approxEquals } from "../Math/FMath"
 import { VertexDef } from "../GL/VertexAttr"
-import { maxItems, sum } from "../Common/ArrayHelper";
+import { maxItems, sum } from "../Common/ArrayExt"
 import * as VertexFilter from "./VertexFilter" 
 
 export interface Positional<V extends Vec<V>>
@@ -74,7 +74,7 @@ export function extents<P extends Positional<V>, V extends Vec<V>> (positionals:
 export function furthest<P extends Positional<V>, V extends Vec<V>> (positionals: P[],
     direction: V): P[]
 {
-    return maxItems (positionals, p => sum (p.position.toArray ()))
+    return maxItems (positionals, p => p.position.dot (direction))
 }
 
 export function facing<P extends Planar> (planars: P[], direction: Vec3): P[]

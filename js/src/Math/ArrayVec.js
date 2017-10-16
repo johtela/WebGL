@@ -2,16 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const FMath = require("./FMath");
 const Vectors_1 = require("./Vectors");
-const ArrayHelper = require("../Common/ArrayHelper");
+const ArrayExt = require("../Common/ArrayExt");
 class NewArrayVec {
     constructor(dimensions) {
         this.dimensions = dimensions;
     }
     get zero() {
-        return new ArrayVec(ArrayHelper.fill(Array(this.dimensions), 0));
+        return new ArrayVec(ArrayExt.fill(Array(this.dimensions), 0));
     }
     unif(x) {
-        return new ArrayVec(ArrayHelper.fill(Array(this.dimensions), x));
+        return new ArrayVec(ArrayExt.fill(Array(this.dimensions), x));
     }
     init(...values) {
         if (values.length != this.dimensions)

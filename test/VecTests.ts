@@ -4,10 +4,10 @@ import * as jsc from "jsverify"
 import { approxEquals } from "../src/Math/FMath"
 import { NewVec, Vec, Vec2, Vec3, Vec4 } from "../src/Math/Vectors"
 import { newVec2, newVec3, newVec4 } from "../src/Math/ArrayVec"
-import { NewMat, NewMat4, Mat, Mat2, Mat3, Mat4 } from "../src/Math/Matrices";
-import { newMat2, newMat3, newMat4 } from "../src/Math/ArrayMat";
-import { arbNumArr, arbVec2, arbVec3, arbVec4 } from "./ArbitraryTypes";
-import * as ArrayHelper from "../src/Common/ArrayHelper";
+import { NewMat, NewMat4, Mat, Mat2, Mat3, Mat4 } from "../src/Math/Matrices"
+import { newMat2, newMat3, newMat4 } from "../src/Math/ArrayMat"
+import * as Arb from "./ArbitraryTypes"
+import * as ArrayExt from "../src/Common/ArrayExt"
 
 function addAndSubtract<V extends Vec<V>> (arb: jsc.Arbitrary<V>, zero: V)
 {
@@ -31,7 +31,7 @@ function multiplyWithVector<V extends Vec<V>> (arb: jsc.Arbitrary<V>,
     newVec: NewVec<V>)
 {
     let dim = arb.generator (0).dimensions
-    jsc.property (`Vec${dim}: v * s = v * v.${ArrayHelper.repeat('s', dim)}`, 
+    jsc.property (`Vec${dim}: v * s = v * v.${ArrayExt.repeat('s', dim)}`, 
         arb, jsc.number,  
         (v, s) => v.mul (s).approxEquals (v.mul (newVec.unif (s))))
 }
@@ -73,49 +73,49 @@ function dotProduct<V extends Vec<V>> (arb: jsc.Arbitrary<V>, zero: V)
 
 describe ("vector addition and subtraction", () =>
 {
-    addAndSubtract (arbVec2, newVec2.zero)
-    addAndSubtract (arbVec3, newVec3.zero)
-    addAndSubtract (arbVec4, newVec4.zero)
+    addAndSubtract (Arb.vec2, newVec2.zero)
+    addAndSubtract (Arb.vec3, newVec3.zero)
+    addAndSubtract (Arb.vec4, newVec4.zero)
 })
 
 describe ("vector multiplication with scalar", () =>
 {
-    multiplyWithScalar (arbVec2)
-    multiplyWithScalar (arbVec3)
-    multiplyWithScalar (arbVec4)
+    multiplyWithScalar (Arb.vec2)
+    multiplyWithScalar (Arb.vec3)
+    multiplyWithScalar (Arb.vec4)
 })
 
 describe ("vector multiplication with vector", () =>
 {
-    multiplyWithVector (arbVec2, newVec2)
-    multiplyWithVector (arbVec3, newVec3)
-    multiplyWithVector (arbVec4, newVec4)
+    multiplyWithVector (Arb.vec2, newVec2)
+    multiplyWithVector (Arb.vec3, newVec3)
+    multiplyWithVector (Arb.vec4, newVec4)
 })
 
 describe ("vector division with scalar", () =>
 {
-    divideWithScalar (arbVec2)
-    divideWithScalar (arbVec3)
-    divideWithScalar (arbVec4)
+    divideWithScalar (Arb.vec2)
+    divideWithScalar (Arb.vec3)
+    divideWithScalar (Arb.vec4)
 })
 
 describe ("vector normalization", () =>
 {
-    normalize (arbVec2, newVec2.zero)
-    normalize (arbVec3, newVec3.zero)
-    normalize (arbVec4, newVec4.zero)
+    normalize (Arb.vec2, newVec2.zero)
+    normalize (Arb.vec3, newVec3.zero)
+    normalize (Arb.vec4, newVec4.zero)
 })
 
 describe ("vector dot product", () =>
 {
-    dotProduct (arbVec2, newVec2.zero)
-    dotProduct (arbVec3, newVec3.zero)
-    dotProduct (arbVec4, newVec4.zero)
+    dotProduct (Arb.vec2, newVec2.zero)
+    dotProduct (Arb.vec3, newVec3.zero)
+    dotProduct (Arb.vec4, newVec4.zero)
 })
 
 describe ("vec3 cross product", () =>
 {
-    var nonzero = jsc.suchthat (arbVec3, v => !v.equals (newVec3.zero))
+    var nonzero = jsc.suchthat (Arb.vec3, v => !v.equals (newVec3.zero))
     jsc.property (`Vec3: norm(v1) x norm(v2) . norm(v1|v2) = 1 when v1, v2 != [0 0 0]`, 
         nonzero, nonzero,
         (v1, v2) =>

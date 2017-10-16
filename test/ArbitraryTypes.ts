@@ -1,34 +1,55 @@
 ///<reference types="jsverify"/>
 
 import * as jsc from "jsverify"
-import * as ArrayHelper from "../src/Common/ArrayHelper";
+import * as ArrayExt from "../src/Common/ArrayExt";
 import { NewVec, Vec, Vec2, Vec3, Vec4 } from "../src/Math/Vectors"
 import { newVec2, newVec3, newVec4 } from "../src/Math/ArrayVec"
 import { NewMat, NewMat4, Mat, Mat2, Mat3, Mat4 } from "../src/Math/Matrices";
 import { newMat2, newMat3, newMat4 } from "../src/Math/ArrayMat";
+import { Positional, Planar } from "../src/Geometry/Vertex";
 
-export function arbNumArr (size: number): jsc.Arbitrary<number[]>
+export function numArr (size: number): jsc.Arbitrary<number[]>
 {
-    return jsc.tuple (ArrayHelper.fill (Array<jsc.Arbitrary<number>>(size), jsc.number));
+    return jsc.tuple (ArrayExt.fill (Array<jsc.Arbitrary<number>>(size), jsc.number));
 }
 
-export const arbVec2: jsc.Arbitrary<Vec2> = arbNumArr (2).smap (
+export const vec2: jsc.Arbitrary<Vec2> = numArr (2).smap (
     a => newVec2.fromArray (a),
     v => [v.x, v.y], v => v.toString ())
-export const arbVec3: jsc.Arbitrary<Vec3> = arbNumArr (3).smap (
+export const vec3: jsc.Arbitrary<Vec3> = numArr (3).smap (
     a => newVec3.fromArray (a),
     v => [v.x, v.y, v.z], v => v.toString ())
-export const arbVec4: jsc.Arbitrary<Vec4> = arbNumArr (4).smap (
+export const vec4: jsc.Arbitrary<Vec4> = numArr (4).smap (
     a => newVec4.fromArray (a),
     v => [v.x, v.y, v.z, v.w], v => v.toString ())
 
-export const arbMat2: jsc.Arbitrary<Mat2> = arbNumArr (4).smap (
+export const mat2: jsc.Arbitrary<Mat2> = numArr (4).smap (
     a => newMat2.fromArray (a, 2, 2),
     m => m.toArray (), m => m.toString ())
-export const arbMat3: jsc.Arbitrary<Mat3> = arbNumArr (9).smap (
+export const mat3: jsc.Arbitrary<Mat3> = numArr (9).smap (
     a => newMat3.fromArray (a, 3, 3),
     m => m.toArray (), m => m.toString ())
-export const arbMat4: jsc.Arbitrary<Mat4> = arbNumArr (16).smap (
+export const mat4: jsc.Arbitrary<Mat4> = numArr (16).smap (
     a => newMat4.fromArray (a, 4, 4),
     m => m.toArray (), m => m.toString ())
 
+export class ArbPositional<V extends Vec<V>> implements Positional<V>
+{
+    constructor (public position: V) {}
+}
+
+export const positional2: jsc.Arbitrary<ArbPositional<Vec2>> = vec2.smap (
+    v => new ArbPositional (v),
+    p => p.position, p => `{ position: ${p.position} }`)
+export const positional3: jsc.Arbitrary<ArbPositional<Vec3>> = vec3.smap (
+    v => new ArbPositional (v),
+    p => p.position, p => `{ position: ${p.position} }`)
+
+export class ArbPlanar implements Planar
+{
+    constructor (public normal: Vec3) {}
+}
+
+export const planar: jsc.Arbitrary<ArbPlanar> = vec3.smap (
+    v => new ArbPlanar (v.norm ()),
+    p => p.normal, p => `{ normal: ${p.normal} }`)

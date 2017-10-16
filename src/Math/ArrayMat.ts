@@ -1,7 +1,7 @@
 import { Vec, Vec2, Vec3, Vec4 } from "./Vectors";
 import { NewMat, NewMat4, Mat2, Mat3, Mat4 } from "./Matrices";
 import * as FMath from "./FMath"
-import * as ArrayHelper from "../Common/ArrayHelper";
+import * as ArrayHelper from "../Common/ArrayExt";
 
 class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
 {

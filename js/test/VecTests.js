@@ -4,8 +4,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsc = require("jsverify");
 const FMath_1 = require("../src/Math/FMath");
 const ArrayVec_1 = require("../src/Math/ArrayVec");
-const ArbitraryTypes_1 = require("./ArbitraryTypes");
-const ArrayHelper = require("../src/Common/ArrayHelper");
+const Arb = require("./ArbitraryTypes");
+const ArrayExt = require("../src/Common/ArrayExt");
 function addAndSubtract(arb, zero) {
     let dim = zero.dimensions;
     jsc.property(`Vec${dim}: v - v = ${zero}`, arb, v => v.sub(v).equals(zero));
@@ -18,7 +18,7 @@ function multiplyWithScalar(arb) {
 }
 function multiplyWithVector(arb, newVec) {
     let dim = arb.generator(0).dimensions;
-    jsc.property(`Vec${dim}: v * s = v * v.${ArrayHelper.repeat('s', dim)}`, arb, jsc.number, (v, s) => v.mul(s).approxEquals(v.mul(newVec.unif(s))));
+    jsc.property(`Vec${dim}: v * s = v * v.${ArrayExt.repeat('s', dim)}`, arb, jsc.number, (v, s) => v.mul(s).approxEquals(v.mul(newVec.unif(s))));
 }
 function divideWithScalar(arb) {
     let dim = arb.generator(0).dimensions;
@@ -39,37 +39,37 @@ function dotProduct(arb, zero) {
     jsc.property(`Vec${dim}: v1 . v2 == (v2 . norm(v1)) * |v1| when v1 != ${zero}`, nonzero, arb, (v1, v2) => FMath_1.approxEquals(v1.dot(v2), v2.dot(v1.norm()) * v1.len));
 }
 describe("vector addition and subtraction", () => {
-    addAndSubtract(ArbitraryTypes_1.arbVec2, ArrayVec_1.newVec2.zero);
-    addAndSubtract(ArbitraryTypes_1.arbVec3, ArrayVec_1.newVec3.zero);
-    addAndSubtract(ArbitraryTypes_1.arbVec4, ArrayVec_1.newVec4.zero);
+    addAndSubtract(Arb.vec2, ArrayVec_1.newVec2.zero);
+    addAndSubtract(Arb.vec3, ArrayVec_1.newVec3.zero);
+    addAndSubtract(Arb.vec4, ArrayVec_1.newVec4.zero);
 });
 describe("vector multiplication with scalar", () => {
-    multiplyWithScalar(ArbitraryTypes_1.arbVec2);
-    multiplyWithScalar(ArbitraryTypes_1.arbVec3);
-    multiplyWithScalar(ArbitraryTypes_1.arbVec4);
+    multiplyWithScalar(Arb.vec2);
+    multiplyWithScalar(Arb.vec3);
+    multiplyWithScalar(Arb.vec4);
 });
 describe("vector multiplication with vector", () => {
-    multiplyWithVector(ArbitraryTypes_1.arbVec2, ArrayVec_1.newVec2);
-    multiplyWithVector(ArbitraryTypes_1.arbVec3, ArrayVec_1.newVec3);
-    multiplyWithVector(ArbitraryTypes_1.arbVec4, ArrayVec_1.newVec4);
+    multiplyWithVector(Arb.vec2, ArrayVec_1.newVec2);
+    multiplyWithVector(Arb.vec3, ArrayVec_1.newVec3);
+    multiplyWithVector(Arb.vec4, ArrayVec_1.newVec4);
 });
 describe("vector division with scalar", () => {
-    divideWithScalar(ArbitraryTypes_1.arbVec2);
-    divideWithScalar(ArbitraryTypes_1.arbVec3);
-    divideWithScalar(ArbitraryTypes_1.arbVec4);
+    divideWithScalar(Arb.vec2);
+    divideWithScalar(Arb.vec3);
+    divideWithScalar(Arb.vec4);
 });
 describe("vector normalization", () => {
-    normalize(ArbitraryTypes_1.arbVec2, ArrayVec_1.newVec2.zero);
-    normalize(ArbitraryTypes_1.arbVec3, ArrayVec_1.newVec3.zero);
-    normalize(ArbitraryTypes_1.arbVec4, ArrayVec_1.newVec4.zero);
+    normalize(Arb.vec2, ArrayVec_1.newVec2.zero);
+    normalize(Arb.vec3, ArrayVec_1.newVec3.zero);
+    normalize(Arb.vec4, ArrayVec_1.newVec4.zero);
 });
 describe("vector dot product", () => {
-    dotProduct(ArbitraryTypes_1.arbVec2, ArrayVec_1.newVec2.zero);
-    dotProduct(ArbitraryTypes_1.arbVec3, ArrayVec_1.newVec3.zero);
-    dotProduct(ArbitraryTypes_1.arbVec4, ArrayVec_1.newVec4.zero);
+    dotProduct(Arb.vec2, ArrayVec_1.newVec2.zero);
+    dotProduct(Arb.vec3, ArrayVec_1.newVec3.zero);
+    dotProduct(Arb.vec4, ArrayVec_1.newVec4.zero);
 });
 describe("vec3 cross product", () => {
-    var nonzero = jsc.suchthat(ArbitraryTypes_1.arbVec3, v => !v.equals(ArrayVec_1.newVec3.zero));
+    var nonzero = jsc.suchthat(Arb.vec3, v => !v.equals(ArrayVec_1.newVec3.zero));
     jsc.property(`Vec3: norm(v1) x norm(v2) . norm(v1|v2) = 1 when v1, v2 != [0 0 0]`, nonzero, nonzero, (v1, v2) => {
         let v1n = v1.norm();
         let v2n = v2.norm();
