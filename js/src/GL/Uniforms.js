@@ -1,17 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Uniform = (function () {
-    function Uniform(name, type, numComponents, getter) {
+class Uniform {
+    constructor(name, type, numComponents, getter) {
         this.name = name;
         this.type = type;
         this.numComponents = numComponents;
         this.getter = getter;
-        var lowComp = type === 'matrix' ? 2 : 1;
+        let lowComp = type === 'matrix' ? 2 : 1;
         if (numComponents < lowComp || numComponents > 4)
-            throw RangeError("Number of components must be [" + lowComp + "..4] for " + type + ".");
+            throw RangeError(`Number of components must be [${lowComp}..4] for ${type}.`);
     }
-    Uniform.prototype.setValue = function (gl, uniforms) {
-        var val = this.getter(uniforms);
+    setValue(gl, uniforms) {
+        let val = this.getter(uniforms);
         if (val.length < this.numComponents || val.length % this.numComponents !== 0)
             throw Error('Invalid number of uniform elements.');
         switch (this.numComponents) {
@@ -45,58 +45,56 @@ var Uniform = (function () {
                 else
                     gl.uniformMatrix4fv(this.location, false, val);
         }
-    };
-    return Uniform;
-}());
+    }
+}
 exports.Uniform = Uniform;
-var UniformDef = (function () {
-    function UniformDef(uniforms) {
+class UniformDef {
+    constructor(uniforms) {
         this.uniforms = uniforms;
     }
-    UniformDef.prototype.initUniformLocations = function (gl, prg) {
-        this.uniforms.forEach(function (u) {
+    initUniformLocations(gl, prg) {
+        this.uniforms.forEach(u => {
             var loc = gl.getUniformLocation(prg, u.name);
             if (loc === null)
-                throw Error("Uniform '" + u.name + "' not found in program.");
+                throw Error(`Uniform '${u.name}' not found in program.`);
             u.location = loc;
         });
-    };
-    UniformDef.prototype.setValues = function (gl, uniforms) {
-        this.uniforms.forEach(function (unif) { return unif.setValue(gl, uniforms); });
-    };
-    return UniformDef;
-}());
+    }
+    setValues(gl, uniforms) {
+        this.uniforms.forEach(unif => unif.setValue(gl, uniforms));
+    }
+}
 exports.UniformDef = UniformDef;
 function int(name) {
-    return new Uniform(name, 'int', 1, function (u) { return [u[name]]; });
+    return new Uniform(name, 'int', 1, u => [u[name]]);
 }
 exports.int = int;
 function float(name) {
-    return new Uniform(name, 'float', 1, function (u) { return [u[name]]; });
+    return new Uniform(name, 'float', 1, u => [u[name]]);
 }
 exports.float = float;
 function vec2(name) {
-    return new Uniform(name, 'float', 2, function (u) { return u[name].toArray(); });
+    return new Uniform(name, 'float', 2, u => u[name].toArray());
 }
 exports.vec2 = vec2;
 function vec3(name) {
-    return new Uniform(name, 'float', 3, function (u) { return u[name].toArray(); });
+    return new Uniform(name, 'float', 3, u => u[name].toArray());
 }
 exports.vec3 = vec3;
 function vec4(name) {
-    return new Uniform(name, 'float', 4, function (u) { return u[name].toArray(); });
+    return new Uniform(name, 'float', 4, u => u[name].toArray());
 }
 exports.vec4 = vec4;
 function mat2(name) {
-    return new Uniform(name, 'matrix', 2, function (u) { return u[name].toArray(); });
+    return new Uniform(name, 'matrix', 2, u => u[name].toArray());
 }
 exports.mat2 = mat2;
 function mat3(name) {
-    return new Uniform(name, 'matrix', 3, function (u) { return u[name].toArray(); });
+    return new Uniform(name, 'matrix', 3, u => u[name].toArray());
 }
 exports.mat3 = mat3;
 function mat4(name) {
-    return new Uniform(name, 'matrix', 4, function (u) { return u[name].toArray(); });
+    return new Uniform(name, 'matrix', 4, u => u[name].toArray());
 }
 exports.mat4 = mat4;
 //# sourceMappingURL=Uniforms.js.map

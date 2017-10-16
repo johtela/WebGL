@@ -1,14 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var GLResource = (function () {
-    function GLResource(gl) {
+class GLResource {
+    constructor(gl) {
         this.gl = gl;
     }
-    return GLResource;
-}());
+}
 exports.GLResource = GLResource;
 function using(resource, action) {
-    var res = resource instanceof Array ?
+    let res = resource instanceof Array ?
         resource.pop() :
         resource;
     if (!res)

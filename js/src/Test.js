@@ -1,25 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ArrayVec_1 = require("./Math/ArrayVec");
-var ArrayMat_1 = require("./Math/ArrayMat");
-var Shader_1 = require("./GL/Shader");
-var VAttr = require("./GL/VertexAttr");
-var Unif = require("./GL/Uniforms");
-var Buffers_1 = require("./GL/Buffers");
-var Program_1 = require("./GL/Program");
+const ArrayVec_1 = require("./Math/ArrayVec");
+const ArrayMat_1 = require("./Math/ArrayMat");
+const Shader_1 = require("./GL/Shader");
+const VAttr = require("./GL/VertexAttr");
+const Unif = require("./GL/Uniforms");
+const Buffers_1 = require("./GL/Buffers");
+const Program_1 = require("./GL/Program");
 // Vertex shader program
-var vsSource = require('./shaders/simple.vert');
-var fsSource = require('./shaders/simple.frag');
-var SimpleVertex = (function () {
-    function SimpleVertex() {
-    }
-    return SimpleVertex;
-}());
-var MyUniforms = (function () {
-    function MyUniforms() {
-    }
-    return MyUniforms;
-}());
+const vsSource = require('./shaders/simple.vert');
+const fsSource = require('./shaders/simple.frag');
+class SimpleVertex {
+}
+class MyUniforms {
+}
 function drawScene(gl, program, vbuffer, ibuffer, uniforms) {
     gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
     gl.clearDepth(1.0); // Clear everything
@@ -30,30 +24,30 @@ function drawScene(gl, program, vbuffer, ibuffer, uniforms) {
     program.drawElements(gl.TRIANGLE_STRIP, vbuffer, ibuffer, uniforms);
 }
 function main() {
-    var vertices = [
+    let vertices = [
         { aVertexPosition: ArrayVec_1.newVec2.init(1, 1) },
         { aVertexPosition: ArrayVec_1.newVec2.init(-1, 1) },
         { aVertexPosition: ArrayVec_1.newVec2.init(1, -1) },
         { aVertexPosition: ArrayVec_1.newVec2.init(-1, -1) }
     ];
-    var indices = [0, 1, 2, 3];
-    var uniforms = {
+    let indices = [0, 1, 2, 3];
+    let uniforms = {
         uModelViewMatrix: ArrayMat_1.newMat4.translation([0.0, 0.0, -4.0]),
         uProjectionMatrix: ArrayMat_1.newMat4.perspective(-1, 1, -1, 1, 1, 100)
     };
-    var canvas = document.querySelector("#glCanvas");
+    let canvas = document.querySelector("#glCanvas");
     // Initialize the GL context
-    var gl = canvas.getContext("webgl");
+    let gl = canvas.getContext("webgl");
     // Only continue if WebGL is available and working
     if (!gl) {
         alert("Unable to initialize WebGL. Your browser or machine may not support it.");
         return;
     }
-    var vertShader = new Shader_1.Shader(gl, 'vertex', vsSource);
-    var fragShader = new Shader_1.Shader(gl, 'fragment', fsSource);
-    var program = new Program_1.Program(gl, [vertShader, fragShader], [VAttr.vec2('aVertexPosition')], [Unif.mat4('uModelViewMatrix'), Unif.mat4('uProjectionMatrix')]);
-    var vbuffer = new Buffers_1.VertexBuffer(gl, program.vertexDef, vertices);
-    var ibuffer = new Buffers_1.IndexBuffer(gl, indices);
+    let vertShader = new Shader_1.Shader(gl, 'vertex', vsSource);
+    let fragShader = new Shader_1.Shader(gl, 'fragment', fsSource);
+    let program = new Program_1.Program(gl, [vertShader, fragShader], [VAttr.vec2('aVertexPosition')], [Unif.mat4('uModelViewMatrix'), Unif.mat4('uProjectionMatrix')]);
+    let vbuffer = new Buffers_1.VertexBuffer(gl, program.vertexDef, vertices);
+    let ibuffer = new Buffers_1.IndexBuffer(gl, indices);
     drawScene(gl, program, vbuffer, ibuffer, uniforms);
 }
 main();

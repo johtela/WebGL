@@ -6,17 +6,7 @@ import { NewVec, Vec, Vec2, Vec3, Vec4 } from "../src/Math/Vectors"
 import { newVec2, newVec3, newVec4 } from "../src/Math/ArrayVec";
 import { NewMat, NewMat4, Mat, Mat2, Mat3, Mat4 } from "../src/Math/Matrices";
 import { newMat2, newMat3, newMat4 } from "../src/Math/ArrayMat";
-import { arbNumArr, arbVec2, arbVec3, arbVec4 } from "./VecTests";
-
-const arbMat2: jsc.Arbitrary<Mat2> = arbNumArr (4).smap (
-    a => newMat2.fromArray (a, 2, 2),
-    m => m.toArray (), m => m.toString ())
-const arbMat3: jsc.Arbitrary<Mat3> = arbNumArr (9).smap (
-    a => newMat3.fromArray (a, 3, 3),
-    m => m.toArray (), m => m.toString ())
-const arbMat4: jsc.Arbitrary<Mat4> = arbNumArr (16).smap (
-    a => newMat4.fromArray (a, 4, 4),
-    m => m.toArray (), m => m.toString ())
+import { arbNumArr, arbVec2, arbVec3, arbVec4, arbMat2, arbMat3, arbMat4 } from "./ArbitraryTypes";
 
 function transformationIsLinear<M extends Mat<M, V>, V extends Vec<V>> (
     arbm: jsc.Arbitrary<M>, arbv: jsc.Arbitrary<V>)

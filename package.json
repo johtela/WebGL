@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "webpack",
-    "test": "mocha ./js/test/MatTests.js"
+    "test": "mocha ./js/test/*Tests.js"
   },
   "repository": {
     "type": "git",

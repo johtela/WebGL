@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var FMath_1 = require("../Math/FMath");
+const FMath_1 = require("../Math/FMath");
 function clone(array) {
-    var rows = array.length;
-    var res = Array(rows);
-    for (var r = 0; r < rows; r++)
+    let rows = array.length;
+    let res = Array(rows);
+    for (let r = 0; r < rows; r++)
         res[r] = array[r].slice();
     return res;
 }
@@ -23,10 +23,9 @@ function repeat(value, count) {
 }
 exports.repeat = repeat;
 function maxItems(array, selector) {
-    var res = [];
-    var max = Number.MAX_VALUE;
-    for (var _i = 0, array_1 = array; _i < array_1.length; _i++) {
-        var item = array_1[_i];
+    let res = [];
+    let max = Number.MAX_VALUE;
+    for (let item of array) {
         var value = selector(item);
         if (value > max) {
             max = value;
@@ -39,11 +38,9 @@ function maxItems(array, selector) {
 }
 exports.maxItems = maxItems;
 function sum(array) {
-    var res = 0;
-    for (var _i = 0, array_2 = array; _i < array_2.length; _i++) {
-        var item = array_2[_i];
+    let res = 0;
+    for (var item of array)
         res += item;
-    }
     return res;
 }
 exports.sum = sum;
