@@ -19,10 +19,10 @@
             "preLaunchTask": "tsc",
             "name": "Run Mocha",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
-            "args": ["${workspaceRoot}/js/*Test*.js"],
+            "args": ["${workspaceRoot}/js/test/*Tests.js"],
             "cwd": "${workspaceRoot}",
             "outFiles": [
-                "${workspaceRoot}/js/*.js"
+                "${workspaceRoot}/js/**.js"
             ]
         }       
     ]

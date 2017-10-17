@@ -40,4 +40,17 @@ describe("find furthest positionals in a direction", () => {
     testFurthest(Arb.positionals2, Arb.vec2);
     testFurthest(Arb.positionals3, Arb.vec3);
 });
+describe("find planars facing a direction", () => {
+    jsc.property("at least one planar is facing the same direction as a random item in array", jsc.suchthat(Arb.planars, p => p.length > 0), planars => {
+        let randItem = jsc.random(0, planars.length - 1);
+        return Vertex_1.facing(planars, planars[randItem].normal).length > 0;
+    });
+});
+describe("positionals are coplanar", () => {
+    let zero = ArrayVec_1.newVec3.zero;
+    jsc.property("given two vectors all linear combinations of the vectors are coplanar", Arb.vec3, Arb.vec3, jsc.number, jsc.number, (v1, v2, s1, s2) => {
+        let positions = [v1, v2, zero, v1.mul(s1).add(v2.mul(s2))];
+        return Vertex_1.areCoplanar(positions.map(p => new Arb.APositional(p)));
+    });
+});
 //# sourceMappingURL=VertexTests.js.map

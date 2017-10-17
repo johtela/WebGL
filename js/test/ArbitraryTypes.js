@@ -20,6 +20,7 @@ class APositional {
         this.position = position;
     }
 }
+exports.APositional = APositional;
 exports.positional2 = exports.vec2.smap(v => new APositional(v), p => p.position, p => `{ position: ${p.position} }`);
 exports.positional3 = exports.vec3.smap(v => new APositional(v), p => p.position, p => `{ position: ${p.position} }`);
 exports.positionals2 = jsc.array(exports.positional2);

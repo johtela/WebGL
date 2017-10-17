@@ -33,7 +33,7 @@ export const mat4: jsc.Arbitrary<Mat4> = numArr (16).smap (
     a => newMat4.fromArray (a, 4, 4),
     m => m.toArray (), m => m.toString ())
 
-class APositional<V extends Vec<V>> implements Positional<V>
+export class APositional<V extends Vec<V>> implements Positional<V>
 {
     constructor (public position: V) {}
 }
