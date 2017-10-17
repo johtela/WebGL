@@ -33,23 +33,26 @@ export const mat4: jsc.Arbitrary<Mat4> = numArr (16).smap (
     a => newMat4.fromArray (a, 4, 4),
     m => m.toArray (), m => m.toString ())
 
-export class ArbPositional<V extends Vec<V>> implements Positional<V>
+class APositional<V extends Vec<V>> implements Positional<V>
 {
     constructor (public position: V) {}
 }
 
-export const positional2: jsc.Arbitrary<ArbPositional<Vec2>> = vec2.smap (
-    v => new ArbPositional (v),
+export const positional2: jsc.Arbitrary<Positional<Vec2>> = vec2.smap (
+    v => new APositional (v),
     p => p.position, p => `{ position: ${p.position} }`)
-export const positional3: jsc.Arbitrary<ArbPositional<Vec3>> = vec3.smap (
-    v => new ArbPositional (v),
+export const positional3: jsc.Arbitrary<Positional<Vec3>> = vec3.smap (
+    v => new APositional (v),
     p => p.position, p => `{ position: ${p.position} }`)
+export const positionals2: jsc.Arbitrary<Positional<Vec2>[]> = jsc.array (positional2)
+export const positionals3: jsc.Arbitrary<Positional<Vec3>[]> = jsc.array (positional3)
 
-export class ArbPlanar implements Planar
+class APlanar implements Planar
 {
     constructor (public normal: Vec3) {}
 }
 
-export const planar: jsc.Arbitrary<ArbPlanar> = vec3.smap (
-    v => new ArbPlanar (v.norm ()),
+export const planar: jsc.Arbitrary<Planar> = vec3.smap (
+    v => new APlanar (v.norm ()),
     p => p.normal, p => `{ normal: ${p.normal} }`)
+export const planars: jsc.Arbitrary<Planar[]> = jsc.array (planar)

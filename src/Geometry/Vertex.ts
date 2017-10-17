@@ -1,5 +1,5 @@
 import { Vec, Vec2, Vec3, Vec4, NewVec } from "../Math/Vectors"
-import { newVec3 } from "../Math/ArrayVec"
+import { newVec2, newVec3 } from "../Math/ArrayVec"
 import { approxEquals } from "../Math/FMath"
 import { VertexDef } from "../GL/VertexAttr"
 import { maxItems, sum } from "../Common/ArrayExt"
@@ -21,6 +21,14 @@ export interface Vertex<V>
 }
 
 export interface Vertex3D<V> extends Vertex<V>, Positional<Vec3>, Planar {}
+
+export class Dir2D
+{
+    static left: Vec2 = newVec2.init (-1, 0)
+    static right: Vec2 = newVec2.init (1, 0)
+    static down: Vec2 = newVec2.init (0, -1)
+    static up: Vec2 = newVec2.init (0, 1)
+}
 
 export class Dir3D
 {
@@ -51,8 +59,8 @@ export function copyVertex3D<V extends Vertex3D<V>> (vertex: V, position: Vec3, 
 
 export function center<P extends Positional<V>, V extends Vec<V>> (positionals: P[]): V
 {
-    let [ min, max ] = extents (positionals)
-    return min.add (max).divide (2)
+    let [ min, max ] = extents<P, V> (positionals)
+    return min.add (max).div (2)
 }
 
 export function extents<P extends Positional<V>, V extends Vec<V>> (positionals: P[]): [V, V]

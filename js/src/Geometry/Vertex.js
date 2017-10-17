@@ -4,6 +4,13 @@ const ArrayVec_1 = require("../Math/ArrayVec");
 const FMath_1 = require("../Math/FMath");
 const ArrayExt_1 = require("../Common/ArrayExt");
 const VertexFilter = require("./VertexFilter");
+class Dir2D {
+}
+Dir2D.left = ArrayVec_1.newVec2.init(-1, 0);
+Dir2D.right = ArrayVec_1.newVec2.init(1, 0);
+Dir2D.down = ArrayVec_1.newVec2.init(0, -1);
+Dir2D.up = ArrayVec_1.newVec2.init(0, 1);
+exports.Dir2D = Dir2D;
 class Dir3D {
 }
 Dir3D.left = ArrayVec_1.newVec3.init(-1, 0, 0);
@@ -29,7 +36,7 @@ function copyVertex3D(vertex, position, normal) {
 exports.copyVertex3D = copyVertex3D;
 function center(positionals) {
     let [min, max] = extents(positionals);
-    return min.add(max).divide(2);
+    return min.add(max).div(2);
 }
 exports.center = center;
 function extents(positionals) {
