@@ -1,4 +1,4 @@
-import { Vec, NewVec, Vec3 } from "../Math/Vectors";
+import { Vec, NewVec, Vec3, Vec4 } from "../Math/Vectors";
 import { Mat4 } from "../Math/Matrices";
 
 export enum Alignment
@@ -153,7 +153,11 @@ export function fromPositions<V extends Vec<V>> (positions: V[]): Aabb<V>
     return new Aabb<V> (first).add (positions)
 }
 
-export function transformAabb3 (bbox: Aabb<Vec3>, matrix: Mat4): Aabb<Vec3>
+export function transformAabb3 (bbox: Aabb<Vec3>, matrix: Mat4, newVec4: NewVec<Vec4>): Aabb<Vec3>
 {
-    return fromPositions (bbox.corners.map (c => matrix.transform ()))
+    return fromPositions (bbox.corners.map (c => 
+        {
+            let v = newVec4.fromArray ([ ...c.toArray (), 1 ])
+            return matrix.transform (v)
+        }))
 }
