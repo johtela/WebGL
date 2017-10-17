@@ -4,7 +4,7 @@ import * as ArrayExt from "../Common/ArrayExt"
 
 class NewArrayVec implements NewVec<Vec2>, NewVec<Vec3>, NewVec<Vec4>
 {
-    constructor (private dimensions: number) { }
+    constructor (readonly dimensions: number) { }
 
     get zero (): Vec2 & Vec3 & Vec4
     {
@@ -261,4 +261,5 @@ class ArrayVec implements Vec2, Vec3, Vec4
     {
         return new NewArrayVec (this.dimensions)
     }
+
 }
