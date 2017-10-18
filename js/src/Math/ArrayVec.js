@@ -171,5 +171,22 @@ class ArrayVec {
     newVec() {
         return new NewArrayVec(this.dimensions);
     }
+    toVec2() {
+        return new ArrayVec(this.array.slice(0, 1));
+    }
+    toVec3(z = 0) {
+        switch (this.dimensions) {
+            case 2: new ArrayVec([...this.array, z]);
+            case 4: new ArrayVec(this.array.slice(0, 2));
+            default: throw Error("Unsupported conversion.");
+        }
+    }
+    toVec4(z = 0, w = 0) {
+        switch (this.dimensions) {
+            case 2: new ArrayVec([...this.array, z, w]);
+            case 3: new ArrayVec([...this.array, w]);
+            default: throw Error("Unsupported conversion.");
+        }
+    }
 }
 //# sourceMappingURL=ArrayVec.js.map

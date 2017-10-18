@@ -111,7 +111,7 @@ function fromPositions(positions) {
 }
 exports.fromPositions = fromPositions;
 function transformAabb3(bbox, matrix) {
-    return fromPositions(bbox.corners.map(c => matrix.transform()));
+    return fromPositions(bbox.corners.map(c => matrix.transform(c.toVec4(1)).toVec3()));
 }
 exports.transformAabb3 = transformAabb3;
 //# sourceMappingURL=Aabb.js.map

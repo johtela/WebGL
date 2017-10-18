@@ -262,4 +262,28 @@ class ArrayVec implements Vec2, Vec3, Vec4
         return new NewArrayVec (this.dimensions)
     }
 
+    toVec2 (): ArrayVec
+    {
+        return new ArrayVec (this.array.slice (0, 1))
+    }
+
+    toVec3 (z: number = 0): ArrayVec
+    {
+        switch (this.dimensions)
+        {
+            case 2: new ArrayVec ([...this.array, z])
+            case 4: new ArrayVec (this.array.slice (0, 2))
+            default: throw Error ("Unsupported conversion.")
+        }
+    }
+
+    toVec4 (z: number = 0, w: number = 0): ArrayVec
+    {
+        switch (this.dimensions)
+        {
+            case 2: new ArrayVec ([...this.array, z, w])
+            case 3: new ArrayVec ([...this.array, w])
+            default: throw Error ("Unsupported conversion.")
+        }
+    }
 }

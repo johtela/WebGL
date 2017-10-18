@@ -83,6 +83,8 @@ export interface Vec2 extends Vec<Vec2>
 {
     x: number
     y: number
+    toVec3 (z: number): Vec3
+    toVec4 (z: number, w: number): Vec4
 }
 
 export interface Vec3 extends Vec<Vec3>
@@ -91,6 +93,8 @@ export interface Vec3 extends Vec<Vec3>
     y: number
     z: number
 
+    toVec2 (): Vec2
+    toVec4 (w: number): Vec4
     cross (other: Vec3): Vec3
 }
 
@@ -100,4 +104,7 @@ export interface Vec4 extends Vec<Vec4>
     y: number
     z: number
     w: number
+
+    toVec2 (): Vec2
+    toVec3 (): Vec3
 }
