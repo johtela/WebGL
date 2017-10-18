@@ -47,7 +47,7 @@ function translation(arb, newMat) {
 }
 function scaling(arb, newMat) {
     let d = newMat.rows;
-    jsc.property(`Mat${d}: M(v1) = v1 * v2 where M = scale (v2)`, arb, arb, (v1, v2) => newMat.scaling(v2).transform(v1).equals(v1.mul(v2)));
+    jsc.property(`Mat${d}: M(v1) = v1 * v2 where M = scale (v2)`, arb, arb, (v1, v2) => newMat.scaling(v2.toArray()).transform(v1).equals(v1.mul(v2)));
 }
 function rotationZ(arb, newMat, zero) {
     let d = newMat.rows;

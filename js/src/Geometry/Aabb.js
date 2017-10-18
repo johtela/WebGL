@@ -95,6 +95,9 @@ class Aabb {
         }
         return true;
     }
+    transform(matrix) {
+        return fromPositions(this.corners.map(matrix.transform));
+    }
     equals(other) {
         return this.min.equals(other.min) && this.max.equals(other.max);
     }
@@ -110,8 +113,4 @@ function fromPositions(positions) {
     return new Aabb(first).add(positions);
 }
 exports.fromPositions = fromPositions;
-function transformAabb3(bbox, matrix) {
-    return fromPositions(bbox.corners.map(c => matrix.transform(c.toVec4(1)).toVec3()));
-}
-exports.transformAabb3 = transformAabb3;
 //# sourceMappingURL=Aabb.js.map

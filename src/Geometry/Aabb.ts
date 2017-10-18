@@ -1,5 +1,5 @@
-import { Vec, NewVec, Vec3, Vec4 } from "../Math/Vectors";
-import { Mat4 } from "../Math/Matrices";
+import { Vec, NewVec } from "../Math/Vectors";
+import { Mat } from "../Math/Matrices";
 
 export enum Alignment
 {
@@ -134,6 +134,11 @@ export class Aabb<V extends Vec<V>>
         return true;
     }
 
+    transform<M extends Mat<M>> (matrix: M): Aabb<V>
+    {
+        return fromPositions (this.corners.map (matrix.transform))
+    }
+
     equals (other: Aabb<V>): boolean
     {
         return this.min.equals (other.min) && this.max.equals (other.max)
@@ -151,9 +156,4 @@ export function fromPositions<V extends Vec<V>> (positions: V[]): Aabb<V>
     if (!first)
         throw Error ("No positions given")
     return new Aabb<V> (first).add (positions)
-}
-
-export function transformAabb3 (bbox: Aabb<Vec3>, matrix: Mat4): Aabb<Vec3>
-{
-    return fromPositions (bbox.corners.map (c => matrix.transform (c.toVec4 (1)).toVec3 ()))
 }

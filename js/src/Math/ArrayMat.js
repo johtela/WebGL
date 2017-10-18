@@ -23,23 +23,17 @@ class NewArrayMat {
     }
     translation(offsets) {
         let { rows: r, cols: c } = this;
-        let offs = offsets instanceof Array ? offsets : offsets.toArray();
-        if (offs.length > r)
-            throw RangeError(`Too many offsets for ${r}x${c} matrix.`);
         let res = this.identityArray();
         let lastCol = c - 1;
-        for (let i = 0; i < Math.min(offs.length, r - 1); i++)
-            res[lastCol * r + i] = offs[i];
+        for (let i = 0; i < Math.min(offsets.length, r - 1); i++)
+            res[lastCol * r + i] = offsets[i];
         return new ArrayMat(res, r, c);
     }
     scaling(factors) {
         let { rows: r, cols: c } = this;
-        let facs = factors instanceof Array ? factors : factors.toArray();
-        if (facs.length > r)
-            throw RangeError(`Too many factors for ${r}x${c} matrix.`);
         let res = this.identityArray();
-        for (let i = 0; i < Math.min(facs.length, r, c); i++)
-            res[i * r + i] = facs[i];
+        for (let i = 0; i < Math.min(factors.length, r, c); i++)
+            res[i * r + i] = factors[i];
         return new ArrayMat(res, r, c);
     }
     rotationX(angle) {
@@ -121,7 +115,7 @@ class ArrayMat {
         this.rows = rows;
         this.cols = cols;
         if (array.length !== rows * cols)
-            throw RangeError("Array length has to be equeal rows * columns.");
+            throw RangeError("Array length has to be equal to rows * columns.");
     }
     element(row, column) {
         return this.array[column * this.rows + row];
@@ -172,9 +166,10 @@ class ArrayMat {
             this.matrixMultiply(other) :
             this.map(x => x * other);
     }
-    transform(other) {
-        let vecm = new ArrayMat(other.toArray(), this.cols, 1);
-        return other.newVec().fromArray(this.matrixMultiply(vecm).array);
+    transform(vec) {
+        let arr = [...vec.toArray(), 1, 1].slice(0, this.cols);
+        let vecm = new ArrayMat(arr, this.cols, 1);
+        return vec.newVec().fromArray(this.matrixMultiply(vecm).array);
     }
     transpose() {
         let rows = this.cols;

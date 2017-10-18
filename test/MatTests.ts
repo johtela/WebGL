@@ -8,7 +8,7 @@ import { NewMat, NewMat4, Mat, Mat2, Mat3, Mat4 } from "../src/Math/Matrices"
 import { newMat2, newMat3, newMat4 } from "../src/Math/ArrayMat"
 import * as Arb from "./ArbitraryTypes"
 
-function transformationIsLinear<M extends Mat<M, V>, V extends Vec<V>> (
+function transformationIsLinear<M extends Mat<M>, V extends Vec<V>> (
     arbm: jsc.Arbitrary<M>, arbv: jsc.Arbitrary<V>)
 {
     let d = arbv.generator (0).dimensions
@@ -19,8 +19,7 @@ function transformationIsLinear<M extends Mat<M, V>, V extends Vec<V>> (
         (m, v, s) => m.transform (v.mul (s)).approxEquals (m.transform (v).mul (s)))
 }
 
-function addAndSubtract<M extends Mat<M, V>, V extends Vec<V>> (
-    arb: jsc.Arbitrary<M>, zero: M)
+function addAndSubtract<M extends Mat<M>> (arb: jsc.Arbitrary<M>, zero: M)
 {
     jsc.property (`Mat${zero.rows}: m - m = [ 0 ... ]`, arb, 
         m => m.sub (m).equals (zero))
@@ -28,8 +27,7 @@ function addAndSubtract<M extends Mat<M, V>, V extends Vec<V>> (
         (m1, m2) => m1.sub (m2).equals (m1.add (m2.mul (-1))))
 }
 
-function multiplyWithScalar<M extends Mat<M, V>, V extends Vec<V>> (
-    arb: jsc.Arbitrary<M>)
+function multiplyWithScalar<M extends Mat<M>> (arb: jsc.Arbitrary<M>)
 {
     let d = arb.generator (0).rows
     jsc.property (`Mat${d}: m * s * (1 / s) = m when s != 0`, 
@@ -37,8 +35,7 @@ function multiplyWithScalar<M extends Mat<M, V>, V extends Vec<V>> (
         (m, s) => m.mul (s).mul (1 / s).approxEquals (m))
 }
 
-function transpose<M extends Mat<M, V>, V extends Vec<V>> (
-    arb: jsc.Arbitrary<M>)
+function transpose<M extends Mat<M>> (arb: jsc.Arbitrary<M>)
 {
     let d = arb.generator (0).rows
     jsc.property (`Mat${d}: m.rows = m^T.cols and m.cols = m^T.rows`, arb, 
@@ -54,8 +51,7 @@ function transpose<M extends Mat<M, V>, V extends Vec<V>> (
             .equals (m1.add (m2).transpose ()))
 }
 
-function matrixMultiply<M extends Mat<M, V>, V extends Vec<V>> (
-    arb: jsc.Arbitrary<M>, newMat: NewMat<M, V>)
+function matrixMultiply<M extends Mat<M>> (arb: jsc.Arbitrary<M>, newMat: NewMat<M>)
 {
     let d = newMat.rows
     let ident = newMat.identity
@@ -66,8 +62,8 @@ function matrixMultiply<M extends Mat<M, V>, V extends Vec<V>> (
         (m1, m2, m3) => m1.mul (m2).mul (m3).approxEquals (m1.mul (m2.mul (m3))))
 }
 
-function translation<M extends Mat<M, V>, V extends Vec<V>> (
-    arb: jsc.Arbitrary<V>, newMat: NewMat<M, V>)
+function translation<M extends Mat<M>, V extends Vec<V>> (
+    arb: jsc.Arbitrary<V>, newMat: NewMat<M>)
 {
     let d = newMat.rows
     jsc.property (`Mat${d}: M(v1) = v1 + v2 where M = translate (v2)`, 
@@ -81,17 +77,17 @@ function translation<M extends Mat<M, V>, V extends Vec<V>> (
         })
 }
 
-function scaling<M extends Mat<M, V>, V extends Vec<V>> (
-    arb: jsc.Arbitrary<V>, newMat: NewMat<M, V>)
+function scaling<M extends Mat<M>, V extends Vec<V>> (
+    arb: jsc.Arbitrary<V>, newMat: NewMat<M>)
 {
     let d = newMat.rows
     jsc.property (`Mat${d}: M(v1) = v1 * v2 where M = scale (v2)`, 
         arb, arb, 
-        (v1, v2) => newMat.scaling (v2).transform (v1).equals (v1.mul (v2)))
+        (v1, v2) => newMat.scaling (v2.toArray ()).transform (v1).equals (v1.mul (v2)))
 }
 
-function rotationZ<M extends Mat<M, V>, V extends Vec<V>> (
-    arb: jsc.Arbitrary<V>, newMat: NewMat<M, V>, zero: V)
+function rotationZ<M extends Mat<M>, V extends Vec<V>> (
+    arb: jsc.Arbitrary<V>, newMat: NewMat<M>, zero: V)
 {
     let d = newMat.rows
     let arbnz = jsc.suchthat (arb, v => !v.equals (zero)) 
@@ -108,8 +104,8 @@ function rotationZ<M extends Mat<M, V>, V extends Vec<V>> (
         })
 }
 
-function rotationXY<M extends Mat<M, V>, V extends Vec<V>> (
-    arb: jsc.Arbitrary<V>, newMat: NewMat<M, V>, zero: V)
+function rotationXY<M extends Mat<M>, V extends Vec<V>> (
+    arb: jsc.Arbitrary<V>, newMat: NewMat<M>, zero: V)
 {
     let d = newMat.rows
     let arbnz = jsc.suchthat (arb, v => !v.equals (zero)) 
@@ -128,8 +124,7 @@ function rotationXY<M extends Mat<M, V>, V extends Vec<V>> (
         })
 }
 
-function inverse<M extends Mat<M, V>, V extends Vec<V>> (
-    arb: jsc.Arbitrary<M>, newMat: NewMat<M, V>)
+function inverse<M extends Mat<M>> (arb: jsc.Arbitrary<M>, newMat: NewMat<M>)
 {
     let ident = newMat.identity
     let zero = newMat.zero

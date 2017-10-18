@@ -19,9 +19,9 @@ class NewArrayVec {
         return new ArrayVec(values);
     }
     fromArray(array) {
-        if (array.length != this.dimensions)
+        if (array.length < this.dimensions)
             throw RangeError(`Expected ${this.dimensions} components.`);
-        return new ArrayVec(array);
+        return new ArrayVec(array.slice(0, this.dimensions));
     }
 }
 exports.newVec2 = new NewArrayVec(2);
@@ -172,12 +172,12 @@ class ArrayVec {
         return new NewArrayVec(this.dimensions);
     }
     toVec2() {
-        return new ArrayVec(this.array.slice(0, 1));
+        return new ArrayVec(this.array.slice(0, 2));
     }
     toVec3(z = 0) {
         switch (this.dimensions) {
             case 2: new ArrayVec([...this.array, z]);
-            case 4: new ArrayVec(this.array.slice(0, 2));
+            case 4: new ArrayVec(this.array.slice(0, 3));
             default: throw Error("Unsupported conversion.");
         }
     }

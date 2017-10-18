@@ -3,7 +3,7 @@ import { NewMat, NewMat4, Mat2, Mat3, Mat4 } from "./Matrices";
 import * as FMath from "./FMath"
 import * as ArrayHelper from "../Common/ArrayExt";
 
-class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
+class NewArrayMat implements NewMat<Mat2>, NewMat<Mat3>, NewMat4
 {
     constructor(readonly rows: number, readonly cols: number) { }
 
@@ -27,28 +27,22 @@ class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
         return new ArrayMat (this.identityArray (), this.rows, this.cols)
     }
 
-    translation (offsets: number[]|Vec2|Vec3|Vec4): Mat2 & Mat3 & Mat4
+    translation (offsets: number[]): Mat2 & Mat3 & Mat4
     {
         let { rows: r, cols: c } = this        
-        let offs = offsets instanceof Array ? offsets : offsets.toArray ()
-        if (offs.length > r)
-            throw RangeError (`Too many offsets for ${r}x${c} matrix.`)
         let res = this.identityArray ()
         let lastCol = c - 1
-        for (let i = 0; i < Math.min (offs.length, r - 1); i++)
-            res [lastCol * r + i] = offs[i]
+        for (let i = 0; i < Math.min (offsets.length, r - 1); i++)
+            res [lastCol * r + i] = offsets[i]
         return new ArrayMat (res, r, c)
     }
 
-    scaling (factors: number[]|Vec2|Vec3|Vec4): Mat2 & Mat3 & Mat4
+    scaling (factors: number[]): Mat2 & Mat3 & Mat4
     {
         let { rows: r, cols: c } = this        
-        let facs = factors instanceof Array ? factors :factors.toArray ()
-        if (facs.length > r)
-            throw RangeError (`Too many factors for ${r}x${c} matrix.`)
         let res = this.identityArray ()
-        for (let i = 0; i < Math.min (facs.length, r, c); i++)
-            res [i * r + i] = facs[i]
+        for (let i = 0; i < Math.min (factors.length, r, c); i++)
+            res [i * r + i] = factors[i]
         return new ArrayMat (res, r, c)
     }
 
@@ -144,8 +138,8 @@ class NewArrayMat implements NewMat<Mat2, Vec2>, NewMat<Mat3, Vec3>, NewMat4
     }
 }
 
-export const newMat2: NewMat<Mat2, Vec2> = new NewArrayMat (2, 2)
-export const newMat3: NewMat<Mat3, Vec3> = new NewArrayMat (3, 3)
+export const newMat2: NewMat<Mat2> = new NewArrayMat (2, 2)
+export const newMat3: NewMat<Mat3> = new NewArrayMat (3, 3)
 export const newMat4: NewMat4 = new NewArrayMat (4, 4)
 
 class ArrayMat implements Mat2, Mat3, Mat4
@@ -153,7 +147,7 @@ class ArrayMat implements Mat2, Mat3, Mat4
     constructor (readonly array: number[], readonly rows: number, readonly cols: number) 
     {
         if (array.length !== rows *cols)
-            throw RangeError ("Array length has to be equeal rows * columns.") 
+            throw RangeError ("Array length has to be equal to rows * columns.") 
     }
 
     element (row: number, column: number): number
@@ -224,10 +218,11 @@ class ArrayMat implements Mat2, Mat3, Mat4
             this.map (x => x * other)
     }
 
-    transform<V extends Vec<V>> (other: V): V
+    transform<V extends Vec<V>> (vec: V): V
     {
-        let vecm = new ArrayMat (other.toArray (), this.cols, 1)
-        return other.newVec ().fromArray (this.matrixMultiply (vecm).array)
+        let arr = [...vec.toArray (), 1, 1].slice (0, this.cols)
+        let vecm = new ArrayMat (arr, this.cols, 1)
+        return vec.newVec ().fromArray (this.matrixMultiply (vecm).array)
     }
 
     transpose (): ArrayMat
