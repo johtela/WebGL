@@ -316,5 +316,43 @@ class ArrayMat {
     toFloat32Array() {
         return new Float32Array(this.array);
     }
+    toMat2() {
+        return new ArrayMat([
+            ...this.array.slice(0, 2),
+            ...this.array.slice(this.rows, this.rows + 2)
+        ], 2, 2);
+    }
+    toMat3() {
+        switch (this.rows) {
+            case 2: return new ArrayMat([
+                ...this.array.slice(0, 2), 0,
+                ...this.array.slice(2, 4), 0,
+                0, 0, 1
+            ], 3, 3);
+            case 4: return new ArrayMat([
+                ...this.array.slice(0, 3),
+                ...this.array.slice(4, 7),
+                ...this.array.slice(8, 11)
+            ], 3, 3);
+            default: throw Error("Unsupported conversion.");
+        }
+    }
+    toMat4() {
+        switch (this.rows) {
+            case 2: return new ArrayMat([
+                ...this.array.slice(0, 2), 0, 0,
+                ...this.array.slice(2, 4), 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ], 4, 4);
+            case 3: return new ArrayMat([
+                ...this.array.slice(0, 3), 0,
+                ...this.array.slice(3, 7), 0,
+                ...this.array.slice(7, 10), 0,
+                0, 0, 0, 1
+            ], 4, 4);
+            default: throw Error("Unsupported conversion.");
+        }
+    }
 }
 //# sourceMappingURL=ArrayMat.js.map

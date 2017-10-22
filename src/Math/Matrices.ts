@@ -35,9 +35,23 @@ export interface NewMat<M extends Mat<M>>
     fromArray (array: number[], rows: number, cols: number)
 }
 
-export interface Mat2 extends Mat<Mat2> {}
-export interface Mat3 extends Mat<Mat3> {}
-export interface Mat4 extends Mat<Mat4> {}
+export interface Mat2 extends Mat<Mat2> 
+{
+    toMat3 (): Mat3
+    toMat4 (): Mat4
+}
+
+export interface Mat3 extends Mat<Mat3> 
+{
+    toMat2 (): Mat2
+    toMat4 (): Mat4
+}
+
+export interface Mat4 extends Mat<Mat4> 
+{
+    toMat2 (): Mat2
+    toMat3 (): Mat3
+}
 
 export interface NewMat4 extends NewMat<Mat4>
 {
