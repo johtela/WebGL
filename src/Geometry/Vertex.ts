@@ -49,12 +49,18 @@ export function newVertex3D<V extends Vertex3D<V>> (vertType: new () => V,
     return vertex
 }
 
-export function copyVertex3D<V extends Vertex3D<V>> (vertex: V, position: Vec3, normal: Vec3): V
+export function copyVertex3D<V extends Vertex3D<V>> (vertex: V, position: Vec3 = vertex.position, 
+    normal: Vec3 = vertex.normal): V
 {
     let copy = <V>Object.create (vertex)
     copy.position = position
     copy.normal = normal
     return copy
+}
+
+export function instanceOfVertex3D<V> (object: any): object is Vertex3D<V>
+{
+    return 'vertexDef' in object && 'position' in object && 'normal' in object
 }
 
 export function center<P extends Positional<V>, V extends Vec<V>> (positionals: P[]): V

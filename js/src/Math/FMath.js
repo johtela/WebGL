@@ -1,5 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.twoPI = Math.PI * 2;
+exports.PIover2 = Math.PI / 2;
+exports.PIover4 = Math.PI / 4;
+exports.PIover6 = Math.PI / 6;
 function approxEquals(x, y, epsilon = 0.000001) {
     if (x === y)
         return true;

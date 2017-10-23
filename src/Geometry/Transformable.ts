@@ -7,42 +7,42 @@ export interface Transformable<T extends Transformable<T, M>, M extends Mat<M>>
     reverseWinding (): T
 }
 
-function translate<T extends Transformable<T, M>, M extends Mat<M>> (tf: T, offsets: number[])
+export function translate<T extends Transformable<T, M>, M extends Mat<M>> (tf: T, offsets: number[])
 {
     return tf.transform (tf.newMat ().translation (offsets))
 }
 
-function scale<T extends Transformable<T, M>, M extends Mat<M>> (tf: T, factors: number[])
+export function scale<T extends Transformable<T, M>, M extends Mat<M>> (tf: T, factors: number[])
 {
     return tf.transform (tf.newMat ().scaling (factors))
 }
 
-function rotateX<T extends Transformable<T, M>, M extends Mat<M>> (tf: T, angle: number)
+export function rotateX<T extends Transformable<T, M>, M extends Mat<M>> (tf: T, angle: number)
 {
     return tf.transform (tf.newMat ().rotationX (angle))
 }
 
-function rotateY<T extends Transformable<T, M>, M extends Mat<M>> (tf: T, angle: number)
+export function rotateY<T extends Transformable<T, M>, M extends Mat<M>> (tf: T, angle: number)
 {
     return tf.transform (tf.newMat ().rotationY (angle))
 }
 
-function rotateZ<T extends Transformable<T, M>, M extends Mat<M>> (tf: T, angle: number)
+export function rotateZ<T extends Transformable<T, M>, M extends Mat<M>> (tf: T, angle: number)
 {
     return tf.transform (tf.newMat ().rotationZ (angle))
 }
 
-function reflectX<T extends Transformable<T, M>, M extends Mat<M>> (tf: T)
+export function reflectX<T extends Transformable<T, M>, M extends Mat<M>> (tf: T)
 {
     return tf.transform (tf.newMat ().scaling ([-1,1,1,1])).reverseWinding ()
 }
 
-function reflectY<T extends Transformable<T, M>, M extends Mat<M>> (tf: T)
+export function reflectY<T extends Transformable<T, M>, M extends Mat<M>> (tf: T)
 {
     return tf.transform (tf.newMat ().scaling ([1,-1,1,1])).reverseWinding ()
 }
 
-function reflectZ<T extends Transformable<T, M>, M extends Mat<M>> (tf: T)
+export function reflectZ<T extends Transformable<T, M>, M extends Mat<M>> (tf: T)
 {
     return tf.transform (tf.newMat ().scaling ([1,1,-1,1])).reverseWinding ()
 }

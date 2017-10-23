@@ -27,13 +27,17 @@ function newVertex3D(vertType, position, normal) {
     return vertex;
 }
 exports.newVertex3D = newVertex3D;
-function copyVertex3D(vertex, position, normal) {
+function copyVertex3D(vertex, position = vertex.position, normal = vertex.normal) {
     let copy = Object.create(vertex);
     copy.position = position;
     copy.normal = normal;
     return copy;
 }
 exports.copyVertex3D = copyVertex3D;
+function instanceOfVertex3D(object) {
+    return 'vertexDef' in object && 'position' in object && 'normal' in object;
+}
+exports.instanceOfVertex3D = instanceOfVertex3D;
 function center(positionals) {
     let [min, max] = extents(positionals);
     return min.add(max).div(2);

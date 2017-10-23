@@ -1,3 +1,8 @@
+export const twoPI = Math.PI * 2
+export const PIover2 = Math.PI / 2
+export const PIover4 = Math.PI / 4
+export const PIover6 = Math.PI / 6
+
 export function approxEquals (x: number, y: number, 
     epsilon: number = 0.000001) : boolean
 {
