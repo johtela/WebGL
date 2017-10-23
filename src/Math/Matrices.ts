@@ -1,6 +1,7 @@
-import { Vec, Vec2, Vec3, Vec4 } from "./Vectors";
+import { Equatable } from "../Common/Equatable"
+import { Vec, Vec2, Vec3, Vec4 } from "./Vectors"
 
-export interface Mat<M extends Mat<M>>
+export interface Mat<M extends Mat<M>> extends Equatable<M>
 {
     readonly rows: number
     readonly cols: number
@@ -14,7 +15,6 @@ export interface Mat<M extends Mat<M>>
     determinant (): number
     invert (): M
 
-    equals (other: M): boolean
     approxEquals (other: M, epsilon?: number): boolean
     toString (): string
     toArray (): number[]

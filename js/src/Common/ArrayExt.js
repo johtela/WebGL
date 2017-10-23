@@ -44,4 +44,9 @@ function sum(array) {
     return res;
 }
 exports.sum = sum;
+function distinct(array) {
+    let firstOccurence = (item, index) => array.findIndex(i => i.equals(item)) === index;
+    return array.filter(firstOccurence);
+}
+exports.distinct = distinct;
 //# sourceMappingURL=ArrayExt.js.map

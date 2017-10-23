@@ -1,3 +1,5 @@
+import { Equatable } from "../Common/Equatable";
+
 /**
  * Enumeration that defines the coordinate dimensions used in the vector types.
  */
@@ -13,7 +15,7 @@ export enum Dim
  * Base interface for all vectory types. Defines methods that have the same signature
  * in all vector variants.
  */
-export interface Vec<V extends Vec<V>>
+export interface Vec<V extends Vec<V>> extends Equatable<V>
 {
     /**
      * Number dimensions in the vector.
@@ -54,7 +56,6 @@ export interface Vec<V extends Vec<V>>
     mul (other: V | number): V
     div (other: V | number): V
     norm (): V
-    equals (other: V): boolean
     approxEquals (other: V, epsilon?: number): boolean
     dot (other: V): number
     abs (): V

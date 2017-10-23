@@ -1,3 +1,4 @@
+import { Equatable } from "./Equatable";
 import { approxEquals } from "../Math/FMath";
 
 export function clone<T> (array: T[][]): T[][]
@@ -48,4 +49,10 @@ export function sum (array: number[]): number
     for (var item of array)
         res += item
     return res
+}
+
+export function distinct<T extends Equatable<T>> (array: T[])
+{
+    let firstOccurence = (item: T, index: number) => array.findIndex (i => i.equals (item)) === index
+    return array.filter (firstOccurence)    
 }

@@ -90,7 +90,7 @@ function alignmentMatrix(xalign, yalign, zalign, alignWith, bbox) {
 function align(geometries, xalign = Aabb_1.Alignment.none, yalign = Aabb_1.Alignment.none, zalign = Aabb_1.Alignment.none) {
     let cnt = geometries.length;
     if (cnt === 0)
-        throw RangeError("Geometries array is empty.");
+        throw Error("Geometries array is empty.");
     let result = new Array(cnt);
     let alignWith = geometries[0].boundingBox;
     result[0] = geometries[0];

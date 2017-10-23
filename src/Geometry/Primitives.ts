@@ -1,3 +1,4 @@
+import { distinct } from "../Common/ArrayExt";
 import { twoPI } from "../Math/FMath"
 import { Vec3 } from "../Math/Vectors"
 import { newVec3 } from "../Math/ArrayVec"
@@ -76,5 +77,71 @@ export class Circular<V extends Vertex3D<V>> extends Primitive<V>
             result [cnt - 1] = cnt - 4
         }
         return result
+    }
+}
+
+export class Quadrilateral<V extends Vertex3D<V>> extends Primitive<V>
+{
+    constructor (vertices: V[])
+    {
+        if (vertices.length !== 4)
+            throw RangeError ("Quadrilaterals must have 4 vertices.")
+        super (vertices)
+    }
+
+    static trapezoid<V extends Vertex3D<V>> (vertType: new () => V, width: number, height: number, 
+        topLeftOffset: number, topRightOffset: number)
+    {
+        let bottomRight = width / 2
+        let topRight = bottomRight + topRightOffset
+        let top = height / 2
+        let bottomLeft = -bottomRight
+        let topLeft = bottomLeft + topLeftOffset
+        let bottom = -top
+        let normal = newVec3.init (0, 0, 1)
+        return new Quadrilateral<V> ([
+            newVertex3D (vertType, newVec3.init (topRight, top, 0), normal),
+            newVertex3D (vertType, newVec3.init (bottomRight, bottom, 0), normal),
+            newVertex3D (vertType, newVec3.init (bottomLeft, bottom, 0), normal),
+            newVertex3D (vertType, newVec3.init (topLeft, top, 0), normal)])
+    }
+
+    static parallelogram<V extends Vertex3D<V>> (vertType: new () => V, width: number, height: number, 
+        topOffset: number): Quadrilateral<V> 
+    {
+        return Quadrilateral.trapezoid (vertType, width, height, topOffset, topOffset);
+    }
+
+    static rectangle<V extends Vertex3D<V>> (vertType: new () => V, width: number, height: number):
+        Quadrilateral<V> 
+    {
+        return Quadrilateral.trapezoid (vertType, width, height, 0, 0);
+    }
+
+    protected generateIndices (): number[]
+    {
+        return [ 0, 1, 2, 2, 3, 0]
+    }
+}
+
+export class Polygon<V extends Vertex3D<V>> extends Primitive<V>
+{
+    protected constructor (vertices: V[], protected tesselatedIndices: number[])
+    {
+        super (vertices)
+    }
+
+    static fromVertices<V extends Vertex3D<V>> (vertices: V[])
+    {
+        var path = distinct (vertices)
+        if (path.length < 3)
+            throw new Error ("Polygon must contain at least 3 unique vertices. " +
+                "Duplicate vertices are removed from the list automatically.")
+        return new Polygon<V> (vertices, [])
+    }
+
+    protected generateIndices (): number[]
+    {
+        return this.tesselatedIndices
     }
 }

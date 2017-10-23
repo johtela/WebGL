@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const ArrayExt_1 = require("../Common/ArrayExt");
 const FMath_1 = require("../Math/FMath");
 const ArrayVec_1 = require("../Math/ArrayVec");
 const Vertex_1 = require("./Vertex");
@@ -60,4 +61,53 @@ class Circular extends Primitive {
     }
 }
 exports.Circular = Circular;
+class Quadrilateral extends Primitive {
+    constructor(vertices) {
+        if (vertices.length !== 4)
+            throw RangeError("Quadrilaterals must have 4 vertices.");
+        super(vertices);
+    }
+    static trapezoid(vertType, width, height, topLeftOffset, topRightOffset) {
+        let bottomRight = width / 2;
+        let topRight = bottomRight + topRightOffset;
+        let top = height / 2;
+        let bottomLeft = -bottomRight;
+        let topLeft = bottomLeft + topLeftOffset;
+        let bottom = -top;
+        let normal = ArrayVec_1.newVec3.init(0, 0, 1);
+        return new Quadrilateral([
+            Vertex_1.newVertex3D(vertType, ArrayVec_1.newVec3.init(topRight, top, 0), normal),
+            Vertex_1.newVertex3D(vertType, ArrayVec_1.newVec3.init(bottomRight, bottom, 0), normal),
+            Vertex_1.newVertex3D(vertType, ArrayVec_1.newVec3.init(bottomLeft, bottom, 0), normal),
+            Vertex_1.newVertex3D(vertType, ArrayVec_1.newVec3.init(topLeft, top, 0), normal)
+        ]);
+    }
+    static parallelogram(vertType, width, height, topOffset) {
+        return Quadrilateral.trapezoid(vertType, width, height, topOffset, topOffset);
+    }
+    static rectangle(vertType, width, height) {
+        return Quadrilateral.trapezoid(vertType, width, height, 0, 0);
+    }
+    generateIndices() {
+        return [0, 1, 2, 2, 3, 0];
+    }
+}
+exports.Quadrilateral = Quadrilateral;
+class Polygon extends Primitive {
+    constructor(vertices, tesselatedIndices) {
+        super(vertices);
+        this.tesselatedIndices = tesselatedIndices;
+    }
+    static fromVertices(vertices) {
+        var path = ArrayExt_1.distinct(vertices);
+        if (path.length < 3)
+            throw new Error("Polygon must contain at least 3 unique vertices. " +
+                "Duplicate vertices are removed from the list automatically.");
+        return new Polygon(vertices, []);
+    }
+    generateIndices() {
+        return this.tesselatedIndices;
+    }
+}
+exports.Polygon = Polygon;
 //# sourceMappingURL=Primitives.js.map

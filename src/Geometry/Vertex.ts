@@ -1,3 +1,4 @@
+import { Equatable } from "../Common/Equatable";
 import { Vec, Vec2, Vec3, Vec4, NewVec } from "../Math/Vectors"
 import { newVec2, newVec3 } from "../Math/ArrayVec"
 import { approxEquals } from "../Math/FMath"
@@ -20,7 +21,8 @@ export interface Vertex<V>
     vertexDef: VertexDef<V>
 }
 
-export interface Vertex3D<V> extends Vertex<V>, Positional<Vec3>, Planar {}
+export interface Vertex3D<V> extends Vertex<V>, Positional<Vec3>, Planar, Equatable<Vertex3D<V>> 
+{}
 
 export class Dir2D
 {

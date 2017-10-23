@@ -128,7 +128,7 @@ export function align<V extends Vertex3D<V>> (geometries: Geometry<V>[],
 {
     let cnt = geometries.length
     if (cnt === 0)
-        throw RangeError ("Geometries array is empty.")
+        throw Error ("Geometries array is empty.")
     let result = new Array<Geometry<V>>(cnt)
     let alignWith = geometries[0].boundingBox
     result[0] = geometries[0]
