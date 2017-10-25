@@ -1,9 +1,9 @@
-import { twoPI } from "../Math/FMath";
-import { Reducible, Reducer, foreach, filter, min } from "../Common/Reducible";
-import { Vec3 } from "../Math/Vectors";
-import { Positional } from "./Vertex";
+import { IterableExt } from "../Common/IterableExt"
+import { twoPI } from "../Math/FMath"
+import { Vec3 } from "../Math/Vectors"
+import { Positional } from "./Vertex"
 
-class TessVertex implements Reducible<TessVertex>
+class TessVertex extends IterableExt<TessVertex>
 {
     next: TessVertex
     previous: TessVertex
@@ -11,7 +11,10 @@ class TessVertex implements Reducible<TessVertex>
     angle: number
     isEar: boolean
 
-    constructor (public index: number) {}
+    constructor (public index: number) 
+    {
+        super ()
+    }
 
     get isReflex(): boolean
     {
@@ -41,18 +44,16 @@ class TessVertex implements Reducible<TessVertex>
         this.next.previous = this.previous
     }
 
-    reduce<U> (initial: U, reducer: Reducer<TessVertex, U>): U
+    *[Symbol.iterator] (): Iterator<TessVertex>
     {
-        let result = initial
         let first = <TessVertex>this
         let curr = first
         do
         {
-            result = reducer (result, curr)
-            curr = curr.next            
+            yield curr
+            curr = curr.next
         }
-        while (curr !== first)
-        return result
+        while (curr != first)
     }
 }
 
@@ -65,12 +66,14 @@ export function tesselatePolygon<P extends Positional<Vec3>> (vertices: P[]): nu
     var resInd = 0
     var tessVerts = TessVertex.circularList (count)
 
-    foreach (tessVerts, tv => updateVertexAngle (tv, vertices))
-    foreach (tessVerts, tv => updateIsEar (tv, vertices))
+    for (let tv of tessVerts) 
+        updateVertexAngle (tv, vertices)
+    for (let tv of tessVerts) 
+        updateIsEar (tv, vertices)
 
     while (count > 3)
     {
-        var curr = tessVerts.reduce (tessVerts, filter (v => v.isEar, min (v => v.angle)))
+        var curr = Iter.min (tessVerts.filter (v => v.isEar), v => v.angle)
         var prev = curr.previous
         var next = curr.next
         result[resInd++] = prev.index
