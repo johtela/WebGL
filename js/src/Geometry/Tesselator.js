@@ -47,9 +47,7 @@ function tesselatePolygon(vertices) {
     for (let tv of tessVerts)
         updateIsEar(tv, vertices);
     while (count > 3) {
-        let [curr,] = Iter.min(Iter.filter(tessVerts, v => v.isEar), v => v.angle);
-        if (!curr)
-            return result;
+        let curr = Iter.min(Iter.filter(tessVerts, v => v.isEar), v => v.angle);
         let prev = curr.previous;
         let next = curr.next;
         result[resInd++] = prev.index;

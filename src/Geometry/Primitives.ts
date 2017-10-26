@@ -1,10 +1,11 @@
 import { distinct } from "../Common/ArrayExt";
 import { twoPI } from "../Math/FMath"
-import { Vec3 } from "../Math/Vectors"
+import { Vec3, Vec2 } from "../Math/Vectors"
 import { newVec3 } from "../Math/ArrayVec"
 import { Mat3, Mat4 } from "../Math/Matrices"
 import { Vertex3D, newVertex3D } from "./Vertex"
 import { Geometry } from "./Geometry"
+import { tesselatePolygon } from "./Tesselator"
 
 export abstract class Primitive<V extends Vertex3D<V>> extends Geometry<V>
 {
@@ -131,13 +132,19 @@ export class Polygon<V extends Vertex3D<V>> extends Primitive<V>
         super (vertices)
     }
 
-    static fromVertices<V extends Vertex3D<V>> (vertices: V[])
+    static fromVertices<V extends Vertex3D<V>> (vertices: V[]): Polygon<V>
     {
         var path = distinct (vertices)
         if (path.length < 3)
             throw new Error ("Polygon must contain at least 3 unique vertices. " +
                 "Duplicate vertices are removed from the list automatically.")
-        return new Polygon<V> (vertices, [])
+        return new Polygon<V> (vertices, tesselatePolygon (vertices))
+    }
+
+    static fromVec2s<V extends Vertex3D<V>> (vertType: new () => V, vectors: Vec2[]): Polygon<V>
+    {
+        return Polygon.fromVertices (vectors.map (vec => 
+            newVertex3D (vertType, vec.toVec3 (0), newVec3.init (0, 0, 1))))
     }
 
     protected generateIndices (): number[]

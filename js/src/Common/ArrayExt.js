@@ -49,4 +49,8 @@ function distinct(array) {
     return array.filter(firstOccurence);
 }
 exports.distinct = distinct;
+function flatMap(array, selector) {
+    return new Array().concat(...array.map(selector));
+}
+exports.flatMap = flatMap;
 //# sourceMappingURL=ArrayExt.js.map

@@ -5,6 +5,7 @@ const FMath_1 = require("../Math/FMath");
 const ArrayVec_1 = require("../Math/ArrayVec");
 const Vertex_1 = require("./Vertex");
 const Geometry_1 = require("./Geometry");
+const Tesselator_1 = require("./Tesselator");
 class Primitive extends Geometry_1.Geometry {
     constructor(vertices) {
         super();
@@ -103,7 +104,10 @@ class Polygon extends Primitive {
         if (path.length < 3)
             throw new Error("Polygon must contain at least 3 unique vertices. " +
                 "Duplicate vertices are removed from the list automatically.");
-        return new Polygon(vertices, []);
+        return new Polygon(vertices, Tesselator_1.tesselatePolygon(vertices));
+    }
+    static fromVec2s(vertType, vectors) {
+        return Polygon.fromVertices(vectors.map(vec => Vertex_1.newVertex3D(vertType, vec.toVec3(0), ArrayVec_1.newVec3.init(0, 0, 1))));
     }
     generateIndices() {
         return this.tesselatedIndices;

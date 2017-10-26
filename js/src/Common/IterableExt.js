@@ -26,7 +26,9 @@ function first(iter) {
 exports.first = first;
 function* skip(iter, skipCount) {
     for (let item of iter)
-        if (--skipCount < 0)
+        if (skipCount > 0)
+            skipCount--;
+        else
             yield item;
 }
 exports.skip = skip;
@@ -34,6 +36,8 @@ function* take(iter, takeCount) {
     for (let item of iter)
         if (takeCount-- > 0)
             yield item;
+        else
+            break;
 }
 exports.take = take;
 function isEmpty(iter) {
@@ -41,33 +45,29 @@ function isEmpty(iter) {
 }
 exports.isEmpty = isEmpty;
 function min(iter, selector) {
-    let minItem = first(iter);
-    if (!minItem)
-        throw Error("Empty iterator given.");
-    let minValue = selector(minItem);
-    for (let item of skip(iter, 1)) {
+    let result = undefined;
+    let minValue = Number.MAX_VALUE;
+    for (let item of iter) {
         let value = selector(item);
         if (value < minValue) {
             minValue = value;
-            minItem = item;
+            result = item;
         }
     }
-    return [minItem, minValue];
+    return result;
 }
 exports.min = min;
 function max(iter, selector) {
-    let maxItem = first(iter);
-    if (!maxItem)
-        throw Error("Empty iterator given.");
-    let maxValue = selector(maxItem);
-    for (let item of skip(iter, 1)) {
+    let result = undefined;
+    let maxValue = Number.MAX_VALUE;
+    for (let item of iter) {
         let value = selector(item);
         if (value > maxValue) {
             maxValue = value;
-            maxItem = item;
+            result = item;
         }
     }
-    return [maxItem, maxValue];
+    return result;
 }
 exports.max = max;
 function every(iter, predicate) {

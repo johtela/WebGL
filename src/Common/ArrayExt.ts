@@ -56,3 +56,8 @@ export function distinct<T extends Equatable<T>> (array: T[])
     let firstOccurence = (item: T, index: number) => array.findIndex (i => i.equals (item)) === index
     return array.filter (firstOccurence)    
 }
+
+export function flatMap<T, U> (array: T[], selector: (item: T) => U[]): U[]
+{
+    return new Array<U> ().concat (...array.map (selector))
+}
