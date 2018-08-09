@@ -1,11 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Geometry_1 = require("./Geometry");
 const ArrayExt_1 = require("../Common/ArrayExt");
+const Geometry_1 = require("./Geometry");
 class Composite extends Geometry_1.Geometry {
     constructor(geometries) {
         super();
         this.geometries = geometries;
+    }
+    static create(...geometries) {
+        return new Composite(geometries);
     }
     generateVertices() {
         return ArrayExt_1.flatMap(this.geometries, g => g.vertices);
