@@ -78,42 +78,42 @@ export class VertexDef<V>
     }
 }
 
-export function byte<V, A extends keyof V> (name: A): VertexAttr<V>
+export function byte<V, A extends Extract<keyof V, string>> (name: A): VertexAttr<V>
 {
     return new VertexAttr (name, 'byte', 1, v => [ v[name] ])
 }
 
-export function ubyte<V, A extends keyof V> (name: A): VertexAttr<V>
+export function ubyte<V, A extends Extract<keyof V, string>> (name: A): VertexAttr<V>
 {
     return new VertexAttr (name, 'ubyte', 1, v => [ v[name] ])
 }
 
-export function short<V, A extends keyof V> (name: A): VertexAttr<V>
+export function short<V, A extends Extract<keyof V, string>> (name: A): VertexAttr<V>
 {
     return new VertexAttr (name, 'short', 1, v => [ v[name] ])
 }
 
-export function ushort<V, A extends keyof V> (name: A): VertexAttr<V>
+export function ushort<V, A extends Extract<keyof V, string>> (name: A): VertexAttr<V>
 {
     return new VertexAttr (name, 'ushort', 1, v => [ v[name] ])
 }
 
-export function float<V, A extends keyof V> (name: A): VertexAttr<V>
+export function float<V, A extends Extract<keyof V, string>> (name: A): VertexAttr<V>
 {
     return new VertexAttr (name, 'float', 1, v => [ v[name] ])
 }
 
-export function vec2<V, A extends keyof V> (name: A): VertexAttr<V>
+export function vec2<V, A extends Extract<keyof V, string>> (name: A): VertexAttr<V>
 {
     return new VertexAttr (name, 'float', 2, v => (<Vec2>v[name]).toArray ())
 }
 
-export function vec3<V, A extends keyof V> (name: A): VertexAttr<V>
+export function vec3<V, A extends Extract<keyof V, string>> (name: A): VertexAttr<V>
 {
     return new VertexAttr (name, 'float', 3, v => (<Vec3>v[name]).toArray ())
 }
 
-export function vec4<V, A extends keyof V> (name: A): VertexAttr<V>
+export function vec4<V, A extends Extract<keyof V, string>> (name: A): VertexAttr<V>
 {
     return new VertexAttr (name, 'float', 4, v => (<Vec4>v[name]).toArray () )
 }

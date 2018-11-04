@@ -217,7 +217,8 @@ class ArrayMat {
             perm[i] = i;
         // toggle tracks row swaps. +1 -> even, -1 -> odd. used by MatrixDeterminant
         let toggle = 1;
-        for (let c = 0; c < cols - 1; c++) {
+        for (let c = 0; c < cols - 1; c++) // each column
+         {
             let colMax = Math.abs(matrix[c][c]); // find largest value in col j
             let pRow = c;
             for (let r = c + 1; r < rows; r++)

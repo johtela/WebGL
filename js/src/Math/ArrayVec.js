@@ -55,19 +55,13 @@ class ArrayVec {
         return res;
     }
     map(oper) {
-        return new ArrayVec(this.array.map(function (v, i, a) {
-            return oper(v);
-        }));
+        return new ArrayVec(this.array.map(v => oper(v)));
     }
     map2(other, oper) {
-        return new ArrayVec(this.array.map(function (v, i, a) {
-            return oper(v, other.array[i]);
-        }));
+        return new ArrayVec(this.array.map((v, i) => oper(v, other.array[i])));
     }
     reduce(oper) {
-        return this.array.reduce(function (c, v, i, a) {
-            return oper(c, v);
-        }, 0);
+        return this.array.reduce((c, v) => oper(c, v), 0);
     }
     get lenSqr() {
         return this.reduce((a, x) => a + (x * x));

@@ -76,42 +76,42 @@ export class UniformDef<U>
     }
 }
 
-export function int<U, A extends keyof U> (name: A): Uniform<U>
+export function int<U, A extends Extract<keyof U, string>> (name: A): Uniform<U>
 {
     return new Uniform (name, 'int', 1, u => [ u[name] ])
 }
 
-export function float<U, A extends keyof U> (name: A): Uniform<U>
+export function float<U, A extends Extract<keyof U, string>> (name: A): Uniform<U>
 {
     return new Uniform (name, 'float', 1, u => [ u[name] ])
 }
 
-export function vec2<U, A extends keyof U> (name: A): Uniform<U>
+export function vec2<U, A extends Extract<keyof U, string>> (name: A): Uniform<U>
 {
     return new Uniform (name, 'float', 2, u => (<Vec2>u[name]).toArray ())
 }
 
-export function vec3<U, A extends keyof U> (name: A): Uniform<U>
+export function vec3<U, A extends Extract<keyof U, string>> (name: A): Uniform<U>
 {
     return new Uniform (name, 'float', 3, u => (<Vec3>u[name]).toArray ())
 }
 
-export function vec4<U, A extends keyof U> (name: A): Uniform<U>
+export function vec4<U, A extends Extract<keyof U, string>> (name: A): Uniform<U>
 {
     return new Uniform (name, 'float', 4, u => (<Vec4>u[name]).toArray ())
 }
 
-export function mat2<U, A extends keyof U> (name: A): Uniform<U>
+export function mat2<U, A extends Extract<keyof U, string>> (name: A): Uniform<U>
 {
     return new Uniform (name, 'matrix', 2, u => (<Mat2>u[name]).toArray ())
 }
 
-export function mat3<U, A extends keyof U> (name: A): Uniform<U>
+export function mat3<U, A extends Extract<keyof U, string>> (name: A): Uniform<U>
 {
     return new Uniform (name, 'matrix', 3, u => (<Mat3>u[name]).toArray ())
 }
 
-export function mat4<U, A extends keyof U> (name: A): Uniform<U>
+export function mat4<U, A extends Extract<keyof U, string>> (name: A): Uniform<U>
 {
     return new Uniform (name, 'matrix', 4, u => (<Mat4>u[name]).toArray ())
 }
