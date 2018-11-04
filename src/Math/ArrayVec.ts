@@ -76,31 +76,20 @@ class ArrayVec implements Vec2, Vec3, Vec4
 
     private map (oper: (x: number) => number): ArrayVec
     {
-        return new ArrayVec (this.array.map (
-            function (this, v, i, a)
-            {
-                return oper (v)
-            }))
+        return new ArrayVec (this.array.map (v => oper (v)));
     }
 
     private map2 (other: ArrayVec, oper: (x: number, y: number) => number): ArrayVec
     {
         return new ArrayVec (this.array.map (
-            function (this, v, i, a)
-            {
-                return oper (v, other.array[i])
-            }))
+            (v, i) => oper (v, other.array[i])));
     }
 
     private reduce (oper: (acc: number, x: number) => number): number
     {
-        return this.array.reduce (
-            function (c, v, i, a)
-            {
-                return oper (c, v)
-            }, 0)
+        return this.array.reduce ((c, v) => oper (c, v), 0);
     }
-
+    
     get lenSqr (): number
     {
         return this.reduce ((a, x) => a + (x * x))
