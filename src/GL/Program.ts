@@ -31,7 +31,8 @@ export class Program<V, U> extends GLResource
         let prg = gl.createProgram()
         if (prg === null)
             throw Error ("Failed to create program")
-        this.shaders.forEach(s => gl.attachShader(prg, s.glShader))
+        for (let i = 0; i < this.shaders.length; i++)
+            gl.attachShader(prg, this.shaders[i]);
         gl.linkProgram(prg);
       
         if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) 

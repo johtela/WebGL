@@ -46,6 +46,16 @@ declare namespace JSVerify {
 
   type Show<T> = (t: T) => string;
   type Property<T> = boolean | void | T;
+
+  interface Either<T, U> {
+    value: T | U;
+    either<X>(l: (a: T) => X, r: (b: U) => X): X;
+    isEqual(other: Either<T, U>): boolean;
+    bimap<X, Y>(f: (a: T) => X, g: (b: U) => Y): Either<X, Y>;
+    first<X>(f: (a: T) => X): Either<X, U>;
+    second<Y>(g: (b: U) => Y): Either<T, Y>;
+  }
+
   type integerFn = (maxsize: number) => Arbitrary<number>;
   type integerFn2 = (minsize: number, maxsize: number) => Arbitrary<number>;
 
@@ -77,11 +87,17 @@ declare namespace JSVerify {
   const asciinestring: Arbitrary<string>;
 
   //Combinators
-  function nonShrink<T>(arb: Arbitrary<T>): Arbitrary<T>;
-  function either<T, U>(arbA: Arbitrary<T>, arbB: Arbitrary<U>): Arbitrary<T | U>;
+  function nonshrink<T>(arb: Arbitrary<T>): Arbitrary<T>;
+  function either<T, U>(arbA: Arbitrary<T>, arbB: Arbitrary<U>): Arbitrary<Either<T,U>>;
   function pair<T, U>(arbA: Arbitrary<T>, arbB: Arbitrary<U>): Arbitrary<[T, U]>;
 
+  function tuple<A>(arbs: [Arbitrary<A>]): Arbitrary<[A]>;
+  function tuple<A, B>(arbs: [Arbitrary<A>, Arbitrary<B>]): Arbitrary<[A, B]>;
+  function tuple<A, B, C>(arbs: [Arbitrary<A>, Arbitrary<B>, Arbitrary<C>]): Arbitrary<[A, B, C]>;
+  function tuple<A, B, C, D>(arbs: [Arbitrary<A>, Arbitrary<B>, Arbitrary<C>, Arbitrary<D>]): Arbitrary<[A, B, C, D]>;
+  function tuple<A, B, C, D, E>(arbs: [Arbitrary<A>, Arbitrary<B>, Arbitrary<C>, Arbitrary<D>, Arbitrary<E>]): Arbitrary<[A, B, C, D, E]>;
   function tuple(arbs: Arbitrary<any>[]): Arbitrary<any[]>;
+
   function sum(arbs: Arbitrary<any>[]): Arbitrary<any>;
 
   function dict<T>(arb: Arbitrary<T>): Arbitrary<{ [s: string]: T }>;
@@ -92,6 +108,10 @@ declare namespace JSVerify {
   const json: Arbitrary<any>;
   const unit: Arbitrary<any>;
 
+  function oneof<A, B>(gs: [Arbitrary<A>, Arbitrary<B>]): Arbitrary<A | B>;
+  function oneof<A, B, C>(gs: [Arbitrary<A>, Arbitrary<B>, Arbitrary<C>]): Arbitrary<A | B | C>;
+  function oneof<A, B, C, D>(gs: [Arbitrary<A>, Arbitrary<B>, Arbitrary<C>, Arbitrary<D>]): Arbitrary<A | B | C | D>;
+  function oneof<A, B, C, D, E>(gs: [Arbitrary<A>, Arbitrary<B>, Arbitrary<C>, Arbitrary<D>, Arbitrary<E>]): Arbitrary<A | B | C | D | E>;
   function oneof<T>(gs: Arbitrary<T>[]): Arbitrary<T>;
   function record<T>(arbs: { [P in keyof T]: Arbitrary<T[P]> }): Arbitrary<T>;
 
@@ -164,7 +184,7 @@ declare namespace JSVerify {
     oneof<U>(gens: Generator<U>[]): Generator<U>;
     recursive<U>(genZ: Generator<U>, f: (u: U) => U): Generator<U>;
     pair<T, U>(genA: Generator<T>, genB: Generator<U>): Generator<[T, U]>;
-    either<T, U>(genA: Generator<T>, genB: Generator<U>): Generator<T | U>;
+    either<T, U>(genA: Generator<T>, genB: Generator<U>): Generator<Either<T, U>>;
 
     tuple(gens: Generator<any>[]): Generator<any[]>;
     sum(gens: Generator<any>[]): Generator<any>;
@@ -196,7 +216,7 @@ declare namespace JSVerify {
   interface ShrinkFunctions {
     noop: Shrink<any>;
     pair<T, U>(shrA: Shrink<T>, shrB: Shrink<U>): Shrink<[T, U]>;
-    either<T, U>(shrA: Shrink<T>, shrB: Shrink<U>): Shrink<T | U>;
+    either<T, U>(shrA: Shrink<T>, shrB: Shrink<U>): Shrink<Either<T, U>>;
 
     tuple(shrs: Shrink<any>[]): Shrink<any[]>;
     sum(shrs: Shrink<any>[]): Shrink<any>;
@@ -210,7 +230,7 @@ declare namespace JSVerify {
   interface ShowFunctions {
     def<T>(x: T): string;
     pair<T, U>(sA: Show<T>, sB: Show<U>, x: [T, U]): string;
-    either<T, U>(sA: Show<T>, sB: Show<U>, x: (T | U)): string;
+    either<T, U>(sA: Show<T>, sB: Show<U>, x: Either<T, U>): string;
 
     tuple(shs: Show<any>[], x: any[]): string;
     sum(shs: Show<any>[], x: any): string;

@@ -10,8 +10,14 @@ const fsSource = require('./shaders/simple.frag');
 function initShaderProgram(gl, vsSource, fsSource) {
     const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
     const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+    if (!(vertexShader && fragmentShader))
+        return null;
     // Create the shader program
     const shaderProgram = gl.createProgram();
+    if (!shaderProgram) {
+        alert('Unable to initialize the create program.');
+        return null;
+    }
     gl.attachShader(shaderProgram, vertexShader);
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
@@ -28,6 +34,10 @@ function initShaderProgram(gl, vsSource, fsSource) {
 //
 function loadShader(gl, type, source) {
     const shader = gl.createShader(type);
+    if (!shader) {
+        alert('Could not create a shader of type: ' + type);
+        return null;
+    }
     // Send the source to the shader object
     gl.shaderSource(shader, source);
     // Compile the shader program
