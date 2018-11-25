@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ArrayVec_1 = require("./Math/ArrayVec");
 const ArrayMat_1 = require("./Math/ArrayMat");
+const FMath_1 = require("./Math/FMath");
 const Shader_1 = require("./GL/Shader");
 const VAttr = require("./GL/VertexAttr");
 const Unif = require("./GL/Uniforms");
@@ -32,7 +33,7 @@ function main() {
     ];
     let indices = [0, 1, 2, 3];
     let uniforms = {
-        uModelViewMatrix: ArrayMat_1.newMat4.translation([0.0, 0.0, -4.0]),
+        uModelViewMatrix: ArrayMat_1.newMat4.translation([0.0, 0.0, -4.0]).mul(ArrayMat_1.newMat4.rotationX(FMath_1.PIover8)),
         uProjectionMatrix: ArrayMat_1.newMat4.perspective(-1, 1, -1, 1, 1, 100)
     };
     let canvas = document.querySelector("#glCanvas");

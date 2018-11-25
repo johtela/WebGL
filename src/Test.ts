@@ -2,6 +2,7 @@ import { NewVec, Vec2, Vec3, Vec4 } from "./Math/Vectors";
 import { NewMat, Mat2, Mat3, Mat4 } from "./Math/Matrices";
 import { newVec2, newVec4 } from "./Math/ArrayVec"
 import { newMat4 } from "./Math/ArrayMat"
+import { PIover8 } from "./Math/FMath"
 import { ShaderType, Shader } from "./GL/Shader"
 import * as VAttr from "./GL/VertexAttr"
 import * as Unif from "./GL/Uniforms"
@@ -20,7 +21,7 @@ class SimpleVertex
 class MyUniforms
 {
     uModelViewMatrix: Mat4
-    uProjectionMatrix: Mat4
+    uProjectionMatrix: Mat4 
 }
 
 function drawScene(gl: WebGLRenderingContext, program: Program<SimpleVertex, MyUniforms>, 
@@ -48,7 +49,7 @@ function main ()
     ]
     let indices = [ 0, 1, 2, 3 ]
     let uniforms: MyUniforms = {
-        uModelViewMatrix: newMat4.translation ([0.0, 0.0, -4.0]),
+        uModelViewMatrix: newMat4.translation ([0.0, 0.0, -4.0]).mul(newMat4.rotationX (PIover8)),
         uProjectionMatrix: newMat4.perspective (-1, 1, -1, 1, 1, 100)
     }
     let canvas = document.querySelector("#glCanvas") as HTMLCanvasElement;
